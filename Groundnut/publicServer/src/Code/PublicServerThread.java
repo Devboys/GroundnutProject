@@ -38,14 +38,6 @@ public class PublicServerThread extends Thread {
                 DatagramPacket newpacket = new DatagramPacket(buf,buf.length, group, 6112);
                 socket.send(newpacket);
 
-
-
-
-
-
-
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

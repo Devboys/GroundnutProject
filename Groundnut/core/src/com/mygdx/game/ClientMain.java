@@ -23,11 +23,15 @@ public class ClientMain extends Thread {
             MultiSocket = new MulticastSocket(6112);
              InetAddress group = InetAddress.getByName("230.0.0.0");
              MultiSocket.joinGroup(group);
+             String message = "Hello";
+             buffer = message.getBytes();
+             DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 6112);
+             socket.send(packet);
 
              while(true){
-                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                 buffer = new byte[256];
+                 packet = new DatagramPacket(buffer, buffer.length);
                  MultiSocket.receive(packet);
-                 System.out.println("Jeppe was here");
                  String output = new String(packet.getData(),0,packet.getLength());
                  System.out.println(output);
              }
