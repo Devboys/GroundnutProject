@@ -1,10 +1,16 @@
 package Code;
 
+import java.io.IOException;
+
 public class PublicMain {
 
-    public static void Main(String[] args){
-        PublicServerThread serverThread = new PublicServerThread();
-        serverThread.start();
+    public static void main(String[] args){
+        try {
+            PublicServerThread serverThread = new PublicServerThread();
+            serverThread.start();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }

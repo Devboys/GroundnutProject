@@ -13,9 +13,11 @@ public class ClientMain extends Thread {
     private DatagramSocket socket;
     private InetAddress address;
 
-    public ClientMain() throws IOException{
-        socket = new DatagramSocket();
-        address = InetAddress.getByName("localhost");
+    public ClientMain(){
+        try {
+            socket = new DatagramSocket();
+            address = InetAddress.getByName("localhost");
+        }catch(IOException e){}
     }
 
     public void run(){
