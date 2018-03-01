@@ -14,8 +14,11 @@ public class PublicServerThread extends Thread {
     private InetAddress group;
     private ArrayList<Integer> ports = new ArrayList<>();
 
+    private int serverPort = 24000;
+    private int clientPort = 24001;
+
     public PublicServerThread() throws IOException {
-        socket = new DatagramSocket(6112);
+        socket = new DatagramSocket(serverPort);
         group = InetAddress.getByName("230.0.0.0");
     }
 
@@ -24,6 +27,8 @@ public class PublicServerThread extends Thread {
             try {
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 socket.receive(packet);
+                System.out.println("Packet recieved from client: " + packet.getData());
+
                 boolean something = true;
                 for (int i = 0; i < IPaddressArray.size(); i++) {
                     if (IPaddressArray.get(i) == packet.getAddress()) {
@@ -34,9 +39,12 @@ public class PublicServerThread extends Thread {
                     IPaddressArray.add(packet.getAddress());
                     ports.add(packet.getPort());
                 }
-                byte[] buf = packet.getData();
-                DatagramPacket newpacket = new DatagramPacket(buf,buf.length, group, 6112);
+                String returnMessage = "returnMessage";
+                byte[] buf = returnMessage.getBytes();
+                //byte[] buf = packet.getData();
+                DatagramPacket newpacket = new DatagramPacket(buf,buf.length, group, clientPort);
                 socket.send(newpacket);
+                System.out.println("Packet set to client" + newpacket.getData());
 
             } catch (IOException e) {
                 e.printStackTrace();

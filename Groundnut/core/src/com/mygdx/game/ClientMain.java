@@ -13,29 +13,36 @@ public class ClientMain extends Thread {
     private DatagramSocket socket;
     private InetAddress address;
 
+    private int serverPort = 24000;
+    private int clientPort = 24001;
+
     public ClientMain(){
         try {
             socket = new DatagramSocket();
-            address = InetAddress.getByName("localhost");
+            address = InetAddress.getByName("127.0.0.1");
         }catch(IOException e){}
     }
 
     public void run(){
         try {
-            MultiSocket = new MulticastSocket(6112);
+            //setup listener sockets
+             MultiSocket = new MulticastSocket(clientPort);
              InetAddress group = InetAddress.getByName("230.0.0.0");
              MultiSocket.joinGroup(group);
+
              String message = "Hello";
              buffer = message.getBytes();
-             DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 6112);
+             DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, serverPort);
              socket.send(packet);
+
+            System.out.println("Message sent to server: " + packet.getData());
 
              while(true){
                  buffer = new byte[256];
                  packet = new DatagramPacket(buffer, buffer.length);
                  MultiSocket.receive(packet);
                  String output = new String(packet.getData(),0,packet.getLength());
-                 System.out.println(output);
+                 System.out.println("Recieved from server: " + output);
              }
         } catch (IOException e) {
             e.printStackTrace();
