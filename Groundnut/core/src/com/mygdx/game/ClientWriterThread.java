@@ -6,7 +6,10 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
-public class ClientMain extends Thread {
+public class ClientWriterThread extends Thread {
+
+
+
     protected MulticastSocket MultiSocket = null;
     protected byte[] buffer = new byte[256];
 
@@ -16,7 +19,7 @@ public class ClientMain extends Thread {
     private int serverPort = 24000;
     private int clientPort = 24001;
 
-    public ClientMain(){
+    public ClientWriterThread(){
         try {
             socket = new DatagramSocket();
             address = InetAddress.getByName("10.60.30.188");

@@ -27,7 +27,7 @@ public class PublicServerThread extends Thread {
             try {
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 socket.receive(packet);
-                System.out.println("Packet recieved from client: " + packet.getData());
+                System.out.println("Packet recieved from client: " + packet.getAddress());
 
                 boolean something = true;
                 for (int i = 0; i < IPaddressArray.size(); i++) {
@@ -44,7 +44,7 @@ public class PublicServerThread extends Thread {
                 //byte[] buf = packet.getData();
                 DatagramPacket newpacket = new DatagramPacket(buf,buf.length, group, clientPort);
                 socket.send(newpacket);
-                System.out.println("Packet set to client" + newpacket.getData());
+                System.out.println("Packet set to client" + newpacket.getAddress());
 
             } catch (IOException e) {
                 e.printStackTrace();
