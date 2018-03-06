@@ -8,7 +8,6 @@ import java.net.MulticastSocket;
 
 public class ClientWriterThread extends Thread {
 
-
     protected MulticastSocket multiSocket = null;
     protected byte[] buffer = new byte[256];
 
