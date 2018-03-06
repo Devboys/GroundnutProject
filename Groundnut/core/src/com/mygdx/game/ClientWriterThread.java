@@ -22,7 +22,7 @@ public class ClientWriterThread extends Thread {
     public ClientWriterThread(){
         try {
             socket = new DatagramSocket();
-            address = InetAddress.getByName("10.60.30.188");
+            address = InetAddress.getByName("10.60.30.188REEeeeeeeee");
         }catch(IOException e){}
     }
 
