@@ -14,8 +14,6 @@ public class ClientGraphics extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
-		ClientMain main = new ClientMain();
-		main.start();
 	}
 
 	@Override
