@@ -19,7 +19,7 @@ public class ClientMain extends Thread {
     public ClientMain(){
         try {
             socket = new DatagramSocket();
-            address = InetAddress.getByName("127.0.0.1");
+            address = InetAddress.getByName("10.60.30.188");
         }catch(IOException e){}
     }
 
