@@ -39,12 +39,11 @@ public class PublicServerThread extends Thread {
                     IPaddressArray.add(packet.getAddress());
                     ports.add(packet.getPort());
                 }
-                String returnMessage = "returnMessage";
-                byte[] buf = returnMessage.getBytes();
-                //byte[] buf = packet.getData();
+
+                byte[] buf = packet.getData();
                 DatagramPacket newpacket = new DatagramPacket(buf,buf.length, group, clientPort);
                 socket.send(newpacket);
-                System.out.println("Packet set to client" + newpacket.getAddress());
+                System.out.println("Packet sent to client" + newpacket.getAddress());
 
             } catch (IOException e) {
                 e.printStackTrace();

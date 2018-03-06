@@ -9,8 +9,7 @@ import java.net.MulticastSocket;
 public class ClientWriterThread extends Thread {
 
 
-
-    protected MulticastSocket MultiSocket = null;
+    protected MulticastSocket multiSocket = null;
     protected byte[] buffer = new byte[256];
 
     private DatagramSocket socket;
@@ -22,7 +21,7 @@ public class ClientWriterThread extends Thread {
     public ClientWriterThread(){
         try {
             socket = new DatagramSocket();
-            address = InetAddress.getByName("third try is the real ree 10.60.30.188");
+            address = InetAddress.getByName("localHost");
 
         }catch(IOException e){}
     }
@@ -30,11 +29,11 @@ public class ClientWriterThread extends Thread {
     public void run(){
         try {
             //setup listener sockets
-             MultiSocket = new MulticastSocket(clientPort);
+             multiSocket = new MulticastSocket(clientPort);
              InetAddress group = InetAddress.getByName("230.0.0.0");
-             MultiSocket.joinGroup(group);
+             multiSocket.joinGroup(group);
 
-             String message = "Hello";
+             String message = "2,6|3,7|6,8";
              buffer = message.getBytes();
              DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, serverPort);
              socket.send(packet);
@@ -44,13 +43,12 @@ public class ClientWriterThread extends Thread {
              while(true){
                  buffer = new byte[256];
                  packet = new DatagramPacket(buffer, buffer.length);
-                 MultiSocket.receive(packet);
+                 multiSocket.receive(packet);
                  String output = new String(packet.getData(),0,packet.getLength());
-                 System.out.println("Recieved from server: " + output);
+                 //System.out.println("Recieved from server: " + output);
              }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }
