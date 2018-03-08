@@ -9,16 +9,18 @@ import java.util.ArrayList;
 public class ClientListenerThread extends Thread {
 
     private MulticastSocket multiSocket;
-    private InetAddress serverAddress;
     private InetAddress groupAdress;
 
     String packetInputData;
 
-    public static final int numDimensions = 2;
+    static int coordX;
+    static int coordY;
+
+    int clientPort = 24001;
 
     public ClientListenerThread() {
         try {
-            multiSocket = new MulticastSocket();
+            multiSocket = new MulticastSocket(clientPort);
             groupAdress = InetAddress.getByName("230.0.0.0");
             multiSocket.joinGroup(groupAdress);
         }catch(IOException e){
@@ -34,28 +36,27 @@ public class ClientListenerThread extends Thread {
                 byte[] buffer = new byte[256];
                 DatagramPacket readPacket = new DatagramPacket(buffer, buffer.length);
                 multiSocket.receive(readPacket);
+
+                System.out.println("package received");
+
                 packetInputData = new String(readPacket.getData());
 
-                System.out.println(getPositions());
+                String[] stringCoords = packetInputData.split("@");
+
+                coordX = Integer.parseInt(stringCoords[0]);
+                coordY = Integer.parseInt(stringCoords[1]);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public int[][] getPositions(){
-        String[] tempPositions = packetInputData.split("|");
+    public static int getX(){
+        return coordX;
+    }
 
-        int[][] playerPositions = new int[tempPositions.length][numDimensions];
-        String[] currentPosition;
-        for(int i = 0; i < tempPositions.length; i++) {
-            currentPosition = tempPositions[i].split(",");
-
-            for(int j = 0; j < 2; j++) {
-                playerPositions[i][j] = Integer.parseInt(currentPosition[j]);
-            }
-        }
-
-        return playerPositions;
+    public static int getY(){
+        return coordY;
     }
 }

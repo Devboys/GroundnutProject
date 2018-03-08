@@ -27,24 +27,14 @@ public class PublicServerThread extends Thread {
             try {
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 socket.receive(packet);
-
-                boolean something = true;
-                for (int i = 0; i < IPaddressArray.size(); i++) {
-                    if (IPaddressArray.get(i) == packet.getAddress()) {
-                        something = false;
-                    }
-                }
-                if (something = true) {
-                    IPaddressArray.add(packet.getAddress());
-                    ports.add(packet.getPort());
-
-                }
+                System.out.println("package received");
 
                 byte[] buf = packet.getData();
 
                 DatagramPacket newpacket = new DatagramPacket(buf,buf.length, group, clientPort);
                 socket.send(newpacket);
 
+                System.out.println("package sent");
             } catch (IOException e) {
                 e.printStackTrace();
             }

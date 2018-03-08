@@ -9,5 +9,9 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		new LwjglApplication(new ClientGraphics(), config);
 
+		ClientListenerThread listener = new ClientListenerThread();
+		ClientWriterThread writer = new ClientWriterThread();
+		listener.start();
+		writer.start();
 	}
 }

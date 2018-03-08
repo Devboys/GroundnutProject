@@ -1,10 +1,14 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+
+import static com.badlogic.gdx.Input.Keys.UP;
 
 public class ClientWriterThread extends Thread {
 
@@ -14,8 +18,11 @@ public class ClientWriterThread extends Thread {
     private DatagramSocket socket;
     private InetAddress address;
 
+    int locY = 100;
+    int locX = 50;
+
+
     private int serverPort = 24000;
-    private int clientPort = 24001;
 
     public ClientWriterThread(){
         try {
@@ -25,27 +32,26 @@ public class ClientWriterThread extends Thread {
         }catch(IOException e){}
     }
 
-    public void run(){
-        try {
-            //setup listener sockets
-             multiSocket = new MulticastSocket(clientPort);
-             InetAddress group = InetAddress.getByName("230.0.0.0");
-             multiSocket.joinGroup(group);
+    public void run() {
 
-             String message = "2,6|3,7|6,8";
-             buffer = message.getBytes();
-             DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, serverPort);
-             socket.send(packet);
+        while(true) {
+            if (Gdx.input.isKeyPressed(UP)) {
+                locY--;
+                translate();
+            }
+        }
+
+
+    }
+
+    public void translate() {
+        try {
+            String message = locX + "@" + locY + "@";
+            buffer = message.getBytes();
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, serverPort);
+            socket.send(packet);
 
             System.out.println("Message sent to server: " + packet.getData());
-
-             while(true){
-                 buffer = new byte[256];
-                 packet = new DatagramPacket(buffer, buffer.length);
-                 multiSocket.receive(packet);
-                 String output = new String(packet.getData(),0,packet.getLength());
-                 //System.out.println("Recieved from server: " + output);
-             }
         } catch (IOException e) {
             e.printStackTrace();
         }

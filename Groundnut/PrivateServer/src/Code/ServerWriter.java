@@ -24,21 +24,18 @@ public class ServerWriter extends Thread{
     }
 
     public void run(){
+        boolean running = true;
 
-        String outputString = new String();
-        for(int i = 0; i < coords.length; i++){
-            outputString = outputString + "#" + "-" + "coords" + "|" +
-                    + coords[i][0]
-                    + "," + coords[i][1];
+        while(running) {
+            byte[] buf = new byte[256];
+
+            try {
+                DatagramPacket sendPacket = new DatagramPacket(buf, buf.length, group, PublicMain.clientPort);
+                writeSocket.send(sendPacket);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-        byte[] buf = outputString.getBytes();
-
-        try {
-            DatagramPacket sendPacket = new DatagramPacket(buf, buf.length, group, PublicMain.clientPort);
-            writeSocket.send(sendPacket);
-        }catch(IOException e){e.printStackTrace();}
-
     }
 
 }

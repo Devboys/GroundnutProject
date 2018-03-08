@@ -6,40 +6,31 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import static com.badlogic.gdx.Input.Keys.*;
+
 public class ClientGraphics extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
+
+	int circleX = 0;
+	int circleY = 0;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
-
-		ClientListenerThread listenerThread = new ClientListenerThread();
-		ClientWriterThread writerThread = new ClientWriterThread();
-		listenerThread.start();
-		writerThread.start();
-
-		/*try {
-			Thread.sleep(10000);
-			int[][] tempArray = listenerThread.getPositions();
-			for (int[] i : tempArray) {
-				for (int j : i) {
-					System.out.print(j + ", ");
-				}
-				System.out.println("--");
-			}
-		}catch(InterruptedException e){
-			e.printStackTrace();
-		}*/
 	}
 
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		circleX = ClientListenerThread.getX();
+		circleY = ClientListenerThread.getY();
+
 		batch.begin();
-		batch.draw(img, 0, 0);
+		batch.draw(img, circleX, circleY);
 		batch.end();
 	}
 	
@@ -48,4 +39,7 @@ public class ClientGraphics extends ApplicationAdapter {
 		batch.dispose();
 		img.dispose();
 	}
+
+
+
 }
