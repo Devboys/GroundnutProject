@@ -14,6 +14,24 @@ public class ClientGraphics extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+
+		ClientListenerThread listenerThread = new ClientListenerThread();
+		ClientWriterThread writerThread = new ClientWriterThread();
+		listenerThread.start();
+		writerThread.start();
+
+		/*try {
+			Thread.sleep(10000);
+			int[][] tempArray = listenerThread.getPositions();
+			for (int[] i : tempArray) {
+				for (int j : i) {
+					System.out.print(j + ", ");
+				}
+				System.out.println("--");
+			}
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}*/
 	}
 
 	@Override

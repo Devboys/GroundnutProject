@@ -1,18 +1,17 @@
 package Code;
 
-import java.io.IOException;
-
 public class PublicMain {
 
+    public static final int serverPort = 24000;
+    public static final int clientPort = 24001;
+
     public static void main(String[] args){
-        try {
-            PublicServerThread serverThread = new PublicServerThread();
-            serverThread.start();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
 
+            ServerListener listener = new ServerListener();
+            ServerWriter writer = new ServerWriter();
 
+            listener.start();
+            writer.start();
     }
 
 

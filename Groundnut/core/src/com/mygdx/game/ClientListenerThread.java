@@ -12,7 +12,7 @@ public class ClientListenerThread extends Thread {
     private InetAddress serverAddress;
     private InetAddress groupAdress;
 
-    private String packetInputData;
+    String packetInputData;
 
     public static final int numDimensions = 2;
 
@@ -35,7 +35,6 @@ public class ClientListenerThread extends Thread {
                 DatagramPacket readPacket = new DatagramPacket(buffer, buffer.length);
                 multiSocket.receive(readPacket);
                 packetInputData = new String(readPacket.getData());
-
 
                 System.out.println(getPositions());
             } catch (IOException e) {
