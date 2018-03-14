@@ -8,7 +8,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
-import static com.badlogic.gdx.Input.Keys.UP;
+import static com.badlogic.gdx.Input.Keys.*;
 
 public class ClientWriterThread extends Thread {
 
@@ -36,7 +36,19 @@ public class ClientWriterThread extends Thread {
 
         while(true) {
             if (Gdx.input.isKeyPressed(UP)) {
+                locY++;
+                translate();
+            }
+            else if (Gdx.input.isKeyPressed(DOWN)){
                 locY--;
+                translate();
+            }
+            else if (Gdx.input.isKeyPressed(RIGHT)){
+                locX++;
+                translate();
+            }
+            else if (Gdx.input.isKeyPressed(LEFT)){
+                locX--;
                 translate();
             }
         }
