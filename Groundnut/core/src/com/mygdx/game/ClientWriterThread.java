@@ -40,13 +40,11 @@ public class ClientWriterThread extends Thread {
                 translate();
             }
         }
-
-
     }
 
     public void translate() {
         try {
-            String message = locX + "@" + locY + "@";
+            String message = "@" +locX + "@" + locY ;
             buffer = message.getBytes();
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, serverPort);
             socket.send(packet);

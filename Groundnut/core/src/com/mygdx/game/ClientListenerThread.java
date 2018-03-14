@@ -13,8 +13,10 @@ public class ClientListenerThread extends Thread {
 
     String packetInputData;
 
-    static int coordX;
-    static int coordY;
+    private static int[][] playerPositions = new int[4][2];
+
+    static int coordX = 50;
+    static int coordY = 50;
 
     int clientPort = 24001;
 
@@ -40,16 +42,31 @@ public class ClientListenerThread extends Thread {
                 System.out.println("package received");
 
                 packetInputData = new String(readPacket.getData());
+                System.out.println(packetInputData);
 
                 String[] stringCoords = packetInputData.split("@");
+                System.out.println(stringCoords.length);
 
-                coordX = Integer.parseInt(stringCoords[0]);
-                coordY = Integer.parseInt(stringCoords[1]);
+                playerPositions[0][0] = Integer.parseInt(stringCoords[1]);
+                playerPositions[0][1] = Integer.parseInt(stringCoords[2]);
+
+                playerPositions[1][0] = Integer.parseInt(stringCoords[3]);
+                playerPositions[1][1] = Integer.parseInt(stringCoords[4]);
+
+                playerPositions[2][0] = Integer.parseInt(stringCoords[5]);
+                playerPositions[2][1] = Integer.parseInt(stringCoords[6]);
+
+                playerPositions[3][0] = Integer.parseInt(stringCoords[7]);
+                playerPositions[3][1] = Integer.parseInt(stringCoords[8]);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static int[][] getPositions() {
+        return playerPositions;
     }
 
     public static int getX(){
