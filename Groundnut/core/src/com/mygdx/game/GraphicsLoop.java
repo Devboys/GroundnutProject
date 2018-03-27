@@ -28,31 +28,34 @@ public class GraphicsLoop extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		renderer = new ShapeRenderer();
+
+
+
 	}
 
 	@Override
 	public void render () {
 
 
-//		Gdx.gl.glClearColor(0, 0, 0, 1);
-//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//
-//		playerPositions = ClientListenerThread.getPositions();
-//
-//		renderer.begin(ShapeRenderer.ShapeType.Filled);
-//		renderer.setColor(Color.CYAN);
-//		renderer.circle(playerPositions[0][0], playerPositions[0][1], circleR);
-//
-//		renderer.setColor(Color.GREEN);
-//		renderer.circle(playerPositions[1][0], playerPositions[1][1], circleR);
-//
-//		renderer.setColor(Color.RED);
-//		renderer.circle(playerPositions[2][0], playerPositions[2][1], circleR);
-//
-//		renderer.setColor(Color.PINK);
-//		renderer.circle(playerPositions[3][0], playerPositions[3][1], circleR);
-//
-//		renderer.end();
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		playerPositions = ClientListenerThread.getPositions();
+
+		renderer.begin(ShapeRenderer.ShapeType.Filled);
+		renderer.setColor(Color.CYAN);
+		renderer.circle(playerPositions[0][0], playerPositions[0][1], circleR);
+
+		renderer.setColor(Color.GREEN);
+		renderer.circle(playerPositions[1][0], playerPositions[1][1], circleR);
+
+		renderer.setColor(Color.RED);
+		renderer.circle(playerPositions[2][0], playerPositions[2][1], circleR);
+
+		renderer.setColor(Color.PINK);
+		renderer.circle(playerPositions[3][0], playerPositions[3][1], circleR);
+
+		renderer.end();
 	}
 	
 	@Override
