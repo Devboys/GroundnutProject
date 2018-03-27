@@ -27,7 +27,7 @@ public class ClientWriterThread extends Thread {
     public ClientWriterThread(){
         try {
             socket = new DatagramSocket();
-            address = InetAddress.getByName("127.0.0.1");
+            address = InetAddress.getByName("192.168.43.239");
 
         }catch(IOException e){}
     }
