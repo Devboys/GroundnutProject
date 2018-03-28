@@ -1,9 +1,9 @@
-package DesktopMain;
+package Main;
 
 import Constants.ScreenConstants;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import Main.RenderThread;
+import Groundnut.RenderThread;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {

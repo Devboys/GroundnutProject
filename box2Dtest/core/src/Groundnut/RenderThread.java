@@ -1,14 +1,17 @@
-package Main;
+package Groundnut;
 
 import Constants.ScreenConstants;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+
+/**
+ * libGDX render thread. Handles rendering and is also the start-point for the update thread.
+ */
 public class RenderThread extends ApplicationAdapter {
 
     UpdateThread updateThread;
@@ -19,21 +22,27 @@ public class RenderThread extends ApplicationAdapter {
     //debug rendering
     Box2DDebugRenderer testRender;
 
-    GameManager gameManager;
+    GameStateManager gameStateManager;
 
     @Override
 	public void create () {
-        gameManager = new GameManager();
+        gameStateManager = new GameStateManager();
 
         //create and start new thread to handle game logic updates;
-        updateThread = new UpdateThread();
+        updateThread = new UpdateThread(gameStateManager);
         updateThread.start();
-
         setupCamera();
 
         //setup test rendering
         testRender = new Box2DDebugRenderer();
+
+        //initialize all dependent values
+        init();
 	}
+
+	public void init() {
+        gameStateManager.init();
+    }
 
 	@Override
 	public void render () {
