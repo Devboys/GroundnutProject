@@ -37,7 +37,6 @@ public class LobbyServerWriter extends Thread {
                     for(int j = 0; j < usernumber; j++){
                         pw.get(j).println(usernames.get(i)+": "+newsarray.get(i));
                         pw.get(j).flush();
-                        System.out.println("test5");
                         oldsarray.set(i, newsarray.get(i));
                     }
                 }
