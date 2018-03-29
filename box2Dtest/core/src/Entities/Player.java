@@ -21,7 +21,13 @@ public class Player implements Entity {
     }
 
     @Override
-    public void update() {}
+    public void update() {
+        //handle input (change collider position)
+
+        //get positions from collider
+
+        //change sprite-drawing position to match new collider positions
+    }
 
     @Override
     public void render() {}

@@ -19,8 +19,8 @@ public class UpdateThread extends Thread{
 
     //Box2Dtest Variables
     public static World theWorld ;
-    private static final int xAcceleration = 0;
-    private static final int yAcceleration = -10;
+    private static final int xAcceleration = +100;
+    private static final int yAcceleration = -100;
 
     GameStateManager gameStateManager;
 
