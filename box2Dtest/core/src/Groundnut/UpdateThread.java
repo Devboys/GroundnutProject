@@ -1,6 +1,7 @@
 package Groundnut;
 
 
+import Constants.RunConstants;
 import Constants.ScreenConstants;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -19,8 +20,8 @@ public class UpdateThread extends Thread{
 
     //Box2Dtest Variables
     public static World theWorld ;
-    private static final int xAcceleration = +100;
-    private static final int yAcceleration = -100;
+    private static final int xAcceleration = 0;
+    private static final int yAcceleration = 0;
 
     GameStateManager gameStateManager;
 
@@ -36,10 +37,23 @@ public class UpdateThread extends Thread{
 
     @Override
     public void run() {
-        while(running){
-            gameStateManager.update();
 
-            stepWorld();
+        long startTime = System.currentTimeMillis();
+        long prevFrameTime;
+
+        while(running){
+            try {
+                prevFrameTime = System.currentTimeMillis() - startTime;
+                startTime = System.currentTimeMillis();
+
+                long remainder = (long)(1/RunConstants.MAX_UPS - (prevFrameTime / 1000f)) * 1000;
+                if (remainder > 0) {
+                    Thread.sleep(remainder);
+                }
+                update();
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -47,6 +61,13 @@ public class UpdateThread extends Thread{
         running = false;
     }
 
+    private void update() {
+
+        gameStateManager.update();
+        stepWorld();
+
+
+    }
     private void stepWorld() {
         float delta =(float) ((System.currentTimeMillis() - frameTime) / 1000f);
         frameTime = System.currentTimeMillis();
