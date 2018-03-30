@@ -36,6 +36,8 @@ public class TestScene extends Scene {
 
     @Override
     public void render() {
-
+        for(Entity e : entities){
+            e.render();
+        }
     }
 }

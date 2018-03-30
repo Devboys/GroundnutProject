@@ -58,18 +58,18 @@ public class Player implements Entity {
     private void handleInput(){
         //THESE ARE ALL TEMPORARY
         if(Gdx.input.isKeyJustPressed(Input.Keys.W)){
-            playerCollider.applyLinearImpulse(new Vector2(0, 10000), new Vector2(xLoc, yLoc), false);
+            playerCollider.applyLinearImpulse(new Vector2(0, 10000), new Vector2(xLoc, yLoc), true);
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.S)){
-            playerCollider.applyLinearImpulse(new Vector2(0, -10000), new Vector2(xLoc, yLoc), false);
+            playerCollider.applyLinearImpulse(new Vector2(0, -10000), new Vector2(xLoc, yLoc), true);
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.D)){
-            playerCollider.applyLinearImpulse(new Vector2( 10000, 0), new Vector2(xLoc, yLoc), false);
+            playerCollider.applyLinearImpulse(new Vector2( 10000, 0), new Vector2(xLoc, yLoc), true);
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.A)){
-            playerCollider.applyLinearImpulse(new Vector2( -10000, 0), new Vector2(xLoc, yLoc), false);
+            playerCollider.applyLinearImpulse(new Vector2( -10000, 0), new Vector2(xLoc, yLoc), true);
         }
     }
 }
