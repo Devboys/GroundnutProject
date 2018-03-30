@@ -27,6 +27,7 @@ public class Player implements Entity {
     public void update() {
         //handle input (change collider position)
         handleInput();
+
         //get positions from collider
 
         //change sprite-drawing position to match new collider positions
@@ -49,12 +50,13 @@ public class Player implements Entity {
         pFixDef.shape = circle;
         pFixDef.density = 0;
         pFixDef.friction = 0;
-        pFixDef.restitution = 10f;
+        pFixDef.restitution = 0f;
         playerFixture = playerCollider.createFixture(pFixDef);
         circle.dispose();
     }
 
     private void handleInput(){
+        //THESE ARE ALL TEMPORARY
         if(Gdx.input.isKeyJustPressed(Input.Keys.W)){
             playerCollider.applyLinearImpulse(new Vector2(0, 10000), new Vector2(xLoc, yLoc), false);
         }
@@ -69,6 +71,5 @@ public class Player implements Entity {
         if(Gdx.input.isKeyJustPressed(Input.Keys.A)){
             playerCollider.applyLinearImpulse(new Vector2( -10000, 0), new Vector2(xLoc, yLoc), false);
         }
-
     }
 }

@@ -38,19 +38,20 @@ public class UpdateThread extends Thread{
     @Override
     public void run() {
 
-        long startTime = System.currentTimeMillis();
-        long prevFrameTime;
-
+        double frameStartTime = System.currentTimeMillis();
+        double frameDuration;
+        double remainder;
         while(running){
             try {
-                prevFrameTime = System.currentTimeMillis() - startTime;
-                startTime = System.currentTimeMillis();
+                frameStartTime = System.currentTimeMillis();
 
-                long remainder = (long)(1/RunConstants.MAX_UPS - (prevFrameTime / 1000f)) * 1000;
-                if (remainder > 0) {
-                    Thread.sleep(remainder);
-                }
                 update();
+
+                frameDuration = System.currentTimeMillis() - frameStartTime;
+                remainder = (1f/RunConstants.MAX_UPS - (frameDuration / 1000f)) * 1000f;
+                if (remainder > 0) {
+                    Thread.sleep((long) remainder);
+                }
             }catch (InterruptedException e){
                 e.printStackTrace();
             }
@@ -62,10 +63,8 @@ public class UpdateThread extends Thread{
     }
 
     private void update() {
-
         gameStateManager.update();
         stepWorld();
-
 
     }
     private void stepWorld() {
