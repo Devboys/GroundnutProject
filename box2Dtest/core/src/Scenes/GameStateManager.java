@@ -1,28 +1,110 @@
 package Scenes;
 
-import Scenes.Scene;
-import Scenes.TestScene;
-
 public class GameStateManager {
 
-    TestScene mScene;
+    //enum of possible states
+    public enum Scenes {Test}
+
 
     //Scene Management
-    Scene currentScene;
+    private Scene[] sceneArray;
+    private int currentSceneIndex;
 
     public GameStateManager(){
-        mScene = new TestScene();
+        sceneArray = new Scene[Scenes.values().length];
+
+        //setup testScene as initial scene.
+        currentSceneIndex = Scenes.Test.ordinal();
+        sceneArray[currentSceneIndex] = new TestScene();
     }
 
-    public void init(){
-        mScene.init();
+    /** Tells the GameStateManager to create and initialize a new Scene of the given type.
+     * Only one of each type of Scene can be loaded at a time.
+     * Calling loadScene on an already loaded Scene will re-initialize it.
+     * @param scene An element in the enum GameStateManager.Scenes.
+     */
+    public void loadScene(Scenes scene){
+        int sceneIndex;
+
+        switch (scene){
+            case Test:
+                sceneIndex = Scenes.Test.ordinal();
+                sceneArray[sceneIndex] = new TestScene();
+                sceneArray[sceneIndex].init();
+                break;
+
+            default:
+                System.out.println("UNKNOWN SCENE TYPE");
+        }
     }
 
-    public void update(){
-        mScene.update();
+    /** Tells the GameStateManager to drop all reference to the selected scene type. This will free up memory but also
+     * delete scene and drop all state-data related to that scene. The scene will have to be reloaded if needed again.
+     * @param scene An element in the enum GameStateManager.Scenes.
+     */
+    public void unloadScene(Scenes scene){
+        int sceneIndex;
+
+        switch (scene){
+            case Test:
+                sceneIndex = Scenes.Test.ordinal();
+                sceneArray[sceneIndex] = null;
+                break;
+
+            default:
+                System.out.println("UNKNOWN SCENE TYPE");
+        }
     }
 
-    public void render() {
-        mScene.render();
+    /** Tells the GameStateManager to distribute all init(), update() and render() calls to the Scene. This will not
+     * method will not initialize anything, so make sure a scene is loaded before you try to change it.
+     * @param scene An element in the enum GameStateManager.Scenes.
+     */
+    public void changeScene(Scenes scene){
+        int sceneIndex;
+
+        switch(scene){
+            case Test:
+                sceneIndex = Scenes.Test.ordinal();
+                currentSceneIndex = sceneIndex;
+                break;
+
+            default:
+                System.out.println("UNKNOWN SCENE TYPE");
+        }
+
+    }
+
+    /** Calls init() on whichever scene is the current scene.
+     * @throws NoSceneLoadedException
+     */
+    public void init() throws NoSceneLoadedException{
+        if(sceneArray[currentSceneIndex] != null ) sceneArray[currentSceneIndex].init();
+
+        else {
+            throw new NoSceneLoadedException("No Scene loaded at current Scene index in GameStateManger.init()");
+        }
+    }
+
+    /** Calls update() on whichever scene is the current scene.
+     * @throws NoSceneLoadedException
+     */
+    public void update() throws NoSceneLoadedException{
+        if(sceneArray[currentSceneIndex] != null ) sceneArray[currentSceneIndex].update();
+
+        else {
+            throw new NoSceneLoadedException("No Scene loaded at current Scene index in GameStateManger.init()");
+        }
+    }
+
+    /** Calls render() on whichever scene is the current scene.
+     * @throws NoSceneLoadedException
+     */
+    public void render() throws NoSceneLoadedException {
+        if(sceneArray[currentSceneIndex] != null ) sceneArray[currentSceneIndex].render();
+
+        else {
+            throw new NoSceneLoadedException("No Scene loaded at current Scene index in GameStateManger.init()");
+        }
     }
 }

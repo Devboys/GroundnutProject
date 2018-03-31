@@ -3,6 +3,7 @@ package Groundnut;
 
 import Constants.RunConstants;
 import Scenes.GameStateManager;
+import Scenes.NoSceneLoadedException;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
@@ -14,8 +15,6 @@ public class UpdateThread extends Thread{
     //physics Stepping variables
     static final int VELOCITY_ITERATIONS = 6;
     static final int POSITION_ITERATIONS = 2;
-    float accumulator = 0;
-    double frameTime;
 
     //Box2Dtest Variables
     public static World theWorld ;
@@ -38,7 +37,6 @@ public class UpdateThread extends Thread{
         theWorld = new World(new Vector2(xAcceleration, yAcceleration), true);
         gameStateManager = gm;
 
-        frameTime = System.currentTimeMillis();
         running = true;
     }
 
@@ -77,20 +75,24 @@ public class UpdateThread extends Thread{
     }
 
     private void update() {
-        gameStateManager.update();
+        try {
+            gameStateManager.update();
+        } catch (NoSceneLoadedException e) {
+            e.printStackTrace();
+        }
         theWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 
     }
 
-    private void stepWorld() {
-        float delta =(float) ((System.currentTimeMillis() - frameTime) / 1000f);
-        frameTime = System.currentTimeMillis();
-
-        accumulator += Math.min(delta, 0.25f);
-
-        if (accumulator >= STEP_TIME) {
-            accumulator -= STEP_TIME;
-            theWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-        }
-    }
+//    private void stepWorld() {
+//        float delta =(float) ((System.currentTimeMillis() - frameTime) / 1000f);
+//        frameTime = System.currentTimeMillis();
+//
+//        accumulator += Math.min(delta, 0.25f);
+//
+//        if (accumulator >= STEP_TIME) {
+//            accumulator -= STEP_TIME;
+//            theWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+//        }
+//    }
 }

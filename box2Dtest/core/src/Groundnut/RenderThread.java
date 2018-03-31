@@ -2,6 +2,7 @@ package Groundnut;
 
 import Constants.ScreenConstants;
 import Scenes.GameStateManager;
+import Scenes.NoSceneLoadedException;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -42,7 +43,11 @@ public class RenderThread extends ApplicationAdapter {
 	}
 
 	public void init() {
-        gameStateManager.init();
+        try {
+            gameStateManager.init();
+        } catch (NoSceneLoadedException e) {
+            e.printStackTrace();
+        }
     }
 
 	@Override
