@@ -10,14 +10,30 @@ public class TestScene extends Scene {
 
     int wallSize = 10;
 
+    private Wall northBorder;
+    private Wall southBorder;
+    private Wall eastBorder;
+    private Wall westBorder;
+
+    private Player player;
+
     public TestScene(){
         super();
 
-        entities.add(new Player(EntityConstants.PLAYER_INIT_X, EntityConstants.PLAYER_INIT_Y));
-        entities.add(new Wall(0, wallSize, ScreenConstants.CAM_WIDTH, wallSize));
-        entities.add(new Wall(wallSize, 0, wallSize, ScreenConstants.CAM_HEIGHT));
-        entities.add(new Wall((ScreenConstants.CAM_WIDTH - wallSize), 0, wallSize, ScreenConstants.CAM_HEIGHT));
-        entities.add(new Wall(0, ScreenConstants.CAM_HEIGHT - wallSize, ScreenConstants.CAM_WIDTH, wallSize));
+        northBorder = new Wall(0, ScreenConstants.CAM_HEIGHT - wallSize, ScreenConstants.CAM_WIDTH, wallSize);
+        southBorder = new Wall(0, wallSize, ScreenConstants.CAM_WIDTH, wallSize);
+        eastBorder = new Wall((ScreenConstants.CAM_WIDTH - wallSize), 0, wallSize, ScreenConstants.CAM_HEIGHT);
+        westBorder = new Wall(wallSize, 0, wallSize, ScreenConstants.CAM_HEIGHT);
+        player = new Player(EntityConstants.PLAYER_INIT_X, EntityConstants.PLAYER_INIT_Y);
+
+        entities.add(northBorder);
+        entities.add(southBorder);
+        entities.add(eastBorder);
+        entities.add(westBorder);
+        entities.add(player);
+
+        entities.add(new Player(100, 200));
+        entities.add(new Player(wallSize, 200));
     }
 
     @Override

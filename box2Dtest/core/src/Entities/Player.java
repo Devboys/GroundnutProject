@@ -50,7 +50,7 @@ public class Player implements Entity {
         pFixDef.shape = circle;
         pFixDef.density = 0;
         pFixDef.friction = 0;
-        pFixDef.restitution = 0f;
+        pFixDef.restitution = 1f;
         playerFixture = playerCollider.createFixture(pFixDef);
         circle.dispose();
     }
@@ -60,6 +60,7 @@ public class Player implements Entity {
         if(Gdx.input.isKeyJustPressed(Input.Keys.W)){
             playerCollider.applyLinearImpulse(new Vector2(0, 10000), new Vector2(xLoc, yLoc), true);
         }
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.S)){
             playerCollider.applyLinearImpulse(new Vector2(0, -10000), new Vector2(xLoc, yLoc), true);
         }

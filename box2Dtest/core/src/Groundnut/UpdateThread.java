@@ -2,7 +2,7 @@ package Groundnut;
 
 
 import Constants.RunConstants;
-import Constants.ScreenConstants;
+import Scenes.GameStateManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
@@ -23,14 +23,21 @@ public class UpdateThread extends Thread{
     private static final int xAcceleration = 0;
     private static final int yAcceleration = 0;
 
+
+    //time-step variables
+    private static double optimalFrameDuration  = Math.pow(10,9) / RunConstants.UPS;
+    private static final int MAX_FRAMESKIPS  = 10;
+
     GameStateManager gameStateManager;
 
     boolean running;
 
     public UpdateThread(GameStateManager gm){
+
         Box2D.init();
         theWorld = new World(new Vector2(xAcceleration, yAcceleration), true);
         gameStateManager = gm;
+
         frameTime = System.currentTimeMillis();
         running = true;
     }
@@ -38,22 +45,29 @@ public class UpdateThread extends Thread{
     @Override
     public void run() {
 
-        double frameStartTime = System.currentTimeMillis();
-        double frameDuration;
-        double remainder;
-        while(running){
-            try {
-                frameStartTime = System.currentTimeMillis();
+        double currentTime = System.nanoTime();
+        double newTime;
+        double frameTime;
+        double timeSinceLastUpdate = 0.0;
 
+        while(running){
+            //Time previous frame duration
+            newTime = System.nanoTime();
+            frameTime = newTime - currentTime;
+            currentTime = newTime;
+
+            //keep track of how much time has passed since the last update was performed.
+            timeSinceLastUpdate += frameTime;
+
+            //When enough time has passed since the last update, update again. Cap the number of ticks pr. frame
+            //to avoid spiraling to death.
+            int iterations = 0;
+            while(timeSinceLastUpdate >= optimalFrameDuration && iterations < MAX_FRAMESKIPS){
                 update();
 
-                frameDuration = System.currentTimeMillis() - frameStartTime;
-                remainder = (1f/RunConstants.MAX_UPS - (frameDuration / 1000f)) * 1000f;
-                if (remainder > 0) {
-                    Thread.sleep((long) remainder);
-                }
-            }catch (InterruptedException e){
-                e.printStackTrace();
+                //when updated, do a 'soft-reset' on time since last update, but leave remainder of un-simulated time.
+                timeSinceLastUpdate -= optimalFrameDuration;
+                iterations++;
             }
         }
     }
@@ -64,9 +78,11 @@ public class UpdateThread extends Thread{
 
     private void update() {
         gameStateManager.update();
-        stepWorld();
+        theWorld.step((float)optimalFrameDuration, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+        //stepWorld();
 
     }
+    
     private void stepWorld() {
         float delta =(float) ((System.currentTimeMillis() - frameTime) / 1000f);
         frameTime = System.currentTimeMillis();
@@ -75,7 +91,6 @@ public class UpdateThread extends Thread{
 
         if (accumulator >= STEP_TIME) {
             accumulator -= STEP_TIME;
-
             theWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
         }
     }
