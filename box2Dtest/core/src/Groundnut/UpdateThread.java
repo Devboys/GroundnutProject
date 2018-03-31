@@ -12,7 +12,6 @@ import com.badlogic.gdx.physics.box2d.*;
 public class UpdateThread extends Thread{
 
     //physics Stepping variables
-    static final float STEP_TIME = 1f / 60f;
     static final int VELOCITY_ITERATIONS = 6;
     static final int POSITION_ITERATIONS = 2;
     float accumulator = 0;
@@ -26,6 +25,7 @@ public class UpdateThread extends Thread{
 
     //time-step variables
     private static double optimalFrameDuration  = Math.pow(10,9) / RunConstants.UPS;
+    static final float STEP_TIME = (float) (optimalFrameDuration / Math.pow(10, 9));
     private static final int MAX_FRAMESKIPS  = 10;
 
     GameStateManager gameStateManager;
@@ -78,11 +78,10 @@ public class UpdateThread extends Thread{
 
     private void update() {
         gameStateManager.update();
-        theWorld.step((float)optimalFrameDuration, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-        //stepWorld();
+        theWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 
     }
-    
+
     private void stepWorld() {
         float delta =(float) ((System.currentTimeMillis() - frameTime) / 1000f);
         frameTime = System.currentTimeMillis();
