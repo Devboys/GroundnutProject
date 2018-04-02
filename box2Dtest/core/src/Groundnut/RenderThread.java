@@ -2,7 +2,7 @@ package Groundnut;
 
 import Constants.ScreenConstants;
 import Scenes.GameStateManager;
-import Scenes.NoSceneLoadedException;
+import Scenes.SceneNotLoadedException;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -37,18 +37,7 @@ public class RenderThread extends ApplicationAdapter {
 
         //setup test rendering
         testRender = new Box2DDebugRenderer();
-
-        //initialize all dependent values
-        init();
 	}
-
-	public void init() {
-        try {
-            gameStateManager.init();
-        } catch (NoSceneLoadedException e) {
-            e.printStackTrace();
-        }
-    }
 
 	@Override
 	public void render () {

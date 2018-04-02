@@ -1,21 +1,22 @@
 package Scenes;
 
+import Groundnut.UpdateThread;
+
 public class GameStateManager {
 
     //enum of possible states
     public enum Scenes {Test}
 
-
     //Scene Management
     private Scene[] sceneArray;
-    private int currentSceneIndex;
+    private int currentSceneIndex = -99;
 
     public GameStateManager(){
         sceneArray = new Scene[Scenes.values().length];
 
         //setup testScene as initial scene.
-        currentSceneIndex = Scenes.Test.ordinal();
-        sceneArray[currentSceneIndex] = new TestScene();
+        loadScene(Scenes.Test);
+        changeScene(Scenes.Test);
     }
 
     /** Tells the GameStateManager to create and initialize a new Scene of the given type.
@@ -24,17 +25,19 @@ public class GameStateManager {
      * @param scene An element in the enum GameStateManager.Scenes.
      */
     public void loadScene(Scenes scene){
-        int sceneIndex;
+        int sceneIndex = -1;
 
         switch (scene){
             case Test:
                 sceneIndex = Scenes.Test.ordinal();
                 sceneArray[sceneIndex] = new TestScene();
-                sceneArray[sceneIndex].init();
                 break;
-
             default:
                 System.out.println("UNKNOWN SCENE TYPE");
+        }
+
+        if(currentSceneIndex != -99){
+            sceneArray[sceneIndex].init();
         }
     }
 
@@ -76,35 +79,35 @@ public class GameStateManager {
     }
 
     /** Calls init() on whichever scene is the current scene.
-     * @throws NoSceneLoadedException
+     * @throws SceneNotLoadedException
      */
-    public void init() throws NoSceneLoadedException{
+    public void init() throws SceneNotLoadedException {
         if(sceneArray[currentSceneIndex] != null ) sceneArray[currentSceneIndex].init();
 
         else {
-            throw new NoSceneLoadedException("No Scene loaded at current Scene index in GameStateManger.init()");
+            throw new SceneNotLoadedException("No Scene loaded at current Scene index in GameStateManger.init()");
         }
     }
 
     /** Calls update() on whichever scene is the current scene.
-     * @throws NoSceneLoadedException
+     * @throws SceneNotLoadedException
      */
-    public void update() throws NoSceneLoadedException{
+    public void update() throws SceneNotLoadedException {
         if(sceneArray[currentSceneIndex] != null ) sceneArray[currentSceneIndex].update();
 
         else {
-            throw new NoSceneLoadedException("No Scene loaded at current Scene index in GameStateManger.init()");
+            throw new SceneNotLoadedException("No Scene loaded at current Scene index in GameStateManger.init()");
         }
     }
 
     /** Calls render() on whichever scene is the current scene.
-     * @throws NoSceneLoadedException
+     * @throws SceneNotLoadedException
      */
-    public void render() throws NoSceneLoadedException {
+    public void render() throws SceneNotLoadedException {
         if(sceneArray[currentSceneIndex] != null ) sceneArray[currentSceneIndex].render();
 
         else {
-            throw new NoSceneLoadedException("No Scene loaded at current Scene index in GameStateManger.init()");
+            throw new SceneNotLoadedException("No Scene loaded at current Scene index in GameStateManger.init()");
         }
     }
 }

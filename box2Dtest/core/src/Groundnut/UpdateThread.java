@@ -3,7 +3,7 @@ package Groundnut;
 
 import Constants.RunConstants;
 import Scenes.GameStateManager;
-import Scenes.NoSceneLoadedException;
+import Scenes.SceneNotLoadedException;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
@@ -29,15 +29,24 @@ public class UpdateThread extends Thread{
 
     GameStateManager gameStateManager;
 
-    boolean running;
+    private boolean running;
 
     public UpdateThread(GameStateManager gm){
-
+        //initialize independent values
         Box2D.init();
         theWorld = new World(new Vector2(xAcceleration, yAcceleration), true);
         gameStateManager = gm;
 
-        running = true;
+        //initialize all dependent values
+        init();
+    }
+
+    public void init() {
+        try {
+            gameStateManager.init();
+        } catch (SceneNotLoadedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -47,6 +56,8 @@ public class UpdateThread extends Thread{
         double newTime;
         double frameTime;
         double timeSinceLastUpdate = 0.0;
+
+        running = true;
 
         while(running){
             //Time previous frame duration
@@ -77,7 +88,7 @@ public class UpdateThread extends Thread{
     private void update() {
         try {
             gameStateManager.update();
-        } catch (NoSceneLoadedException e) {
+        } catch (SceneNotLoadedException e) {
             e.printStackTrace();
         }
         theWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
