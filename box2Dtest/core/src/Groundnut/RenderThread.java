@@ -44,7 +44,12 @@ public class RenderThread extends ApplicationAdapter {
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        testRender.render(UpdateThread.theWorld, camera.combined);
+        try {
+            testRender.render(UpdateThread.theWorld, camera.combined);
+            gameStateManager.render();
+        }catch (SceneNotLoadedException e){
+            e.printStackTrace();
+        }
 	}
 
 	@Override

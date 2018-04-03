@@ -2,6 +2,7 @@ package Scenes;
 
 import Constants.EntityConstants;
 import Constants.ScreenConstants;
+import Entities.ControllablePlayer;
 import Entities.Entity;
 import Entities.Player;
 import Entities.Wall;
@@ -34,8 +35,7 @@ public class TestScene extends Scene {
 
         entities.add(new Player(100, 200));
         entities.add(new Player(wallSize, 200));
-
-        System.out.println("TESTSCENE HERE");
+        entities.add(new ControllablePlayer(200, 200));
     }
 
     @Override
@@ -50,14 +50,19 @@ public class TestScene extends Scene {
         for(Entity e : entities){
             e.update(gsm);
         }
-
-        gsm.loadScene(GameStateManager.Scenes.MENU);
     }
 
     @Override
     public void render() {
         for(Entity e : entities){
             e.render();
+        }
+    }
+
+    @Override
+    public void destroy() {
+        for(Entity e : entities){
+            e.destroy();
         }
     }
 }

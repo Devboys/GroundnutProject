@@ -14,6 +14,8 @@ public class Wall implements Entity {
     private int width;
     private int height;
 
+    private Body groundBody;
+
     public Wall(int x, int y, int w, int h){
         xLoc = x;
         yLoc = y;
@@ -32,12 +34,17 @@ public class Wall implements Entity {
     @Override
     public void render() {}
 
+    @Override
+    public void destroy() {
+        UpdateThread.theWorld.destroyBody(groundBody);
+    }
+
     private void setupPhysics(){
         //define floor(static)
         BodyDef groundDef = new BodyDef();
         groundDef.position.set(xLoc, yLoc);
 
-        Body groundBody = UpdateThread.theWorld.createBody(groundDef);
+        groundBody = UpdateThread.theWorld.createBody(groundDef);
         groundBody.setType(BodyDef.BodyType.StaticBody);
 
         PolygonShape groundBox = new PolygonShape();

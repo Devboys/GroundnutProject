@@ -1,6 +1,7 @@
 package Entities;
 
 import Groundnut.UpdateThread;
+import Input.PlayerInputHandler;
 import Scenes.GameStateManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -13,8 +14,8 @@ public class Player implements Entity {
     int yLoc;
 
     //box2D Physics collision
-    Body playerCollider;
-    Fixture playerFixture;
+    protected Body playerCollider;
+    private Fixture playerFixture;
 
     public Player(int initX, int initY) {
         xLoc = initX;
@@ -28,7 +29,6 @@ public class Player implements Entity {
     @Override
     public void update(GameStateManager gsm) {
         //handle input (change collider position)
-        handleInput(gsm);
 
         //get positions from collider
 
@@ -37,6 +37,11 @@ public class Player implements Entity {
 
     @Override
     public void render() {}
+
+    @Override
+    public void destroy() {
+        UpdateThread.theWorld.destroyBody(playerCollider);
+    }
 
     private void setupPhysics() {
         //Define player body
@@ -57,33 +62,4 @@ public class Player implements Entity {
         circle.dispose();
     }
 
-    private void handleInput(GameStateManager gsm){
-
-        //THESE ARE ALL TEMPORARY, IMPLEMENT EVENTHANDLING INSTEAD LATER
-        if(Gdx.input.isKeyJustPressed(Input.Keys.W)){
-            playerCollider.setLinearVelocity(0,0);
-            playerCollider.setAngularVelocity(0);
-            playerCollider.applyLinearImpulse(new Vector2(0, 100), new Vector2(xLoc, yLoc), true);
-
-            gsm.changeScene(GameStateManager.Scenes.MENU);
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.S)){
-            playerCollider.setLinearVelocity(0,0);
-            playerCollider.setAngularVelocity(0);
-            playerCollider.applyLinearImpulse(new Vector2(0, -100), new Vector2(xLoc, yLoc), true);
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.D)){
-            playerCollider.setLinearVelocity(0,0);
-            playerCollider.setAngularVelocity(0);
-            playerCollider.applyLinearImpulse(new Vector2( 100, 0), new Vector2(xLoc, yLoc), true);
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.A)){
-            playerCollider.setLinearVelocity(0,0);
-            playerCollider.setAngularVelocity(0);
-            playerCollider.applyLinearImpulse(new Vector2( -100, 0), new Vector2(xLoc, yLoc), true);
-        }
-    }
 }
