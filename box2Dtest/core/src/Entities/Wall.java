@@ -2,6 +2,7 @@ package Entities;
 
 import Constants.ScreenConstants;
 import Groundnut.UpdateThread;
+import Scenes.GameStateManager;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -26,7 +27,7 @@ public class Wall implements Entity {
     }
 
     @Override
-    public void update() {}
+    public void update(GameStateManager gsm) {}
 
     @Override
     public void render() {}

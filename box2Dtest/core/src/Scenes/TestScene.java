@@ -34,6 +34,8 @@ public class TestScene extends Scene {
 
         entities.add(new Player(100, 200));
         entities.add(new Player(wallSize, 200));
+
+        System.out.println("TESTSCENE HERE");
     }
 
     @Override
@@ -44,10 +46,12 @@ public class TestScene extends Scene {
     }
 
     @Override
-    public void update() {
+    public void update(GameStateManager gsm) {
         for(Entity e : entities){
-            e.update();
+            e.update(gsm);
         }
+
+        gsm.loadScene(GameStateManager.Scenes.MENU);
     }
 
     @Override

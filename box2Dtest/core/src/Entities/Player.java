@@ -1,6 +1,8 @@
 package Entities;
 
 import Groundnut.UpdateThread;
+import Scenes.GameStateManager;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
@@ -24,9 +26,9 @@ public class Player implements Entity {
     }
 
     @Override
-    public void update() {
+    public void update(GameStateManager gsm) {
         //handle input (change collider position)
-        handleInput();
+        handleInput(gsm);
 
         //get positions from collider
 
@@ -55,13 +57,15 @@ public class Player implements Entity {
         circle.dispose();
     }
 
-    private void handleInput(){
+    private void handleInput(GameStateManager gsm){
 
         //THESE ARE ALL TEMPORARY, IMPLEMENT EVENTHANDLING INSTEAD LATER
         if(Gdx.input.isKeyJustPressed(Input.Keys.W)){
             playerCollider.setLinearVelocity(0,0);
             playerCollider.setAngularVelocity(0);
             playerCollider.applyLinearImpulse(new Vector2(0, 100), new Vector2(xLoc, yLoc), true);
+
+            gsm.changeScene(GameStateManager.Scenes.MENU);
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.S)){
