@@ -1,15 +1,14 @@
 package Input;
 
-import Entities.ControllablePlayer;
 import Entities.Player;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 
 public class PlayerInputHandler extends InputAdapter {
 
-    ControllablePlayer player;
+    Player player;
 
-    public PlayerInputHandler(ControllablePlayer p){
+    public PlayerInputHandler(Player p){
         player = p;
     }
 
@@ -18,16 +17,16 @@ public class PlayerInputHandler extends InputAdapter {
 
         switch (keyCode){
             case Input.Keys.W:
-                player.moveNorth(true);
+                player.setMovingNorth(true);
                 break;
             case Input.Keys.S:
-                player.moveSouth(true);
+                player.setMovingSouth(true);
                 break;
             case Input.Keys.D:
-                player.moveEast(true);
+                player.setMovingEast(true);
                 break;
             case Input.Keys.A:
-                player.moveWest(true);
+                player.setMovingWest(true);
                 break;
         }
 
@@ -39,16 +38,16 @@ public class PlayerInputHandler extends InputAdapter {
 
         switch (keyCode){
             case Input.Keys.W:
-                player.moveNorth(false);
+                player.setMovingNorth(false);
                 break;
             case Input.Keys.S:
-                player.moveSouth(false);
+                player.setMovingSouth(false);
                 break;
             case Input.Keys.D:
-                player.moveEast(false);
+                player.setMovingEast(false);
                 break;
             case Input.Keys.A:
-                player.moveWest(false);
+                player.setMovingWest(false);
                 break;
         }
 

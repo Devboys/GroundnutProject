@@ -2,7 +2,6 @@ package Scenes;
 
 import Constants.EntityConstants;
 import Constants.ScreenConstants;
-import Entities.ControllablePlayer;
 import Entities.Entity;
 import Entities.Player;
 import Entities.Wall;
@@ -35,7 +34,7 @@ public class TestScene extends Scene {
 
         entities.add(new Player(100, 200));
         entities.add(new Player(wallSize, 200));
-        entities.add(new ControllablePlayer(200, 200));
+        entities.add(new Player(200, 200));
     }
 
     @Override
