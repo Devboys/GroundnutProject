@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.groudnut.client;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -33,7 +33,7 @@ public class ClientGraphics extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		playerPositions = ClientListenerThread.getPositions();
+		playerPositions = ClientInputThread.getPositions();
 
 		renderer.begin(ShapeRenderer.ShapeType.Filled);
 		renderer.setColor(Color.CYAN);
@@ -56,7 +56,4 @@ public class ClientGraphics extends ApplicationAdapter {
 		batch.dispose();
 		img.dispose();
 	}
-
-
-
 }

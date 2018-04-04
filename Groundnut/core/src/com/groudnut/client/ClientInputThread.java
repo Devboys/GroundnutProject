@@ -1,30 +1,28 @@
-package com.mygdx.game;
+package com.groudnut.client;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.util.ArrayList;
+import com.groudnut.server.NetworkHandler;
 
-public class ClientListenerThread extends Thread {
+public class ClientInputThread extends Thread {
 
     private MulticastSocket multiSocket;
-    private InetAddress groupAdress;
+    private InetAddress groupAddress;
 
     String packetInputData;
 
     private static int[][] playerPositions = new int[4][2];
 
-    static int coordX = 50;
-    static int coordY = 50;
+    static int coordX = 250;
+    static int coordY = 250;
 
-    int clientPort = 24001;
-
-    public ClientListenerThread() {
+    public ClientInputThread() {
         try {
-            multiSocket = new MulticastSocket(clientPort);
-            groupAdress = InetAddress.getByName("230.0.0.0");
-            multiSocket.joinGroup(groupAdress);
+            multiSocket = NetworkHandler.getMultiSocket();
+            groupAddress = NetworkHandler.getGroup();
+            multiSocket.joinGroup(groupAddress);
         }catch(IOException e){
             //handle this exception
         }
@@ -36,14 +34,11 @@ public class ClientListenerThread extends Thread {
         while(running) {
             try {
                 byte[] buffer = new byte[256];
-                DatagramPacket readPacket = new DatagramPacket(buffer, buffer.length);
-                multiSocket.receive(readPacket);
-
-                System.out.println("package received");
-
-                packetInputData = new String(readPacket.getData());
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                multiSocket.receive(packet);
+                System.out.println("Package received " + packet.getAddress() + " : " + packet.getPort());
+                packetInputData = new String(packet.getData());
                 System.out.println(packetInputData);
-
                 String[] stringCoords = packetInputData.split("@");
                 System.out.println(stringCoords.length);
 
