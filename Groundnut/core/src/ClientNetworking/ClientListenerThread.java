@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package ClientNetworking;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

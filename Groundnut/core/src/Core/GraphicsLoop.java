@@ -1,5 +1,6 @@
-package com.mygdx.game;
+package Core;
 
+import ClientNetworking.ClientListenerThread;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -18,9 +19,6 @@ public class GraphicsLoop extends ApplicationAdapter {
 	ShapeRenderer renderer;
 
 	int[][] playerPositions = new int[4][2];
-
-
-	//box2Dtestin
 
 	int circleR = 10;
 	

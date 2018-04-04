@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package ClientNetworking;
 
 import com.badlogic.gdx.Gdx;
 
