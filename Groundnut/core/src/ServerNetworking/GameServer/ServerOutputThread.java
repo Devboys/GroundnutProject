@@ -1,4 +1,4 @@
-package com.groudnut.server;
+package ServerNetworking.GameServer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package Code;
+package ServerNetworking.LobbyServer;
 
 import java.io.*;
 import java.net.ServerSocket;

@@ -1,4 +1,4 @@
-package com.groudnut.client;
+package ClientNetworking.GameClient;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import com.groudnut.server.ServerHandler;
+import ServerNetworking.GameServer.ServerHandler;
 
 public class ClientInputThread extends Thread {
 
@@ -47,8 +47,7 @@ public class ClientInputThread extends Thread {
 
                 try {
                     Object readObjectFromServer = ois.readObject();
-
-                        System.out.println("CLIENT Message is: " + readObjectFromServer);
+                    System.out.println("CLIENT Message is: " + readObjectFromServer);
 
                 } catch (Exception e){
                     System.out.println("CLIENT No object read from UDP Datagram");
@@ -56,6 +55,7 @@ public class ClientInputThread extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             try {
                 Thread.sleep(ServerHandler.getTickRate());
             } catch (InterruptedException e) {

@@ -1,4 +1,4 @@
-package com.groudnut.client;
+package ClientNetworking.GameClient;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

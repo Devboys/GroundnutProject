@@ -1,14 +1,14 @@
-package com.groudnut.client;
+package ClientNetworking.LobbyClient;
 
 import java.util.Scanner;
 
-public class CommandopromtListener extends Thread {
+public class CommandPromptListener extends Thread {
 
     Scanner scanner;
     LobbyClientMain parent;
 
 
-    public CommandopromtListener(LobbyClientMain parent){
+    public CommandPromptListener(LobbyClientMain parent){
         scanner = new Scanner(System.in);
         this.parent = parent;
     }

@@ -1,4 +1,4 @@
-package com.groudnut.client;
+package ClientNetworking.LobbyClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class LobbyClientMain {
         }
         ChatAndCommandThread thread1 = new ChatAndCommandThread(this);
         thread1.start();
-        CommandopromtListener thread2 = new CommandopromtListener(this);
+        CommandPromptListener thread2 = new CommandPromptListener(this);
         thread2.start();
 
 

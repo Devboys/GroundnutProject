@@ -1,4 +1,4 @@
-package com.groudnut.client;
+package ClientNetworking.LobbyClient;
 
 import java.io.IOException;
 

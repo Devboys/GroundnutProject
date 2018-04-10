@@ -1,9 +1,7 @@
-package com.groudnut.server;
-import com.groudnut.client.ClientOutput;
-import com.sun.security.ntlm.Server;
+package ServerNetworking.GameServer;
+import ClientNetworking.GameClient.ClientOutput;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class GameState implements Serializable {
 

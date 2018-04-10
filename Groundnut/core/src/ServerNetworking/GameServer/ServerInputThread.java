@@ -1,6 +1,6 @@
-package com.groudnut.server;
+package ServerNetworking.GameServer;
 
-import com.groudnut.client.ClientOutput;
+import ClientNetworking.GameClient.ClientOutput;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -47,7 +47,8 @@ public class ServerInputThread extends Thread {
                     ClientOutput serverInput = (ClientOutput) objectFromClient;
                     if (playerIPs.isEmpty()){
                         ServerHandler.addIP(serverInput.getClientIP());
-                    } else if(!playerIPs.isEmpty() && ServerHandler.getConnectedPlayers() < 4){
+                    }
+                    else if(!playerIPs.isEmpty() && ServerHandler.getConnectedPlayers() < 4){
                         for(int i = 0; i < ServerHandler.getMaxPlayerCount(); i++) {
                             if(serverInput.getClientIP() != playerIPs.get(i)){
                                 ServerHandler.addIP(serverInput.getClientIP());
