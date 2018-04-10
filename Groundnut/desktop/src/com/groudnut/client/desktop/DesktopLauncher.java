@@ -15,24 +15,6 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		new LwjglApplication(new ClientGraphics(), config);
 
-		try {
-			ClientInfo clientInfo = new ClientInfo();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		ServerHandler serverHandler = new ServerHandler();
-
-		ServerInputThread serverInput = new ServerInputThread();
-		ServerOutputThread serverOutput = null;
-		try {
-			serverOutput = new ServerOutputThread();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		serverInput.start();
-		serverOutput.start();
-
 		ClientInputThread clientInput = new ClientInputThread();
 		ClientOutputThread clientOutput = new ClientOutputThread();
 		clientInput.start();
