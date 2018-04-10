@@ -2,10 +2,7 @@ package com.groudnut.client.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.groudnut.client.ClientGraphics;
-import com.groudnut.client.ClientInfo;
-import com.groudnut.client.ClientInputThread;
-import com.groudnut.client.ClientOutputThread;
+import com.groudnut.client.*;
 import com.groudnut.server.ServerHandler;
 import com.groudnut.server.ServerInputThread;
 import com.groudnut.server.ServerOutputThread;
@@ -40,5 +37,8 @@ public class DesktopLauncher {
 		ClientOutputThread clientOutput = new ClientOutputThread();
 		clientInput.start();
 		clientOutput.start();
+
+		LobbyClientMain lcm = new LobbyClientMain();
+
 	}
 }
