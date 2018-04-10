@@ -1,74 +1,66 @@
 package com.groudnut.client;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import com.groudnut.server.NetworkHandler;
+import com.groudnut.server.ServerHandler;
 
 public class ClientInputThread extends Thread {
 
-    private MulticastSocket multiSocket;
-    private InetAddress groupAddress;
+    //String packetInputData;
+    //private static int[][] playerPositions = new int[4][2];
+    //static int coordX = 250;
+    //static int coordY = 250;
+    final int bufferSize = 1024;
 
-    String packetInputData;
-
-    private static int[][] playerPositions = new int[4][2];
-
-    static int coordX = 250;
-    static int coordY = 250;
-
+    //Create Socket
+    private MulticastSocket udpMulticastSocket;
+    private int multicastPort;
+    private InetAddress multicastGroup;
     public ClientInputThread() {
         try {
-            multiSocket = NetworkHandler.getMultiSocket();
-            groupAddress = NetworkHandler.getGroup();
-            multiSocket.joinGroup(groupAddress);
+            multicastPort = ServerHandler.getMulticastPort();
+            multicastGroup = InetAddress.getByName(ServerHandler.getGroup());
+            udpMulticastSocket = new MulticastSocket(multicastPort);
+            udpMulticastSocket.joinGroup(multicastGroup);
         }catch(IOException e){
-            //handle this exception
+            //Handle
         }
     }
 
+    //Receive data
     @Override
     public void run() {
-        boolean running = true;
-        while(running) {
+        while(true) {
+            System.out.println("CLIENT Waiting for datagram to be received...");
             try {
-                byte[] buffer = new byte[256];
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-                multiSocket.receive(packet);
-                System.out.println("Package received " + packet.getAddress() + " : " + packet.getPort());
-                packetInputData = new String(packet.getData());
-                System.out.println(packetInputData);
-                String[] stringCoords = packetInputData.split("@");
-                System.out.println(stringCoords.length);
+                byte[] buffer = new byte[bufferSize];
+                udpMulticastSocket.receive(new DatagramPacket(buffer, bufferSize, multicastGroup, multicastPort));
+                System.out.println("CLIENT Datagram received");
 
-                playerPositions[0][0] = Integer.parseInt(stringCoords[1]);
-                playerPositions[0][1] = Integer.parseInt(stringCoords[2]);
+                //Deserialize object
+                ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+                ObjectInputStream ois = new ObjectInputStream(bais);
 
-                playerPositions[1][0] = Integer.parseInt(stringCoords[3]);
-                playerPositions[1][1] = Integer.parseInt(stringCoords[4]);
+                try {
+                    Object readObjectFromServer = ois.readObject();
 
-                playerPositions[2][0] = Integer.parseInt(stringCoords[5]);
-                playerPositions[2][1] = Integer.parseInt(stringCoords[6]);
+                        System.out.println("CLIENT Message is: " + readObjectFromServer);
 
-                playerPositions[3][0] = Integer.parseInt(stringCoords[7]);
-                playerPositions[3][1] = Integer.parseInt(stringCoords[8]);
-
+                } catch (Exception e){
+                    System.out.println("CLIENT No object read from UDP Datagram");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            try {
+                Thread.sleep(ServerHandler.getTickRate());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-    }
-
-    public static int[][] getPositions() {
-        return playerPositions;
-    }
-
-    public static int getX(){
-        return coordX;
-    }
-
-    public static int getY(){
-        return coordY;
     }
 }

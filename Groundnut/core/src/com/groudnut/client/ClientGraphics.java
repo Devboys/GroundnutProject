@@ -33,7 +33,7 @@ public class ClientGraphics extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		playerPositions = ClientInputThread.getPositions();
+		/*playerPositions = ClientInputThread.getPositions();
 
 		renderer.begin(ShapeRenderer.ShapeType.Filled);
 		renderer.setColor(Color.CYAN);
@@ -46,7 +46,7 @@ public class ClientGraphics extends ApplicationAdapter {
 		renderer.circle(playerPositions[2][0], playerPositions[2][1], circleR);
 
 		renderer.setColor(Color.PINK);
-		renderer.circle(playerPositions[3][0], playerPositions[3][1], circleR);
+		renderer.circle(playerPositions[3][0], playerPositions[3][1], circleR);*/
 
 		renderer.end();
 	}

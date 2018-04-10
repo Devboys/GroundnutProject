@@ -1,61 +1,60 @@
 package com.groudnut.client;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.groudnut.server.NetworkHandler;
-import com.badlogic.gdx.input.*;
+import com.groudnut.server.ServerHandler;
 
 public class ClientOutputThread extends Thread {
 
-    private int serverPort = NetworkHandler.getServerPort();
-    private DatagramSocket socket =  NetworkHandler.getSocket();
-    private byte[] buffer = new byte[256];
-    private InetAddress serverAddress;
+    //Prepare Datagram Socket
+    private DatagramSocket udpSocket;
+    private InetAddress serverIP;
+    private int serverPort;
+   // private byte[] buffer = new byte[256];
 
-
-    int locY = 100;
-    int locX = 50;
+    //Prepare Data Stream
+    private ByteArrayOutputStream baos;
+    private ObjectOutputStream oos;
 
     public ClientOutputThread(){
         try {
-            serverAddress = InetAddress.getByName("127.0.0.1");         //SERVER / HOST IP
-        }catch(IOException e){}
+            //Socket
+            serverIP = InetAddress.getByName(ServerHandler.getServerIp());
+            serverPort = ServerHandler.getGamePort();
+            udpSocket = new DatagramSocket();
+            udpSocket.connect(serverIP,serverPort);
+            System.out.println("CLIENT Created udpSocket on address " + serverIP + ":" + serverPort);
+
+            //Data Stream
+            baos = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(baos);
+        }catch(IOException e){
+            System.out.println("SERVER Error creating Output datagram udpSocket or data stream.");
+        }
     }
 
     public void run() {
-        try {
-            translate();
-            String message = "@" +locX + "@" + locY ;
-            buffer = message.getBytes();
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, serverAddress, serverPort);
-            socket.send(packet);
-            System.out.println("Message sent to server: " + packet.getSocketAddress());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    //OUTPUTS
-    public void translate(){
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-            locY++;
-            System.out.println("UP");
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            locX--;
-            System.out.println("DOWN");
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            locX--;
-            System.out.println("LEFT");
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            locX++;
-            System.out.println("RIGHT");
+        while(true){
+            try {
+                ClientOutput clientOutput = new ClientOutput();
+                oos.writeObject(clientOutput);
+                byte[] data = baos.toByteArray();
+                udpSocket.send(new DatagramPacket(data, data.length));
+                System.out.println("CLIENT Sent Data: "+ data + ". Data Length: " + data.length + ". Multicast Group: "
+                        + serverIP + ":" + serverPort);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(ServerHandler.getTickRate());
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -1,34 +1,64 @@
 package com.groudnut.server;
 
+import com.groudnut.client.ClientOutput;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.util.ArrayList;
 
 
 public class ServerInputThread extends Thread {
 
-    DatagramSocket udpSocket = NetworkHandler.getSocket();
-    byte[] buffer = new byte[256];
-    private String[] userCommands = new String[4];
+    //Server Info
+    private final int bufferSize = 1024;
+
+    //Create Socket
+    private DatagramSocket udpSocket;
+    private int serverPort;
+    private ArrayList<InetAddress> playerIPs = ServerHandler.getClientIPs();
+
+    public ServerInputThread(){
+        try {
+            serverPort = ServerHandler.getGamePort();
+            udpSocket = new DatagramSocket(serverPort);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void run() {
         while (true) {
+            System.out.println("SERVER Waiting for datagram to be received...");
             try {
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-                udpSocket.receive(packet);
-                System.out.println("Message received from client: " + packet.getSocketAddress());
-                boolean found = false;
+                byte[] buffer = new byte[bufferSize];
+                udpSocket.receive(new DatagramPacket(buffer, buffer.length));
+                System.out.println("SERVER Datagram received");
 
-                if(!NetworkHandler.getIPArray().isEmpty()) {
-                    for (int i = 0; i < NetworkHandler.getIPArray().size(); i++) {
-                        if (packet.getAddress().equals(NetworkHandler.getIPArray().get(i))) {
-                            found = true;
-                            userCommands[i] = new String(packet.getData(), 0, packet.getLength());
+                //Deserialize
+                ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+                ObjectInputStream ois = new ObjectInputStream(bais);
+                try{
+                    Object objectFromClient = ois.readObject();
+                    ClientOutput serverInput = (ClientOutput) objectFromClient;
+                    if (playerIPs.isEmpty()){
+                        ServerHandler.addIP(serverInput.getClientIP());
+                    } else if(!playerIPs.isEmpty() && ServerHandler.getConnectedPlayers() < 4){
+                        for(int i = 0; i < ServerHandler.getMaxPlayerCount(); i++) {
+                            if(serverInput.getClientIP() != playerIPs.get(i)){
+                                ServerHandler.addIP(serverInput.getClientIP());
+                            }
                         }
+                    } else {
+                        System.out.println("SERVER Server full.");
                     }
-                }
-                if (!found) {
-                    NetworkHandler.getIPArray().add(packet.getAddress());
+                    GameState.updateGameState(serverInput); //Update State
+                } catch (Exception e){
+                    System.out.println("SERVER Player IPs:" + playerIPs);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

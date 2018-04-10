@@ -4,7 +4,7 @@ public class ServerMain {
 
     public static void main(String[] args){
        /* try {
-            NetworkHandler networkHandler = new NetworkHandler();
+            ServerHandler networkHandler = new ServerHandler();
             ServerInputThread serverInputThread = new ServerInputThread();
             ServerOutputThread serverOutputThread = new ServerOutputThread();
 

@@ -1,29 +1,57 @@
 package com.groudnut.server;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.MulticastSocket;
 
-public class ServerOutputThread extends Thread{
 
-    private DatagramSocket udpSocket;
-    private InetAddress group;
+public class ServerOutputThread extends Thread {
 
-    public ServerOutputThread() {
-        udpSocket = NetworkHandler.getSocket();
-        group = NetworkHandler.getGroup();
+    //Prepare Multicast Socket
+    private MulticastSocket udpMulticastSocket;
+    private InetAddress multicastGroupIP;
+    private int multicastPort;
+
+    //Prepare Data Stream
+    private ByteArrayOutputStream baos;
+    private ObjectOutputStream oos;
+
+    public ServerOutputThread() throws IOException {
+        try {
+            //Socket
+            multicastGroupIP = InetAddress.getByName(ServerHandler.getGroup());
+            multicastPort = ServerHandler.getMulticastPort();
+            udpMulticastSocket = new MulticastSocket();
+            udpMulticastSocket.joinGroup(multicastGroupIP);
+            System.out.println("SERVER Created socket on address " + multicastGroupIP + ":" + multicastPort);
+
+            //Data Stream
+            baos = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(baos);
+        } catch (IOException e) {
+            System.out.println("SERVER Error creating Output multicast socket or data stream.");
+        }
     }
 
+    @Override
     public void run(){
-        boolean running = true;
-
-        while(running) {
-            byte[] buf = new byte[256];
+        while(true) {
             try {
-                DatagramPacket sendPacket = new DatagramPacket(buf, buf.length, group, NetworkHandler.getClientPort());
-                udpSocket.send(sendPacket);
+            ServerOutput serverOutput = new ServerOutput();
+            oos.writeObject(serverOutput); //Server Output
+            byte[] data = baos.toByteArray();
+                udpMulticastSocket.send(new DatagramPacket(data, data.length, multicastGroupIP, multicastPort));
+                System.out.println("SERVER Sent Data: " + data + ". Data Length: " + data.length + ". Multicast Group: "
+                        + multicastGroupIP + ":" + multicastPort);
             } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(ServerHandler.getTickRate());
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
