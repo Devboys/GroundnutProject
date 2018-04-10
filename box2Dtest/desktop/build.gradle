@@ -30,7 +30,7 @@ task dist(type: Jar) {
     from files(project.assetsDir);
  
     manifest {
-        attributes 'Core-Class': project.mainClassName
+        attributes 'Groundnut-Class': project.mainClassName
     }
 }
 
