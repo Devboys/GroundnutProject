@@ -14,7 +14,7 @@ public class LobbyServerListener extends Thread{
     public void run(){
         System.out.println("Server chat thread "+threadnumber+" is running");
         while(true){
-            System.out.println(parent.newsarray.get(threadnumber-1));
+            //System.out.println(parent.newsarray.get(threadnumber-1));
             try {
                 parent.newsarray.set(threadnumber-1, parent.bir.get(threadnumber-1).readLine());
                 this.sleep(500);
