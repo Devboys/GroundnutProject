@@ -3,7 +3,7 @@ import ClientNetworking.GameClient.ClientOutput;
 
 import java.io.Serializable;
 
-public class GameState implements Serializable {
+public class ServerGameState {
 
     //Game State
     //ArrayList[][] playerPositions[Player][Position];
@@ -12,7 +12,7 @@ public class GameState implements Serializable {
     //World grid/map
 
 
-    public GameState() {
+    public ServerGameState() {
 
     }
 
