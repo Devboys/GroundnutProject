@@ -47,17 +47,10 @@ public class ServerInputThread extends Thread {
                     ClientOutput serverInput = (ClientOutput) objectFromClient;
                     if (playerIPs.isEmpty()){
                         ServerHandler.addIP(serverInput.getClientIP());
-<<<<<<< HEAD:Groundnut/core/src/com/groudnut/server/ServerInputThread.java
                         System.out.println("SERVER IP: " + serverInput.getClientIP() + " added to " + playerIPs);
                     } else if(!playerIPs.isEmpty() && ServerHandler.getConnectedPlayers() < 4){
                         for(int i = 0; i < ServerHandler.getConnectedPlayers(); i++) {
                             if(!serverInput.getClientIP().equals(playerIPs.get(i))){
-=======
-                    }
-                    else if(!playerIPs.isEmpty() && ServerHandler.getConnectedPlayers() < 4){
-                        for(int i = 0; i < ServerHandler.getMaxPlayerCount(); i++) {
-                            if(serverInput.getClientIP() != playerIPs.get(i)){
->>>>>>> 24de918be1865e36cd896c33ffd30a3711fd9f58:Groundnut/core/src/ServerNetworking/GameServer/ServerInputThread.java
                                 ServerHandler.addIP(serverInput.getClientIP());
                                 System.out.println("SERVER IP: " + serverInput.getClientIP() + " added to " + playerIPs);
                             }
