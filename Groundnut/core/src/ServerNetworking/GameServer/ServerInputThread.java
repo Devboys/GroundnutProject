@@ -4,45 +4,61 @@ import ClientNetworking.GameClient.ClientOutput;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.util.ArrayList;
 
 
 public class ServerInputThread extends Thread {
 
-    //Server Info
-    private final int bufferSize = 1024;
+    //Data
+    private final int BUFFER_LENGTH = 256;
+    private byte[] buffer = new byte[BUFFER_LENGTH];
 
-    //Create Socket
+    //Socket
     private DatagramSocket udpSocket;
-    private int serverPort;
+    private DatagramPacket dgram;
     private ArrayList<InetAddress> playerIPs = ServerHandler.getClientIPs();
+    private int serverPort;
 
     public ServerInputThread(){
         try {
+            //Socket
             serverPort = ServerHandler.getGamePort();
-            udpSocket = new DatagramSocket(serverPort);
-        } catch (SocketException e) {
+            dgram = new DatagramPacket(buffer, buffer.length);
+            udpSocket = new DatagramSocket(serverPort, InetAddress.getByName("0.0.0.0"));
+            System.out.println("SERVER Created socket on LOCALHOST port: " + serverPort);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    @Override
     public void run() {
         while (true) {
             System.out.println("SERVER Waiting for datagram to be received...");
             try {
-                byte[] buffer = new byte[bufferSize];
-                udpSocket.receive(new DatagramPacket(buffer, buffer.length));
+                udpSocket.receive(dgram);
                 System.out.println("SERVER Datagram received");
-
-                //Deserialize
-                ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+                byte[] data = dgram.getData();
+                ByteArrayInputStream bais = new ByteArrayInputStream(data);
                 ObjectInputStream ois = new ObjectInputStream(bais);
                 try{
+                    ClientOutput serverInput = (ClientOutput) ois.readObject();
+                    ServerGameState.updateServerState(serverInput);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Error in ServerInputThread");
+            }
+        }
+    }
+}               /* try{
                     Object objectFromClient = ois.readObject();
                     ClientOutput serverInput = (ClientOutput) objectFromClient;
                     if (playerIPs.isEmpty()){
@@ -61,10 +77,4 @@ public class ServerInputThread extends Thread {
                     GameState.updateGameState(serverInput); //Update State
                 } catch (Exception e){
                     System.out.println("SERVER Player IPs:" + playerIPs);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-}
+                }*/

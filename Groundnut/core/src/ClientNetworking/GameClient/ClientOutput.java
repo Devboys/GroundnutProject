@@ -2,21 +2,25 @@ package ClientNetworking.GameClient;
 
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.util.ArrayList;
 
 public class ClientOutput implements Serializable {
 
-    private InetAddress clientIP = ClientInfo.getPlayerIP();
-    private int playerNumber;
+    private String testString = "ClientOutput";
+    private int sizeOfCommandList;
+    private Boolean[] commandList = new Boolean[3];
 
-    public InetAddress getClientIP(){
-        return clientIP;
+    public ClientOutput(){
+        
     }
 
-    public void setPlayer(int n){
-        playerNumber = n;
+    public ClientOutput(ClientGameState cgs) {
+        commandList[0] = cgs.getCommand(0);
+        commandList[1] = cgs.getCommand(1);
+        commandList[2] = cgs.getCommand(2);
+        commandList[3] = cgs.getCommand(3);
     }
-
-    public int getPlayerNumber(){
-        return playerNumber;
+    public Boolean[] getCommandList() {
+        return commandList;
     }
 }

@@ -7,57 +7,58 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import ServerNetworking.GameServer.ServerHandler;
+import ServerNetworking.GameServer.ServerOutput;
 
 public class ClientInputThread extends Thread {
 
-    //String packetInputData;
-    //private static int[][] playerPositions = new int[4][2];
-    //static int coordX = 250;
-    //static int coordY = 250;
-    final int bufferSize = 1024;
+    //Data
+    private final int BUFFER_LENGTH = 256;
+    private byte[] buffer = new byte[BUFFER_LENGTH];
 
-    //Create Socket
+    //Socket
     private MulticastSocket udpMulticastSocket;
-    private int multicastPort;
+    private DatagramPacket dgram;
     private InetAddress multicastGroup;
+    private int multicastPort;
+
     public ClientInputThread() {
         try {
-            multicastPort = ServerHandler.getMulticastPort();
+            //Socket
             multicastGroup = InetAddress.getByName(ServerHandler.getGroup());
+            multicastPort = ServerHandler.getMulticastPort();
+            dgram = new DatagramPacket(buffer, buffer.length, multicastGroup, multicastPort);
             udpMulticastSocket = new MulticastSocket(multicastPort);
             udpMulticastSocket.joinGroup(multicastGroup);
+            System.out.println("CLIENT Created udpSocket on multicast address "
+                                + multicastGroup + " : " + multicastPort);
         }catch(IOException e){
-            //Handle
+            System.out.println("Error while creating ClientInputThread Socket.");
         }
+
     }
 
-    //Receive data
     @Override
     public void run() {
         while(true) {
             System.out.println("CLIENT Waiting for datagram to be received...");
             try {
-                byte[] buffer = new byte[bufferSize];
-                udpMulticastSocket.receive(new DatagramPacket(buffer, bufferSize, multicastGroup, multicastPort));
+                udpMulticastSocket.receive(dgram);
                 System.out.println("CLIENT Datagram received");
-
-                //Deserialize object
                 ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
                 ObjectInputStream ois = new ObjectInputStream(bais);
-
                 try {
-                    Object readObjectFromServer = ois.readObject();
-                    System.out.println("CLIENT Message is: " + readObjectFromServer);
-
+                    ServerOutput clientInput = (ServerOutput) ois.readObject();
+                    ClientGameState.updateClientState(clientInput);
+                    System.out.println("CLIENT received: " + clientInput.getTestString());
                 } catch (Exception e){
-                    System.out.println("CLIENT No object read from UDP Datagram");
+                    System.out.println("CLIENT Error reading object");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                System.out.println("Error in ClientInputThread");
             }
-
             try {
-                Thread.sleep(ServerHandler.getTickRate());
+                Thread.sleep(ServerHandler.getClientTickRate());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
