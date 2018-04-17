@@ -15,8 +15,8 @@ public class ChatAndCommandThread extends Thread {
     }
 
     public void run(){
+        System.out.println("client thread running");
         while(isrunning == true){
-            System.out.println("client thread running");
             try {
                 newtext = parent.bufferedreader.readLine();
                 System.out.println(newtext);
