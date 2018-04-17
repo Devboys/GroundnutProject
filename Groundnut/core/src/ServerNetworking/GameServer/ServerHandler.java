@@ -9,7 +9,8 @@ public class ServerHandler {
     private static final int multicastPort = 24002;
     private static final int maxPlayerCount = 4;
     private static int connectedPlayers = 0;
-    private static final int tickRate = 5000; // 1 = 1ms
+    private static final int clientTickRate = 2000; // 1 = 1ms
+    private static final int serverTickRate = 1000;
     private static final String serverIp = "127.0.0.1";
     private static final String group = "230.0.0.0";
     private static ArrayList<InetAddress> clientIPs = new ArrayList<InetAddress>(maxPlayerCount);
@@ -34,6 +35,7 @@ public class ServerHandler {
     //public static int getPlayerCount() { return playerCount; }
     public static int getGamePort() { return gamePort; }
     public static int getMulticastPort() { return multicastPort; }
-    public static int getTickRate(){return tickRate; }
+    public static int getClientTickRate(){return clientTickRate; }
+    public static int getServerTickRate(){return clientTickRate; }
     public static String getServerIp() { return serverIp; }
 }

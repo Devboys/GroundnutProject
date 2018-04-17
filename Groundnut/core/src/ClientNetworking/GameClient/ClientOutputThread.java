@@ -11,15 +11,14 @@ import ServerNetworking.GameServer.ServerHandler;
 
 public class ClientOutputThread extends Thread {
 
-    //Prepare Datagram Socket
+    //Data
+    private byte[] buffer;
+
+    //Socket
     private DatagramSocket udpSocket;
+    private DatagramPacket dgram;
     private InetAddress serverIP;
     private int serverPort;
-   // private byte[] buffer = new byte[256];
-
-    //Prepare Data Stream
-    private ByteArrayOutputStream baos;
-    private ObjectOutputStream oos;
 
     public ClientOutputThread(){
         try {
@@ -29,31 +28,34 @@ public class ClientOutputThread extends Thread {
             udpSocket = new DatagramSocket();
             udpSocket.connect(serverIP,serverPort);
             System.out.println("CLIENT Created udpSocket on address " + serverIP + ":" + serverPort);
-
-            //Data Stream
-            baos = new ByteArrayOutputStream();
-            oos = new ObjectOutputStream(baos);
         }catch(IOException e){
             System.out.println("SERVER Error creating Output datagram udpSocket or data stream.");
         }
     }
 
+    @Override
     public void run() {
         while(true){
             try {
-                ClientOutput clientOutput = new ClientOutput();
-                oos.writeObject(clientOutput);
-                byte[] data = baos.toByteArray();
-                udpSocket.send(new DatagramPacket(data, data.length));
-                System.out.println("CLIENT Sent Data: "+ data + ". Data Length: " + data.length + ". Multicast Group: "
-                        + serverIP + ":" + serverPort);
+                //Data
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(baos);
+
+                oos.writeObject(new ClientOutput());
+                oos.flush();
+                buffer = baos.toByteArray();
+                dgram = new DatagramPacket(buffer, buffer.length, serverIP, serverPort);
+                udpSocket.send(dgram);
+                System.out.println("CLIENT Sent Data length: " + buffer.length);
+                baos.reset();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             try {
-                Thread.sleep(ServerHandler.getTickRate());
+                Thread.sleep(ServerHandler.getClientTickRate());
             } catch (InterruptedException e){
                 e.printStackTrace();
+                System.out.println("Error in ClientOutputThread");
             }
         }
     }
