@@ -8,14 +8,15 @@ import java.util.ArrayList;
 public class ClientGameState{
 
     private static int totalGameStateUpdates;
-    private static Boolean[] commands = PlayerInputHandler.getCommands();
+    private static Boolean[] commandList;
 
     public static void updateClientState(ServerOutput serverOutput){
+        commandList = ClientGameState.getCommandList();
         totalGameStateUpdates++;
         System.out.println("CLIENT game state: " + totalGameStateUpdates);
     }
 
-    public static Boolean getCommand(int i) {
-        return commands[i];
+    public static Boolean[] getCommandList(){
+        return commandList;
     }
 }

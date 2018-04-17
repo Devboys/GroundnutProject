@@ -7,20 +7,13 @@ import java.util.ArrayList;
 public class ClientOutput implements Serializable {
 
     private String testString = "ClientOutput";
-    private int sizeOfCommandList;
-    private Boolean[] commandList = new Boolean[3];
+    private static Boolean[] commandList;
 
     public ClientOutput(){
-        
+        commandList = ClientGameState.getCommandList();
     }
 
-    public ClientOutput(ClientGameState cgs) {
-        commandList[0] = cgs.getCommand(0);
-        commandList[1] = cgs.getCommand(1);
-        commandList[2] = cgs.getCommand(2);
-        commandList[3] = cgs.getCommand(3);
-    }
-    public Boolean[] getCommandList() {
+    public static Boolean[] getCommandList() {
         return commandList;
     }
 }

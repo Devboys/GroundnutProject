@@ -4,7 +4,6 @@ import ClientNetworking.GameClient.ClientOutput;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -48,7 +47,8 @@ public class ServerInputThread extends Thread {
                 ObjectInputStream ois = new ObjectInputStream(bais);
                 try{
                     ClientOutput serverInput = (ClientOutput) ois.readObject();
-                    ServerGameState.updateServerState(serverInput);
+                    int player = ServerHandler.checkPlayer(dgram.getAddress());
+                    ServerGameState.updateServerState(player, serverInput);
                 } catch(Exception e){
                     e.printStackTrace();
                 }
@@ -58,23 +58,4 @@ public class ServerInputThread extends Thread {
             }
         }
     }
-}               /* try{
-                    Object objectFromClient = ois.readObject();
-                    ClientOutput serverInput = (ClientOutput) objectFromClient;
-                    if (playerIPs.isEmpty()){
-                        ServerHandler.addIP(serverInput.getClientIP());
-                        System.out.println("SERVER IP: " + serverInput.getClientIP() + " added to " + playerIPs);
-                    } else if(!playerIPs.isEmpty() && ServerHandler.getConnectedPlayers() < 4){
-                        for(int i = 0; i < ServerHandler.getConnectedPlayers(); i++) {
-                            if(!serverInput.getClientIP().equals(playerIPs.get(i))){
-                                ServerHandler.addIP(serverInput.getClientIP());
-                                System.out.println("SERVER IP: " + serverInput.getClientIP() + " added to " + playerIPs);
-                            }
-                        }
-                    } else {
-                        System.out.println(playerIPs);
-                    }
-                    GameState.updateGameState(serverInput); //Update State
-                } catch (Exception e){
-                    System.out.println("SERVER Player IPs:" + playerIPs);
-                }*/
+}

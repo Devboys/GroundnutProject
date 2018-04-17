@@ -40,6 +40,7 @@ public class ServerOutputThread extends Thread {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(baos);
 
+
                 oos.writeObject(new ServerOutput());
                 oos.flush();
                 buffer = baos.toByteArray();
