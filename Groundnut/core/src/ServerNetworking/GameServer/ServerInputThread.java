@@ -4,7 +4,6 @@ import ClientNetworking.GameClient.ClientOutput;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -48,6 +47,9 @@ public class ServerInputThread extends Thread {
                 ObjectInputStream ois = new ObjectInputStream(bais);
                 try{
                     ClientOutput serverInput = (ClientOutput) ois.readObject();
+                    int player = ServerHandler.checkPlayer(dgram.getAddress());
+                    ServerGameState.updateServerState(player, serverInput);
+
                 } catch(Exception e){
                     e.printStackTrace();
                 }
