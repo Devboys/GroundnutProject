@@ -55,8 +55,7 @@ public class UpdateThread extends Thread{
 
         double currentTime = System.nanoTime();
         double newTime;
-        double frameTime;
-        double timeSinceLastUpdate = 0.0;
+        double frameTime;        double timeSinceLastUpdate = 0.0;
 
         running = true;
 

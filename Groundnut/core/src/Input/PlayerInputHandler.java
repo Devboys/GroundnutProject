@@ -20,7 +20,6 @@ public class PlayerInputHandler extends InputAdapter {
 
     @Override
     public  boolean keyDown(int keyCode){
-
         switch (keyCode){
             case Input.Keys.W:
                 player.setMovingNorth(true);
@@ -39,13 +38,11 @@ public class PlayerInputHandler extends InputAdapter {
                 commands[3] = true;
                 break;
         }
-
         return true;
     }
 
     @Override
     public boolean keyUp(int keyCode){
-
         switch (keyCode){
             case Input.Keys.W:
                 player.setMovingNorth(false);
@@ -64,7 +61,6 @@ public class PlayerInputHandler extends InputAdapter {
                 commands[3] = false;
                 break;
         }
-
         return true;
     }
 

@@ -1,5 +1,6 @@
 package Entity;
 
+import Core.GameThread;
 import Core.UpdateThread;
 import Input.PlayerInputHandler;
 import Scenes.GameStateManager;
@@ -25,11 +26,11 @@ public class Player implements Entity {
     public Player(int initX, int initY) {
         xLoc = initX;
         yLoc = initY;
-        Gdx.input.setInputProcessor(new PlayerInputHandler(this));
     }
 
     public void init() {
         setupPhysics();
+        Gdx.input.setInputProcessor(new PlayerInputHandler(this));
     }
 
     @Override
@@ -56,7 +57,7 @@ public class Player implements Entity {
         BodyDef pBodyDef = new BodyDef();
         pBodyDef.type = BodyDef.BodyType.DynamicBody;
         pBodyDef.position.set(xLoc, yLoc);
-        playerCollider = UpdateThread.theWorld.createBody(pBodyDef);
+        playerCollider = GameThread.theWorld.createBody(pBodyDef);
 
         //define fixture Shape
         CircleShape circle = new CircleShape();
@@ -73,6 +74,7 @@ public class Player implements Entity {
         playerCollider.createFixture(pFixDef);
         circle.dispose();
     }
+
     private void move(){
         Vector2 playerPos = playerCollider.getPosition();
         //NORTH

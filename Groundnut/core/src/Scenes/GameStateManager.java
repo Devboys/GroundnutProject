@@ -32,9 +32,9 @@ public class GameStateManager {
     public GameStateManager(){
         sceneArray = new Scene[Scenes.values().length];
 
-        //setup testScene as initial scene.
-        sceneArray[Scenes.TEST.ordinal()] = Scenes.TEST.createNewScene();
-        currentSceneIndex = Scenes.TEST.ordinal();
+//        //setup testScene as initial scene.
+//        sceneArray[Scenes.TEST.ordinal()] = Scenes.TEST.createNewScene();
+//        currentSceneIndex = Scenes.TEST.ordinal();
     }
 
     /** Tells the GameStateManager to distribute all init(), update() and render() calls to the Scene. This method will
@@ -42,10 +42,14 @@ public class GameStateManager {
      * @param scene An element in the enum GameStateManager.Scenes.
      */
     public void switchScene(Scenes scene){
-        sceneArray[currentSceneIndex].destroy();
 
         sceneArray[scene.ordinal()] = scene.createNewScene();
-        sceneArray[scene.ordinal()].init();
+
+        if(currentSceneIndex != -99) {
+            sceneArray[currentSceneIndex].destroy();
+            sceneArray[scene.ordinal()].init();
+        }
+
         currentSceneIndex = scene.ordinal();
     }
 
