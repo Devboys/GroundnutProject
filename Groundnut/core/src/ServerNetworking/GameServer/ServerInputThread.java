@@ -1,6 +1,8 @@
 package ServerNetworking.GameServer;
 
+import Entity.Player;
 import Input.PlayerInput;
+import com.sun.security.ntlm.Server;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -35,6 +37,20 @@ public class ServerInputThread extends Thread {
         }
     }
 
+    private void checkDatagram(DatagramPacket dgram, PlayerInput playerInput){
+        InetAddress IP = dgram.getAddress();
+        int playerNumber;
+        ArrayList<InetAddress> clientIPs = ServerHandler.getClientIPs();
+
+        if(clientIPs.contains(IP)) {
+            System.out.println("IP already in Client List");
+        } else {
+            ServerHandler.addIP(ServerHandler.getConnectedPlayers()+1, IP);
+            ServerHandler.incrementConnectPlayers();
+        }
+        GameState.updateGame(playerNumber, playerInput);
+    }
+
     @Override
     public void run() {
         while (true) {
@@ -46,9 +62,9 @@ public class ServerInputThread extends Thread {
                 ByteArrayInputStream bais = new ByteArrayInputStream(data);
                 ObjectInputStream ois = new ObjectInputStream(bais);
                 try{
-                    PlayerInput serverInput = (PlayerInput) ois.readObject();
-                    int player = ServerHandler.checkPlayer(dgram.getAddress());
-//                    ServerGameState.updateServerState(player, serverInput);
+                    PlayerInput playerInput = (PlayerInput) ois.readObject();
+                    checkDatagram(dgram, playerInput);
+
 
                 } catch(Exception e){
                     e.printStackTrace();
