@@ -20,6 +20,7 @@ public class ServerMain {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         new LwjglApplication(new GameThread(new PlayerInputHandler()), config);
 
+
         //setup input/output threads
         ServerHandler serverHandler = new ServerHandler();
 

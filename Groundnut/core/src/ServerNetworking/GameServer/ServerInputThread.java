@@ -20,7 +20,7 @@ public class ServerInputThread extends Thread {
     //Socket
     private DatagramSocket udpSocket;
     private DatagramPacket dgram;
-    private ArrayList<InetAddress> playerIPs = ServerHandler.getClientIPs();
+
     private int serverPort;
 
     public ServerInputThread(){
@@ -29,14 +29,35 @@ public class ServerInputThread extends Thread {
             serverPort = ServerHandler.getGamePort();
             dgram = new DatagramPacket(buffer, buffer.length);
             udpSocket = new DatagramSocket(serverPort, InetAddress.getByName("0.0.0.0"));
+
             System.out.println("SERVER Created socket on LOCALHOST port: " + serverPort);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void run() {
+    private void checkDatagram(DatagramPacket dgram, PlayerInput playerInput){
+        InetAddress dgramAddress = dgram.getAddress();
+        ArrayList<PlayerSocket> playerList = ServerHandler.getPlayerList();
+
+        boolean playerIsKnown = false;
+        for(int i = 0; i < playerList.size(); i++){
+            PlayerSocket currPlayerSocket = playerList.get(i);
+
+            if(currPlayerSocket.getPlayerIP().equals(dgramAddress)){
+                currPlayerSocket.setInputSource(playerInput);
+                playerIsKnown = false;
+            }
+        }
+        if(!playerIsKnown && ServerHandler.getNumConnectedPlayers() < ServerHandler.getMaxPlayerCount()){
+            PlayerSocket pSocket = new PlayerSocket(dgramAddress, playerList.size());
+            pSocket.setInputSource(playerInput);
+            ServerHandler.addPlayer(pSocket);
+        }
+    }
+
+
+    @Override public void run() {
         while (true) {
             //System.out.println("SERVER Waiting for datagram to be received...");
             try {
@@ -47,8 +68,7 @@ public class ServerInputThread extends Thread {
                 ObjectInputStream ois = new ObjectInputStream(bais);
                 try{
                     PlayerInput playerInput = (PlayerInput) ois.readObject();
-                    int player = ServerHandler.che89ckPlayer(dgram.getAddress());
-//                    ServerGameState.updateServerState(player, serverInput);
+                    checkDatagram(dgram, playerInput);
 
                 } catch(Exception e){
                     e.printStackTrace();

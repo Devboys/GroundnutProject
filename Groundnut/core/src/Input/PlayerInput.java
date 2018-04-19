@@ -9,7 +9,7 @@ public class PlayerInput implements Serializable {
     public boolean left;
     public boolean right;
 
-    //make singleton
+    //make singleton BAD IDEA, NEED MORE THAN ONE ON SERVERSIDE
     private static PlayerInput instance;
     private PlayerInput(){}
     public static PlayerInput getInstance() {
