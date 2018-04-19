@@ -4,7 +4,13 @@ import java.io.Serializable;
 
 public class ServerOutput implements Serializable{
 
-    public ServerOutput(){
+    Boolean[] commands;
 
+    public ServerOutput(){
+        commands = ServerGameState.getCommandList();
+    }
+
+    public Boolean[] getCommands(){
+        return commands;
     }
 }

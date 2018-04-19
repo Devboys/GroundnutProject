@@ -4,6 +4,8 @@ import ClientNetworking.GameClient.ClientOutput;
 import Core.RenderThread;
 import com.sun.security.ntlm.Server;
 
+import java.io.Serializable;
+
 import static Core.RenderThread.*;
 
 public class ServerGameState {
@@ -14,15 +16,17 @@ public class ServerGameState {
 
     public static void updateServerState(int playerNumber, ClientOutput clientOutput){
         commandList = clientOutput.getCommandList();
-        updatePlayerPositions(playerNumber, commandList);
+     //   updatePlayerPositions(playerNumber, commandList);
         totalGameStateUpdates++;
-        System.out.println("SERVER game state: " + totalGameStateUpdates);
+        RenderThread.setServerInfo(Integer.toString(totalGameStateUpdates));
     }
 
     private static void updatePlayerPositions(int playerNumber, Boolean[] commands){
         if(commands[0]){
             
         }
+
+        // MAKE NEW
     }
 
     public static ServerGameState getServerState(){

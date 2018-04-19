@@ -23,8 +23,8 @@ public class RenderThread extends ApplicationAdapter {
 
 
     //debug rendering
-    String serverInfo = "SERVER INFO";
-    String clientInfo = "CLIENT INFO";
+    static String serverInfo = "SERVER INFO";
+    static String clientInfo = "CLIENT INFO";
     SpriteBatch batch;
     BitmapFont font;
     Box2DDebugRenderer testRender;
@@ -78,12 +78,12 @@ public class RenderThread extends ApplicationAdapter {
         camera = new OrthographicCamera();
         viewPort = new ExtendViewport(ScreenConstants.CAM_WIDTH, ScreenConstants.CAM_HEIGHT, camera);
     }
-    public static void setServerInfo(String serverInfo) {
-        serverInfo = serverInfo;
+    public static void setServerInfo(String si) {
+        serverInfo = si;
     }
 
-    public void setClientInfo(String clientInfo) {
-        this.clientInfo = clientInfo;
+    public static void setClientInfo(String ci) {
+        clientInfo = ci;
     }
 
 }

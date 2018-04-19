@@ -38,10 +38,10 @@ public class ServerInputThread extends Thread {
     @Override
     public void run() {
         while (true) {
-            System.out.println("SERVER Waiting for datagram to be received...");
+            //System.out.println("SERVER Waiting for datagram to be received...");
             try {
                 udpSocket.receive(dgram);
-                System.out.println("SERVER Datagram received");
+                //System.out.println("SERVER Datagram received");
                 byte[] data = dgram.getData();
                 ByteArrayInputStream bais = new ByteArrayInputStream(data);
                 ObjectInputStream ois = new ObjectInputStream(bais);

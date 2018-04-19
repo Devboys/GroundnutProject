@@ -40,16 +40,17 @@ public class ClientInputThread extends Thread {
     @Override
     public void run() {
         while(true) {
-            System.out.println("CLIENT Waiting for datagram to be received...");
+            //System.out.println("CLIENT Waiting for datagram to be received...");
             try {
                 udpMulticastSocket.receive(dgram);
-                System.out.println("CLIENT Datagram received");
+                //System.out.println("CLIENT Datagram received");
                 ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
                 ObjectInputStream ois = new ObjectInputStream(bais);
                 try {
                     ServerOutput clientInput = (ServerOutput) ois.readObject();
                     ClientGameState.updateClientState(clientInput);
                 } catch (Exception e){
+                    e.printStackTrace();
                     System.out.println("CLIENT Error reading object");
                 }
             } catch (IOException e) {

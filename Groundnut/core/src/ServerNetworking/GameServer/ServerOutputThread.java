@@ -46,7 +46,7 @@ public class ServerOutputThread extends Thread {
                 buffer = baos.toByteArray();
                 dgram = new DatagramPacket(buffer, buffer.length, multicastGroupIP, multicastPort);
                 udpMulticastSocket.send(dgram);
-                System.out.println("SERVER Sent Data length: " + buffer.length);
+                //System.out.println("SERVER Sent Data length: " + buffer.length);
                 baos.reset();
             } catch (IOException e) {
                 e.printStackTrace();

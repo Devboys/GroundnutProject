@@ -46,7 +46,7 @@ public class ClientOutputThread extends Thread {
                 buffer = baos.toByteArray();
                 dgram = new DatagramPacket(buffer, buffer.length, serverIP, serverPort);
                 udpSocket.send(dgram);
-                System.out.println("CLIENT Sent Data length: " + buffer.length);
+                //System.out.println("CLIENT Sent Data length: " + buffer.length);
                 baos.reset();
             } catch (IOException e) {
                 e.printStackTrace();

@@ -1,10 +1,8 @@
 package Scenes;
 
-import Constants.EntityConstants;
 import Constants.ScreenConstants;
-import Entity.Entity;
-import Entity.Player;
-import Entity.Wall;
+import Entity.*;
+import Input.PlayerInputHandler;
 
 public class TestScene extends Scene {
 
@@ -15,23 +13,36 @@ public class TestScene extends Scene {
     private Wall eastBorder;
     private Wall westBorder;
 
-    private Player player;
+    private static Player[] players;
+    private static Enemy[] enemies;
+    private static UnitHandler uh;
+    private PlayerInputHandler pih;
 
     public TestScene(){
         super();
-
+        pih = new PlayerInputHandler();
         northBorder = new Wall(0, ScreenConstants.CAM_HEIGHT - wallSize, ScreenConstants.CAM_WIDTH, wallSize);
         southBorder = new Wall(0, wallSize, ScreenConstants.CAM_WIDTH, wallSize);
         eastBorder = new Wall((ScreenConstants.CAM_WIDTH - wallSize), 0, wallSize, ScreenConstants.CAM_HEIGHT);
         westBorder = new Wall(wallSize, 0, wallSize, ScreenConstants.CAM_HEIGHT);
-        player = new Player(EntityConstants.PLAYER_INIT_X, EntityConstants.PLAYER_INIT_Y);
+        uh = new UnitHandler(4,2);
+        pih.setPlayer(players[1]);
+        players = uh.getPlayers();
+        enemies = uh.getEnemies();
 
         entities.add(northBorder);
         entities.add(southBorder);
         entities.add(eastBorder);
         entities.add(westBorder);
-        entities.add(player);
+        for(int i = 0; i < players.length; i++){
+            entities.add(players[i]);
+        }
+        for(int i = 0; i < enemies.length; i++){
+            entities.add(enemies[i]);
+        }
     }
+
+
 
     @Override
     public void init() {
@@ -59,5 +70,13 @@ public class TestScene extends Scene {
         for(Entity e : entities){
             e.destroy();
         }
+    }
+
+    public static UnitHandler getUh() {
+        return uh;
+    }
+
+    public PlayerInputHandler getPih() {
+        return pih;
     }
 }
