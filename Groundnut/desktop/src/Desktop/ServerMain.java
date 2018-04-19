@@ -1,6 +1,7 @@
 package Desktop;
 
 import Core.GameThread;
+import Input.PlayerInputHandler;
 import Scenes.GameStateManager;
 import ServerNetworking.GameServer.ServerHandler;
 import ServerNetworking.GameServer.ServerInputThread;
@@ -17,7 +18,7 @@ public class ServerMain {
 
         //start serverside simulation
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        new LwjglApplication(new GameThread(), config);
+        new LwjglApplication(new GameThread(new PlayerInputHandler()), config);
 
         //setup input/output threads
         ServerHandler serverHandler = new ServerHandler();

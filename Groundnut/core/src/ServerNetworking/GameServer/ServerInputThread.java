@@ -46,8 +46,8 @@ public class ServerInputThread extends Thread {
                 ByteArrayInputStream bais = new ByteArrayInputStream(data);
                 ObjectInputStream ois = new ObjectInputStream(bais);
                 try{
-                    PlayerInput serverInput = (PlayerInput) ois.readObject();
-                    int player = ServerHandler.checkPlayer(dgram.getAddress());
+                    PlayerInput playerInput = (PlayerInput) ois.readObject();
+                    int player = ServerHandler.che89ckPlayer(dgram.getAddress());
 //                    ServerGameState.updateServerState(player, serverInput);
 
                 } catch(Exception e){

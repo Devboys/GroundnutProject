@@ -2,6 +2,7 @@ package Core;
 
 import Constants.RunConstants;
 import Constants.ScreenConstants;
+import Input.PlayerInputHandler;
 import Scenes.GameStateManager;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -29,6 +30,7 @@ public class GameThread extends ApplicationAdapter {
     Box2DDebugRenderer testRender;
 
     GameStateManager gameStateManager;
+    PlayerInputHandler inputHandler;
 
     //time-step variables
     private static double optimalFrameDuration  = Math.pow(10,9) / RunConstants.UPS;
@@ -48,8 +50,11 @@ public class GameThread extends ApplicationAdapter {
     private static final int xAcceleration = 0;
     private static final int yAcceleration = 0;
 
-    @Override
-    public void create () {
+    public GameThread(PlayerInputHandler inputHandler){
+        this.inputHandler = inputHandler;
+    }
+
+    @Override public void create () {
         gameStateManager = new GameStateManager();
         //update timing variables
 
@@ -58,6 +63,8 @@ public class GameThread extends ApplicationAdapter {
 
         setupRendering();
         setupUpdate();
+
+        Gdx.input.setInputProcessor(inputHandler);
 	}
 
 	private void setupRendering(){

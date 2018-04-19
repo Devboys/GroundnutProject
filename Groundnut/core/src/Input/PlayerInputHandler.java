@@ -6,10 +6,9 @@ import com.badlogic.gdx.InputAdapter;
 
 public class PlayerInputHandler extends InputAdapter {
 
-    private PlayerInput pInput;
+    private PlayerInput pInput = PlayerInput.getInstance();
 
-    @Override
-    public  boolean keyDown(int keyCode){
+    @Override public  boolean keyDown(int keyCode){
         switch (keyCode){
             case Input.Keys.W:
                 pInput.setUp(true);
@@ -27,8 +26,7 @@ public class PlayerInputHandler extends InputAdapter {
         return true;
     }
 
-    @Override
-    public boolean keyUp(int keyCode){
+    @Override public boolean keyUp(int keyCode){
         switch (keyCode){
             case Input.Keys.W:
                 pInput.setUp(false);

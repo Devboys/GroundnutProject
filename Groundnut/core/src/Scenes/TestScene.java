@@ -41,8 +41,6 @@ public class TestScene extends Scene {
         }
     }
 
-
-
     @Override public void init() {
         for(Entity e : entities){
             e.init();
