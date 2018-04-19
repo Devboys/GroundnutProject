@@ -1,12 +1,14 @@
 package Entity;
 
-import Core.UpdateThread;
+import Input.PlayerInput;
 import Scenes.GameStateManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+
+import static Core.GameThread.theWorld;
 
 public abstract class Unit implements Entity{
 
@@ -15,10 +17,6 @@ public abstract class Unit implements Entity{
     private int xLoc;
     private int yLoc;
 
-    private boolean movingNorth;
-    private boolean movingSouth;
-    private boolean movingWest;
-    private boolean movingEast;
     private Vector2 unitPos;
 
     private Body unitCollider;
@@ -27,8 +25,7 @@ public abstract class Unit implements Entity{
     private float circleSize;
     private FixtureDef fixDef;
 
-    public Unit(){
-    }
+    PlayerInput inputSource = PlayerInput.getInstance();
 
     public Unit(int initX, int initY){
         this.xLoc = initX;
@@ -52,14 +49,14 @@ public abstract class Unit implements Entity{
     @Override
     public void render(){}
 
-    public void destroy(){ UpdateThread.theWorld.destroyBody(this.unitCollider);}
+    public void destroy(){ theWorld.destroyBody(this.unitCollider);}
 
     private void setupPhysics() {
         //Body definition
         this.bodyDef = new BodyDef();
         this.bodyDef.type = BodyDef.BodyType.DynamicBody;
         this.bodyDef.position.set(this.xLoc, this.yLoc);
-        this.unitCollider = UpdateThread.theWorld.createBody(this.bodyDef);
+        this.unitCollider = theWorld.createBody(this.bodyDef);
 
         //Shape
         this.circle = new CircleShape();
@@ -80,26 +77,22 @@ public abstract class Unit implements Entity{
     private void move(){
         this.unitPos = this.unitCollider.getPosition();
         //NORTH
-        if(movingNorth){
+        if(inputSource.isUp()){
             this.unitCollider.applyLinearImpulse(new Vector2(0, MOVE_SPEED), this.unitPos, true);
         }
         //SOUTH
-        if(movingSouth){
+        if(inputSource.isDown()){
             this.unitCollider.applyLinearImpulse(new Vector2(0, -MOVE_SPEED), this.unitPos, true);
         }
         //EAST
-        if(movingEast) {
+        if(inputSource.isRight()) {
             this.unitCollider.applyLinearImpulse(new Vector2(MOVE_SPEED, 0), this.unitPos, true);
         }
         //WEST
-        if(movingWest) {
+        if(inputSource.isLeft()) {
             this.unitCollider.applyLinearImpulse(new Vector2(-MOVE_SPEED, 0), this.unitPos, true);
         }
     }
 
     public Vector2 getUnitPosition(){ return this.unitCollider.getPosition(); }
-    public void setMovingEast(boolean movingEast)   { this.movingEast = movingEast; }
-    public void setMovingWest(boolean movingWest)   { this.movingWest = movingWest; }
-    public void setMovingNorth(boolean movingNorth) { this.movingNorth = movingNorth; }
-    public void setMovingSouth(boolean movingSouth) { this.movingSouth = movingSouth; }
 }

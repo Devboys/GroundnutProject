@@ -1,6 +1,6 @@
 package ServerNetworking.GameServer;
 
-import ClientNetworking.GameClient.ClientOutput;
+import Input.PlayerInput;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -46,9 +46,9 @@ public class ServerInputThread extends Thread {
                 ByteArrayInputStream bais = new ByteArrayInputStream(data);
                 ObjectInputStream ois = new ObjectInputStream(bais);
                 try{
-                    ClientOutput serverInput = (ClientOutput) ois.readObject();
+                    PlayerInput serverInput = (PlayerInput) ois.readObject();
                     int player = ServerHandler.checkPlayer(dgram.getAddress());
-                    ServerGameState.updateServerState(player, serverInput);
+//                    ServerGameState.updateServerState(player, serverInput);
 
                 } catch(Exception e){
                     e.printStackTrace();

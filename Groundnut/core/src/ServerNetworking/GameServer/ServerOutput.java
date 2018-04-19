@@ -6,9 +6,7 @@ public class ServerOutput implements Serializable{
 
     Boolean[] commands;
 
-    public ServerOutput(){
-        commands = ServerGameState.getCommandList();
-    }
+    public ServerOutput(){}
 
     public Boolean[] getCommands(){
         return commands;

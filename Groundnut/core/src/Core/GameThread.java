@@ -3,7 +3,6 @@ package Core;
 import Constants.RunConstants;
 import Constants.ScreenConstants;
 import Scenes.GameStateManager;
-import Scenes.SceneNotLoadedException;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -49,13 +48,11 @@ public class GameThread extends ApplicationAdapter {
     private static final int xAcceleration = 0;
     private static final int yAcceleration = 0;
 
-    public GameThread(GameStateManager gsm){
-        gameStateManager = gsm;
-    }
-
     @Override
-	public void create () {
+    public void create () {
+        gameStateManager = new GameStateManager();
         //update timing variables
+
         currentTime = System.nanoTime();
         timeSinceLastUpdate = 0.0;
 
@@ -78,15 +75,10 @@ public class GameThread extends ApplicationAdapter {
         theWorld = new World(new Vector2(xAcceleration, yAcceleration), true);
 
         //initialize dependent values.
-        try {
-            gameStateManager.init();
-        } catch (SceneNotLoadedException e) {
-            e.printStackTrace();
-        }
+        gameStateManager.init();
     }
 
-	@Override
-	public void render () {
+    @Override public void render () {
         //update game in steps:
         //Time previous frame duration
         newTime = System.nanoTime();
@@ -110,11 +102,8 @@ public class GameThread extends ApplicationAdapter {
 	}
 
 	public void update(){
-        try {
-            gameStateManager.update();
-        } catch (SceneNotLoadedException e) {
-            e.printStackTrace();
-        }
+        gameStateManager.update();
+
         theWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     }
 
@@ -129,21 +118,15 @@ public class GameThread extends ApplicationAdapter {
         font.draw(batch, serverInfo, 40,70);
         batch.end();
 
-        try {
-            testRender.render(theWorld, camera.combined);
-            gameStateManager.render();
-        }catch (SceneNotLoadedException e){
-            e.printStackTrace();
-        }
+        testRender.render(theWorld, camera.combined);
+        gameStateManager.render();
     }
 
-	@Override
-	public void dispose () {
+    @Override public void dispose () {
         testRender.dispose();
 	}
 
-	@Override
-	public void resize(int width, int height){
+    @Override public void resize(int width, int height){
         viewPort.update(width, height, true);
     }
 

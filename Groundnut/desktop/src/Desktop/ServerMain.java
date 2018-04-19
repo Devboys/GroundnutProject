@@ -14,12 +14,10 @@ public class ServerMain {
 
     public static void main(String[] args){
 
-        //create game simulation
-        GameStateManager gameSimulation = new GameStateManager();
 
         //start serverside simulation
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        new LwjglApplication(new GameThread(gameSimulation), config);
+        new LwjglApplication(new GameThread(), config);
 
         //setup input/output threads
         ServerHandler serverHandler = new ServerHandler();

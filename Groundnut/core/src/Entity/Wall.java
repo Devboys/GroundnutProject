@@ -1,7 +1,6 @@
 package Entity;
 
 import Core.GameThread;
-import Core.UpdateThread;
 import Scenes.GameStateManager;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;

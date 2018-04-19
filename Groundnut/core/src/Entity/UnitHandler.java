@@ -16,33 +16,6 @@ public class UnitHandler {
         }
     }
 
-    public void updateUnitPositions(Boolean[] commands){
-//        if (commands[0]){
-//            enemies[1].setMovingNorth(true);
-//        }
-//        if (commands[1]){
-//            enemies[1].setMovingSouth(true);
-//        }
-//        if (commands[2]){
-//            enemies[1].setMovingWest(true);
-//        }
-//        if (commands[3]){
-//            enemies[1].setMovingEast(true);
-//        }
-//        if (!commands[0]){
-//            enemies[1].setMovingNorth(false);
-//        }
-//        if (!commands[1]){
-//            enemies[1].setMovingSouth(false);
-//        }
-//        if (!commands[2]){
-//            enemies[1].setMovingWest(false);
-//        }
-//        if (!commands[3]){
-//            enemies[1].setMovingEast(false);
-//        }
-    }
-
     public Player[] getPlayers() {
         return players;
     }

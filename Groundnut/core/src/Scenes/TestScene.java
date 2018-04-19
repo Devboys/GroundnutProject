@@ -16,17 +16,15 @@ public class TestScene extends Scene {
     private static Player[] players;
     private static Enemy[] enemies;
     private static UnitHandler uh;
-    private PlayerInputHandler pih;
 
     public TestScene(){
         super();
-        pih = new PlayerInputHandler();
         northBorder = new Wall(0, ScreenConstants.CAM_HEIGHT - wallSize, ScreenConstants.CAM_WIDTH, wallSize);
         southBorder = new Wall(0, wallSize, ScreenConstants.CAM_WIDTH, wallSize);
         eastBorder = new Wall((ScreenConstants.CAM_WIDTH - wallSize), 0, wallSize, ScreenConstants.CAM_HEIGHT);
         westBorder = new Wall(wallSize, 0, wallSize, ScreenConstants.CAM_HEIGHT);
+
         uh = new UnitHandler(4,2);
-        pih.setPlayer(players[1]);
         players = uh.getPlayers();
         enemies = uh.getEnemies();
 
@@ -34,6 +32,7 @@ public class TestScene extends Scene {
         entities.add(southBorder);
         entities.add(eastBorder);
         entities.add(westBorder);
+
         for(int i = 0; i < players.length; i++){
             entities.add(players[i]);
         }
@@ -44,29 +43,25 @@ public class TestScene extends Scene {
 
 
 
-    @Override
-    public void init() {
+    @Override public void init() {
         for(Entity e : entities){
             e.init();
         }
     }
 
-    @Override
-    public void update(GameStateManager gsm) {
+    @Override public void update(GameStateManager gsm) {
         for(Entity e : entities){
             e.update(gsm);
         }
     }
 
-    @Override
-    public void render() {
+    @Override public void render() {
         for(Entity e : entities){
             e.render();
         }
     }
 
-    @Override
-    public void destroy() {
+    @Override public void destroy() {
         for(Entity e : entities){
             e.destroy();
         }
@@ -76,7 +71,4 @@ public class TestScene extends Scene {
         return uh;
     }
 
-    public PlayerInputHandler getPih() {
-        return pih;
-    }
 }

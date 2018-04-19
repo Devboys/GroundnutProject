@@ -48,7 +48,7 @@ public class ClientInputThread extends Thread {
                 ObjectInputStream ois = new ObjectInputStream(bais);
                 try {
                     ServerOutput clientInput = (ServerOutput) ois.readObject();
-                    ClientGameState.updateClientState(clientInput);
+//                    ClientGameState.updateClientState(clientInput);
                 } catch (Exception e){
                     e.printStackTrace();
                     System.out.println("CLIENT Error reading object");

@@ -32,9 +32,9 @@ public class GameStateManager {
     public GameStateManager(){
         sceneArray = new Scene[Scenes.values().length];
 
-//        //setup testScene as initial scene.
-//        sceneArray[Scenes.TEST.ordinal()] = Scenes.TEST.createNewScene();
-//        currentSceneIndex = Scenes.TEST.ordinal();
+        //setup testScene as initial scene.
+        sceneArray[Scenes.TEST.ordinal()] = Scenes.TEST.createNewScene();
+        currentSceneIndex = Scenes.TEST.ordinal();
     }
 
     /** Tells the GameStateManager to distribute all init(), update() and render() calls to the Scene. This method will
@@ -53,36 +53,18 @@ public class GameStateManager {
         currentSceneIndex = scene.ordinal();
     }
 
-    /** Calls init() on whichever scene is the current scene.
-     * @throws SceneNotLoadedException
-     */
-    public void init() throws SceneNotLoadedException {
+    /** Calls init() on whichever scene is the current scene.*/
+    public void init(){
         if(sceneArray[currentSceneIndex] != null ) sceneArray[currentSceneIndex].init();
-
-        else {
-            throw new SceneNotLoadedException("No Scene loaded at current Scene index in GameStateManger)");
-        }
     }
 
-    /** Calls update() on whichever scene is the current scene.
-     * @throws SceneNotLoadedException
-     */
-    public void update() throws SceneNotLoadedException {
+    /** Calls update() on whichever scene is the current scene.*/
+    public void update(){
         if(sceneArray[currentSceneIndex] != null ) sceneArray[currentSceneIndex].update(this);
-
-        else {
-            throw new SceneNotLoadedException("No Scene loaded at current Scene index in GameStateManger");
-        }
     }
 
-    /** Calls render() on whichever scene is the current scene.
-     * @throws SceneNotLoadedException
-     */
-    public void render() throws SceneNotLoadedException {
+    /** Calls render() on whichever scene is the current scene.*/
+    public void render() {
         if(sceneArray[currentSceneIndex] != null ) sceneArray[currentSceneIndex].render();
-
-        else {
-            throw new SceneNotLoadedException("No Scene loaded at current Scene index in GameStateManger");
-        }
     }
 }

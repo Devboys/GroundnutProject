@@ -7,6 +7,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import Input.PlayerInput;
 import ServerNetworking.GameServer.ServerHandler;
 
 public class ClientOutputThread extends Thread {
@@ -41,7 +42,7 @@ public class ClientOutputThread extends Thread {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(baos);
 
-                oos.writeObject(new ClientOutput());
+                oos.writeObject(PlayerInput.getInstance());
                 oos.flush();
                 buffer = baos.toByteArray();
                 dgram = new DatagramPacket(buffer, buffer.length, serverIP, serverPort);
