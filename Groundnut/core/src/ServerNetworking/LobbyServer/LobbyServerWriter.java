@@ -25,6 +25,7 @@ public class LobbyServerWriter extends Thread {
 
     public int usernumber = 0;
     public int gameNumber = 0;
+    public Boolean NameNotTaken;
 
     public void run(){
         System.out.println("ServerMain running");
@@ -40,12 +41,21 @@ public class LobbyServerWriter extends Thread {
                 }
                 else if(newsarray.get(i).startsWith("Host ")){
                     String temp = newsarray.get(i).substring(5);
-                    servernames.add(temp);
-                    System.out.println("socket size: "+ sockets.size() +" gameNumber: "+gameNumber+" Adress: "+sockets.get(i).getInetAddress());
-                    games.add(new ArrayList<InetAddress>());
-                    games.get(gameNumber).add(sockets.get(i).getInetAddress());
-                    gameNumber++;
-                    oldsarray.set(i, newsarray.get(i));
+                    NameNotTaken = true;
+                    for(int j = 0; j <servernames.size(); j++){
+                        if(temp.equals(servernames.get(j))){
+                            NameNotTaken = false;
+                        }
+                    }
+                    if(NameNotTaken == true){
+                        servernames.add(temp);
+                        System.out.println("socket size: "+ sockets.size() +" gameNumber: "+gameNumber+" Adress: "+sockets.get(i).getInetAddress());
+                        games.add(new ArrayList<InetAddress>());
+                        games.get(gameNumber).add(sockets.get(i).getInetAddress());
+                        gameNumber++;
+                        pw.get(i).println("You've Hosted "+temp);
+                        pw.get(i).flush();
+                    }
                 }
                 else if(newsarray.get(i).startsWith("Start")){
                     System.out.println("Start requested");
@@ -54,12 +64,12 @@ public class LobbyServerWriter extends Thread {
                             System.out.println("Users Game Found");
                             for(int k = 0; k < games.get(j).size(); k++){
                                 System.out.println("Sending IP");
-                                pw.get(i).println(games.get(j).get(k).toString() + " ");
-                                pw.get(i).flush();
+                                pw.get(i).print(games.get(j).get(k).toString() + " ");
                             }
+                            pw.get(i).println();
+                            pw.get(i).flush();
                         }
                     }
-                    oldsarray.set(i, newsarray.get(i));
                 }
                 else if(newsarray.get(i).startsWith("Join ")){
                     System.out.println("Join requested");
@@ -71,15 +81,20 @@ public class LobbyServerWriter extends Thread {
                             pw.get(i).flush();
                         }
                     }
-                    oldsarray.set(i, newsarray.get(i));
+                }
+                else if(newsarray.get(i).equals("getServers")){
+                    for(int j = 0; j < servernames.size();j++){
+                        pw.get(i).println(servernames.get(j));
+                        pw.get(i).flush();
+                    }
                 }
                 else{
                     for(int j = 0; j < usernumber; j++){
                         pw.get(j).println(usernames.get(i)+": "+newsarray.get(i));
                         pw.get(j).flush();
-                        oldsarray.set(i, newsarray.get(i));
                     }
                 }
+                oldsarray.set(i, newsarray.get(i));
             }
         }
     }
