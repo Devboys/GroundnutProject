@@ -1,5 +1,6 @@
 package Desktop;
 
+import ClientNetworking.LobbyClient.LobbyClientMain;
 import Core.GameThread;
 import Input.PlayerInputHandler;
 import com.badlogic.gdx.Gdx;
@@ -18,6 +19,8 @@ public class DesktopLauncher {
 		clientOutput.start();
 		ClientInputThread clientInput = new ClientInputThread();
 		clientInput.start();
+
+		LobbyClientMain lobbyClientMain = new LobbyClientMain();
 
 	}
 }
