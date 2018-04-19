@@ -49,6 +49,7 @@ public class ServerInputThread extends Thread {
                     ClientOutput serverInput = (ClientOutput) ois.readObject();
                     int player = ServerHandler.checkPlayer(dgram.getAddress());
                     ServerGameState.updateServerState(player, serverInput);
+
                 } catch(Exception e){
                     e.printStackTrace();
                 }

@@ -1,5 +1,6 @@
 package Entity;
 
+import Core.GameThread;
 import Core.UpdateThread;
 import Scenes.GameStateManager;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -35,7 +36,7 @@ public class Wall implements Entity {
 
     @Override
     public void destroy() {
-        UpdateThread.theWorld.destroyBody(groundBody);
+        GameThread.theWorld.destroyBody(groundBody);
     }
 
     private void setupPhysics(){
@@ -43,7 +44,7 @@ public class Wall implements Entity {
         BodyDef groundDef = new BodyDef();
         groundDef.position.set(xLoc, yLoc);
 
-        groundBody = UpdateThread.theWorld.createBody(groundDef);
+        groundBody = GameThread.theWorld.createBody(groundDef);
         groundBody.setType(BodyDef.BodyType.StaticBody);
 
         PolygonShape groundBox = new PolygonShape();
