@@ -7,28 +7,31 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import Constants.NetworkingIdentifiers;
 import Input.PlayerInput;
 import ServerNetworking.GameServer.ServerHandler;
 
 public class ClientOutputThread extends Thread {
 
-    //Data
-    private byte[] buffer;
-
     //Socket
     private DatagramSocket udpSocket;
-    private DatagramPacket dgram;
     private InetAddress serverIP;
     private int serverPort;
+
+    //timeout
+    private int numTimeoutChecks;
+    private final int maxTimeoutChecks = 10;
+
+    private boolean running;
 
     public ClientOutputThread(){
         try {
             //Socket
-            serverIP = InetAddress.getByName(ServerHandler.getServerIp());
-            serverPort = ServerHandler.getGamePort();
+            serverIP = InetAddress.getByName(ServerHandler.serverIP);
+            serverPort = ServerHandler.gamePort;
             udpSocket = new DatagramSocket();
-            udpSocket.connect(serverIP,serverPort);
-            System.out.println("CLIENT Created udpSocket on address " + serverIP + ":" + serverPort);
+            udpSocket.connect(serverIP, serverPort);
+
         }catch(IOException e){
             System.out.println("SERVER Error creating Output datagram udpSocket or data stream.");
         }
@@ -36,28 +39,72 @@ public class ClientOutputThread extends Thread {
 
     @Override
     public void run() {
-        while(true){
-            try {
-                //Data
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(baos);
+        running = true;
 
-                oos.writeObject(PlayerInput.getInstance());
-                oos.flush();
-                buffer = baos.toByteArray();
-                dgram = new DatagramPacket(buffer, buffer.length, serverIP, serverPort);
-                udpSocket.send(dgram);
-                //System.out.println("CLIENT Sent Data length: " + buffer.length);
-                baos.reset();
-            } catch (IOException e) {
+        while(running){
+            try {
+                switch (ClientConnectionHandler.getState()) {
+                    case CONNECTED:
+                        sendPlayerCommands();
+                        break;
+                    case CONNECTING:
+                        checkTimeout();
+                        break;
+                    case DISCONNECTED:
+                        sendConnectionRequest();
+                        ClientConnectionHandler.switchState(ClientConnectionHandler.ConnectionState.CONNECTING);
+                        break;
+                }
+            }catch (IOException e){
                 e.printStackTrace();
             }
+
             try {
-                Thread.sleep(ServerHandler.getClientTickRate());
+                Thread.sleep(ServerHandler.clientTickRate);
             } catch (InterruptedException e){
                 e.printStackTrace();
-                System.out.println("Error in ClientOutputThread");
             }
         }
     }
+
+    private void sendPlayerCommands() throws IOException{
+        //Data
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(new PlayerInput());
+        oos.flush();
+        byte[] serializedObject = baos.toByteArray();
+
+        //add packet identifier to packet byte-array output.
+        ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();
+        compoundingStream.write(NetworkingIdentifiers.MOVEMENT_PACKET_IDENTIFIER);
+        compoundingStream.write(serializedObject);
+
+        byte[] compoundOutput = compoundingStream.toByteArray();
+        udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, serverIP, serverPort));
+        baos.reset();
+    }
+
+    private void sendConnectionRequest() throws IOException{
+        String connectionRequestMessage = "Connection request";
+
+        ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();
+        compoundingStream.write(NetworkingIdentifiers.CONNECT_REQUEST_IDENTIFIER);
+        compoundingStream.write(connectionRequestMessage.getBytes());
+
+        byte[] compoundOutput = compoundingStream.toByteArray();
+        udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, serverIP, serverPort));
+
+        System.out.println("connection request sent");
+    }
+
+    private void checkTimeout(){
+        if(numTimeoutChecks > maxTimeoutChecks){
+            ClientConnectionHandler.switchState(ClientConnectionHandler.ConnectionState.DISCONNECTED);
+            numTimeoutChecks = 0;
+        }
+        numTimeoutChecks++;
+    }
+
+    public void close(){ running = false; }
 }

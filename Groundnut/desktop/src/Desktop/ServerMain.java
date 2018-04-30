@@ -14,22 +14,12 @@ import java.io.IOException;
 public class ServerMain {
 
     public static void main(String[] args){
-
-
         //start serverside simulation
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        new LwjglApplication(new GameThread(new PlayerInputHandler()), config);
-
+        new LwjglApplication(new GameThread(), config);
 
         //setup input/output threads
-        ServerHandler serverHandler = new ServerHandler();
-
-        ServerOutputThread serverOutput = null;
-        try {
-            serverOutput = new ServerOutputThread();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ServerOutputThread serverOutput = new ServerOutputThread();
         serverOutput.start();
 
         ServerInputThread serverInput = new ServerInputThread();

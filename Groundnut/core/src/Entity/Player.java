@@ -7,8 +7,4 @@ public class Player extends Unit{
     public Player(int xLoc, int yLoc, float size) {
         super(xLoc, yLoc, size);
     }
-
-    public String getName() {
-        return name;
-    }
 }

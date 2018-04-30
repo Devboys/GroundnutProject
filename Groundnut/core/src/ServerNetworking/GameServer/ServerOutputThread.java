@@ -1,9 +1,12 @@
 package ServerNetworking.GameServer;
 
+import Constants.NetworkingIdentifiers;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
@@ -15,18 +18,24 @@ public class ServerOutputThread extends Thread {
 
     //Multicast Socket
     private MulticastSocket udpMulticastSocket;
-    private DatagramPacket dgram;
     private InetAddress multicastGroupIP;
     private int multicastPort;
 
-    public ServerOutputThread() throws IOException {
+    //single-user socket
+    private static DatagramSocket udpSocket;
+
+    private boolean running;
+
+    public ServerOutputThread() {
         try {
-            //Socket
-            multicastGroupIP = InetAddress.getByName(ServerHandler.getGroup());
-            multicastPort = ServerHandler.getMulticastPort();
+            //Multicast
+            multicastGroupIP = InetAddress.getByName(ServerHandler.groupIP);
+            multicastPort = ServerHandler.multicastPort;
             udpMulticastSocket = new MulticastSocket();
             udpMulticastSocket.joinGroup(multicastGroupIP);
-            System.out.println("SERVER Created socket on address " + multicastGroupIP + ":" + multicastPort);
+
+            //single-user
+            udpSocket = new DatagramSocket();
         } catch (IOException e) {
             System.out.println("SERVER Error creating Output multicast socket or data stream.");
         }
@@ -34,29 +43,64 @@ public class ServerOutputThread extends Thread {
 
     @Override
     public void run(){
-        while(true) {
+        running = true;
+        while(running) {
             try {
-                //Data
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(baos);
-
-
-                oos.writeObject(new ServerOutput());
-                oos.flush();
-                buffer = baos.toByteArray();
-                dgram = new DatagramPacket(buffer, buffer.length, multicastGroupIP, multicastPort);
-                udpMulticastSocket.send(dgram);
-                //System.out.println("SERVER Sent Data length: " + buffer.length);
-                baos.reset();
+                sendSimulationState();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             try {
-                Thread.sleep(ServerHandler.getServerTickRate());
+                Thread.sleep(ServerHandler.serverTickRate);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.out.println("Error in ServerOutputThread");
             }
         }
     }
+
+    public void sendSimulationState() throws IOException{
+        //Data
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+
+        oos.writeObject(new ServerOutput());
+        oos.flush();
+
+        ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();
+        compoundingStream.write(NetworkingIdentifiers.SIMULATION_STATE_IDENTIFIER);
+        compoundingStream.write(baos.toByteArray());
+
+        buffer = baos.toByteArray();
+        udpMulticastSocket.send(new DatagramPacket(buffer, buffer.length, multicastGroupIP, multicastPort));
+        baos.reset();
+    }
+
+    public static void sendConnectionConfirm(InetAddress targetIP) throws IOException{
+        String packetMessage = "Connection confirmed";
+
+        ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();
+        compoundingStream.write(NetworkingIdentifiers.ACCEPT_IDENTIFIER);
+        compoundingStream.write(packetMessage.getBytes());
+
+        byte[] compoundOutput = compoundingStream.toByteArray();
+        udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, targetIP, ServerHandler.gamePort));
+
+        System.out.println("confirm sent");
+    }
+
+    public static void sendConnectionReject(InetAddress targetIP) throws IOException{
+        String packetMessage = "Connection denied";
+
+        ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();
+        compoundingStream.write(NetworkingIdentifiers.REJECTION_IDENTIFIER);
+        compoundingStream.write(packetMessage.getBytes());
+
+        byte[] compoundOutput = compoundingStream.toByteArray();
+        udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, targetIP, ServerHandler.gamePort));
+
+        System.out.println("deny sent");
+    }
+
+    public void close(){ running = false; }
 }

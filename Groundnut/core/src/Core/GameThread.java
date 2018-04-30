@@ -135,12 +135,4 @@ public class GameThread extends ApplicationAdapter {
         viewPort = new ExtendViewport(ScreenConstants.CAM_WIDTH, ScreenConstants.CAM_HEIGHT, camera);
     }
 
-    public static void setServerInfo(String serverInfo) {
-        serverInfo = serverInfo;
-    }
-
-    public void setClientInfo(String clientInfo) {
-        this.clientInfo = clientInfo;
-    }
-
 }

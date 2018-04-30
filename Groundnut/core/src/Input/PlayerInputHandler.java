@@ -6,7 +6,11 @@ import com.badlogic.gdx.InputAdapter;
 
 public class PlayerInputHandler extends InputAdapter {
 
-    private PlayerInput pInput = PlayerInput.getInstance();
+    private PlayerInput pInput;
+
+    public PlayerInputHandler(PlayerInput pInput){
+        this.pInput = pInput;
+    }
 
     @Override public  boolean keyDown(int keyCode){
         switch (keyCode){

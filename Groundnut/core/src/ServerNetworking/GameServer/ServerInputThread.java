@@ -1,5 +1,6 @@
 package ServerNetworking.GameServer;
 
+import Constants.NetworkingIdentifiers;
 import Input.PlayerInput;
 
 import java.io.ByteArrayInputStream;
@@ -8,7 +9,7 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class ServerInputThread extends Thread {
@@ -22,61 +23,101 @@ public class ServerInputThread extends Thread {
     private DatagramPacket dgram;
 
     private int serverPort;
+    private boolean running;
 
     public ServerInputThread(){
         try {
             //Socket
-            serverPort = ServerHandler.getGamePort();
+            serverPort = ServerHandler.gamePort;
             dgram = new DatagramPacket(buffer, buffer.length);
             udpSocket = new DatagramSocket(serverPort, InetAddress.getByName("0.0.0.0"));
 
-            System.out.println("SERVER Created socket on LOCALHOST port: " + serverPort);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void checkDatagram(DatagramPacket dgram, PlayerInput playerInput){
-        InetAddress dgramAddress = dgram.getAddress();
-        ArrayList<PlayerSocket> playerList = ServerHandler.getPlayerList();
-
-        boolean playerIsKnown = false;
-        for(int i = 0; i < playerList.size(); i++){
-            PlayerSocket currPlayerSocket = playerList.get(i);
-
-            if(currPlayerSocket.getPlayerIP().equals(dgramAddress)){
-                currPlayerSocket.setInputSource(playerInput);
-                playerIsKnown = false;
-            }
-        }
-        if(!playerIsKnown && ServerHandler.getNumConnectedPlayers() < ServerHandler.getMaxPlayerCount()){
-            PlayerSocket pSocket = new PlayerSocket(dgramAddress, playerList.size());
-            pSocket.setInputSource(playerInput);
-            ServerHandler.addPlayer(pSocket);
-        }
-    }
-
+//    private void checkDatagram(InetAddress playerIP, PlayerInput playerInput){
+//        ArrayList<PlayerSocket> playerList = ServerHandler.getClientList();
+//
+//        //check if player is known
+//        boolean playerIsKnown = false;
+//        for(PlayerSocket currPlayer : playerList){
+//            if(currPlayer.getPlayerIP().equals(playerIP)){
+//                currPlayer.setInputSource(playerInput);
+//                playerIsKnown = true;
+//            }
+//        }
+//        if(!playerIsKnown && ServerHandler.getNumConnectedPlayers() < ServerHandler.maxPlayerCount){
+//            PlayerSocket pSocket = new PlayerSocket(playerIP, playerList.size());
+//            pSocket.setInputSource(playerInput);
+//            ServerHandler.addPlayer(pSocket);
+//        }
+//    }
 
     @Override public void run() {
-        while (true) {
-            //System.out.println("SERVER Waiting for datagram to be received...");
+        running = true;
+        while (running) {
             try {
                 udpSocket.receive(dgram);
-                //System.out.println("SERVER Datagram received");
-                byte[] data = dgram.getData();
-                ByteArrayInputStream bais = new ByteArrayInputStream(data);
-                ObjectInputStream ois = new ObjectInputStream(bais);
-                try{
-                    PlayerInput playerInput = (PlayerInput) ois.readObject();
-                    checkDatagram(dgram, playerInput);
 
-                } catch(Exception e){
-                    e.printStackTrace();
+                byte[] compoundData = dgram.getData();
+                //split recieved data into identifier and packetdata
+                byte[] identifier = Arrays.copyOfRange(compoundData, 0, NetworkingIdentifiers.IDENTIFIER_LENGTH);
+                byte[] packetData = Arrays.copyOfRange(compoundData,
+                        NetworkingIdentifiers.IDENTIFIER_LENGTH, compoundData.length);
+
+                if(Arrays.equals(identifier, NetworkingIdentifiers.CONNECT_REQUEST_IDENTIFIER)){
+                    handleConnectionRequest(dgram.getAddress());
+                }
+                else if(Arrays.equals(identifier, NetworkingIdentifiers.MOVEMENT_PACKET_IDENTIFIER)){
+                    handleMovementInput(packetData, dgram.getAddress());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                System.out.println("Error in ServerInputThread");
             }
+        }
+    }
+
+    public void close(){
+        running = false;
+    }
+
+    private void handleConnectionRequest(InetAddress packetIP) throws IOException{
+        boolean isKnown = ServerHandler.getInstance().isClientKnown(packetIP);
+
+        if(isKnown){
+            //send connection confirm to client.
+            ServerOutputThread.sendConnectionConfirm(packetIP);
+        }
+        else{
+            int pIndex = ServerHandler.getInstance().findFreeClientIndex();
+            if(pIndex != -1){ //client was accepted
+                //setup serverside connection.
+                ServerHandler.getInstance().getClient(pIndex).setPlayerIP(packetIP);
+                ServerHandler.getInstance().getClient(pIndex).setConnected(true);
+
+                //send connection confirm to client
+                ServerOutputThread.sendConnectionConfirm(packetIP);
+            }
+            else{
+                //connection rejected, reply client with rejection
+                ServerOutputThread.sendConnectionReject(packetIP);
+            }
+        }
+    }
+
+    private void handleMovementInput(byte[] packetData, InetAddress packetIP) throws IOException{
+        ByteArrayInputStream bais = new ByteArrayInputStream(packetData);
+        ObjectInputStream ois = new ObjectInputStream(bais);
+        try{
+            PlayerInput playerInput = (PlayerInput) ois.readObject();
+
+            int pIndex = ServerHandler.getInstance().findExistingClientIndex(packetIP);
+            ServerHandler.getInstance().getClient(pIndex).setInputSource(playerInput);
+
+        } catch(ClassNotFoundException e){
+            e.printStackTrace();
         }
     }
 }

@@ -4,20 +4,10 @@ import java.io.Serializable;
 
 public class PlayerInput implements Serializable {
 
-    public boolean up;
-    public boolean down;
-    public boolean left;
-    public boolean right;
-
-    //make singleton BAD IDEA, NEED MORE THAN ONE ON SERVERSIDE
-    private static PlayerInput instance;
-    private PlayerInput(){}
-    public static PlayerInput getInstance() {
-        if(instance == null){
-            instance = new PlayerInput();
-        }
-        return instance;
-    }
+    private boolean up;
+    private boolean down;
+    private boolean left;
+    private boolean right;
 
     public boolean isUp() { return up; }
     public void setUp(boolean up) { this.up = up; }

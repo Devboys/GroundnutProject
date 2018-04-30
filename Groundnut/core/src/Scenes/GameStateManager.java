@@ -4,10 +4,11 @@ import java.lang.reflect.InvocationTargetException;
 
 public class GameStateManager {
 
+
     //enum of possible states
     public enum Scenes {
-        TEST(new TestScene()),
-        MENU(new MenuScene());
+        //NEW SCENES HERE BELOW HERE
+        TEST(new TestScene());
 
         private final Scene sceneObject;
         Scenes(Scene sc){
@@ -27,7 +28,7 @@ public class GameStateManager {
 
     //Scene Management
     private Scene[] sceneArray;
-    private int currentSceneIndex = -99;
+    private int currentSceneIndex;
 
     public GameStateManager(){
         sceneArray = new Scene[Scenes.values().length];
@@ -39,8 +40,7 @@ public class GameStateManager {
 
     /** Tells the GameStateManager to distribute all init(), update() and render() calls to the Scene. This method will
      * also init the scene.
-     * @param scene An element in the enum GameStateManager.Scenes.
-     */
+     * @param scene An element in the enum GameStateManager.Scenes.*/
     public void switchScene(Scenes scene){
 
         sceneArray[scene.ordinal()] = scene.createNewScene();
@@ -67,4 +67,5 @@ public class GameStateManager {
     public void render() {
         if(sceneArray[currentSceneIndex] != null ) sceneArray[currentSceneIndex].render();
     }
+
 }

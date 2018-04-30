@@ -25,7 +25,7 @@ public abstract class Unit implements Entity{
     private float circleSize;
     private FixtureDef fixDef;
 
-    PlayerInput inputSource = PlayerInput.getInstance();
+    private PlayerInput inputSource;
 
     public Unit(int initX, int initY){
         this.xLoc = initX;
@@ -40,14 +40,14 @@ public abstract class Unit implements Entity{
 
     public void init(){ this.setupPhysics(); }
 
-    @Override
-    public void update(GameStateManager gsm){
+    @Override public void update(GameStateManager gsm){
         this.unitCollider.setLinearVelocity(new Vector2(0,0));
-        move();
+        if(inputSource!= null) {
+            move();
+        }
     }
 
-    @Override
-    public void render(){}
+    @Override public void render(){}
 
     public void destroy(){ theWorld.destroyBody(this.unitCollider);}
 
@@ -95,4 +95,8 @@ public abstract class Unit implements Entity{
     }
 
     public Vector2 getUnitPosition(){ return this.unitCollider.getPosition(); }
+
+    public void setInputSource(PlayerInput p){
+        inputSource = p;
+    }
 }

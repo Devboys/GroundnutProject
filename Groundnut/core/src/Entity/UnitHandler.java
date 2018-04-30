@@ -8,6 +8,7 @@ public class UnitHandler {
     public UnitHandler(int numFriends, int numEnemies){
         players = new Player[numFriends];
         enemies = new Enemy[numEnemies];
+
         for(int i = 0; i < numFriends; i++){
             players[i] = new Player(150+i,150+i, 12f+i);
         }

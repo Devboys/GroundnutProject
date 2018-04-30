@@ -4,14 +4,11 @@ import Constants.ScreenConstants;
 import Entity.*;
 import Input.PlayerInputHandler;
 
+import java.util.Arrays;
+
 public class TestScene extends Scene {
 
     private int wallSize = 10;
-
-    private Wall northBorder;
-    private Wall southBorder;
-    private Wall eastBorder;
-    private Wall westBorder;
 
     private static Player[] players;
     private static Enemy[] enemies;
@@ -19,10 +16,10 @@ public class TestScene extends Scene {
 
     public TestScene(){
         super();
-        northBorder = new Wall(0, ScreenConstants.CAM_HEIGHT - wallSize, ScreenConstants.CAM_WIDTH, wallSize);
-        southBorder = new Wall(0, wallSize, ScreenConstants.CAM_WIDTH, wallSize);
-        eastBorder = new Wall((ScreenConstants.CAM_WIDTH - wallSize), 0, wallSize, ScreenConstants.CAM_HEIGHT);
-        westBorder = new Wall(wallSize, 0, wallSize, ScreenConstants.CAM_HEIGHT);
+        Wall northBorder = new Wall(0, ScreenConstants.CAM_HEIGHT - wallSize, ScreenConstants.CAM_WIDTH, wallSize);
+        Wall southBorder = new Wall(0, wallSize, ScreenConstants.CAM_WIDTH, wallSize);
+        Wall eastBorder = new Wall((ScreenConstants.CAM_WIDTH - wallSize), 0, wallSize, ScreenConstants.CAM_HEIGHT);
+        Wall westBorder = new Wall(wallSize, 0, wallSize, ScreenConstants.CAM_HEIGHT);
 
         uh = new UnitHandler(4,2);
         players = uh.getPlayers();
@@ -33,12 +30,8 @@ public class TestScene extends Scene {
         entities.add(eastBorder);
         entities.add(westBorder);
 
-        for(int i = 0; i < players.length; i++){
-            entities.add(players[i]);
-        }
-        for(int i = 0; i < enemies.length; i++){
-            entities.add(enemies[i]);
-        }
+        entities.addAll(Arrays.asList(players));
+        entities.addAll(Arrays.asList(enemies));
     }
 
     @Override public void init() {
@@ -46,27 +39,19 @@ public class TestScene extends Scene {
             e.init();
         }
     }
-
     @Override public void update(GameStateManager gsm) {
         for(Entity e : entities){
             e.update(gsm);
         }
     }
-
     @Override public void render() {
         for(Entity e : entities){
             e.render();
         }
     }
-
     @Override public void destroy() {
         for(Entity e : entities){
             e.destroy();
         }
     }
-
-    public static UnitHandler getUh() {
-        return uh;
-    }
-
 }

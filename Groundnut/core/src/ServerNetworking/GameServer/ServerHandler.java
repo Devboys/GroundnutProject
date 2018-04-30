@@ -1,38 +1,63 @@
 package ServerNetworking.GameServer;
 
-import java.util.ArrayList;
+import java.net.InetAddress;
 
 public class ServerHandler {
 
-    private static final int gamePort = 24000;
-    private static final int multicastPort = 24001;
-    private static final int maxPlayerCount = 4;
-    private static int numConnectedPlayers = 0;
-    private static final int clientTickRate = 2000; // 1 = 1ms
-    private static final int serverTickRate = 1000;
-    private static final String serverIp = "127.0.0.1";
-    private static final String group = "230.0.0.0";
+    //server constants
+    public static final int gamePort = 24000;
+    public static final int multicastPort = 24001;
+    public static final int maxPlayerCount = 4;
+    public static final int serverTickRate = 1000;
+    public static final int clientTickRate = 1000;
+    public static final String groupIP = "230.0.0.0";
+    public static final String serverIP = "localhost";
 
-    private static ArrayList<PlayerSocket> playerList = new ArrayList<>(maxPlayerCount);
+    private PlayerSocket[] clientList = new PlayerSocket[maxPlayerCount];
 
-    public static int getMaxPlayerCount() { return maxPlayerCount; }
-    public static int getNumConnectedPlayers() { return playerList.size(); }
-
-
-    public static ArrayList<PlayerSocket> getPlayerList() {
-        return playerList;
+    //make singleton
+    private static ServerHandler instance;
+    private ServerHandler(){
+        for(int i = 0; i < maxPlayerCount; i++){
+            clientList[i] = new PlayerSocket(i);
+        }
     }
-    public static void addPlayer(PlayerSocket pSocket){
-        playerList.add(pSocket);
+    public static ServerHandler getInstance(){
+        if(instance == null){
+            instance = new ServerHandler();
+        }
+        return instance;
     }
 
-    public static String getGroup() {
-        return group;
+    public int getNumConnectedPlayers() { return clientList.length; }
+
+    public int findFreeClientIndex(){
+        for(PlayerSocket pSocket : clientList){
+            if(!pSocket.isConnected()) return pSocket.getPlayerIndex();
+        }
+        return -1;
     }
-    //public static int getPlayerCount() { return playerCount; }
-    public static int getGamePort() { return gamePort; }
-    public static int getMulticastPort() { return multicastPort; }
-    public static int getClientTickRate(){return clientTickRate; }
-    public static int getServerTickRate(){return clientTickRate; }
-    public static String getServerIp() { return serverIp; }
+
+    public int findExistingClientIndex(InetAddress clientIP){
+        for(PlayerSocket pSocket : clientList){
+            if(clientIP == pSocket.getPlayerIP()) return pSocket.getPlayerIndex();
+        }
+        return -1;
+    }
+
+    public boolean isClientKnown(InetAddress clientIP){
+        for(PlayerSocket pSocket : clientList){
+            if(clientIP == pSocket.getPlayerIP()) return true;
+        }
+        return false;
+    }
+
+    public boolean isClientConnected(int clientIndex){
+        return clientList[clientIndex].isConnected();
+    }
+
+    public PlayerSocket getClient(int clientIndex){
+        return clientList[clientIndex];
+    }
+
 }

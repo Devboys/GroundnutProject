@@ -4,8 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.Arrays;
+
+import Constants.NetworkingIdentifiers;
 import ServerNetworking.GameServer.ServerHandler;
 import ServerNetworking.GameServer.ServerOutput;
 
@@ -15,22 +19,26 @@ public class ClientInputThread extends Thread {
     private final int BUFFER_LENGTH = 256;
     private byte[] buffer = new byte[BUFFER_LENGTH];
 
-    //Socket
+    //multicast Socket
     private MulticastSocket udpMulticastSocket;
     private DatagramPacket dgram;
-    private InetAddress multicastGroup;
-    private int multicastPort;
+
+    //connection socket
+    private DatagramSocket connectionSocket;
+
+    private boolean running;
 
     public ClientInputThread() {
         try {
             //Socket
-            multicastGroup = InetAddress.getByName(ServerHandler.getGroup());
-            multicastPort = ServerHandler.getMulticastPort();
+            InetAddress multicastGroup = InetAddress.getByName(ServerHandler.groupIP);
+            int multicastPort = ServerHandler.multicastPort;
             dgram = new DatagramPacket(buffer, buffer.length, multicastGroup, multicastPort);
             udpMulticastSocket = new MulticastSocket(multicastPort);
             udpMulticastSocket.joinGroup(multicastGroup);
-            System.out.println("CLIENT Created udpSocket on multicast address "
-                                + multicastGroup + " : " + multicastPort);
+
+            connectionSocket = new DatagramSocket();
+
         }catch(IOException e){
             System.out.println("Error while creating ClientInputThread Socket.");
         }
@@ -39,29 +47,73 @@ public class ClientInputThread extends Thread {
 
     @Override
     public void run() {
-        while(true) {
-            //System.out.println("CLIENT Waiting for datagram to be received...");
+        running = true;
+        while(running) {
             try {
-                udpMulticastSocket.receive(dgram);
-                //System.out.println("CLIENT Datagram received");
-                ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-                ObjectInputStream ois = new ObjectInputStream(bais);
-                try {
-                    ServerOutput clientInput = (ServerOutput) ois.readObject();
-//                    ClientGameState.updateClientState(clientInput);
-                } catch (Exception e){
-                    e.printStackTrace();
-                    System.out.println("CLIENT Error reading object");
+
+                if(ClientConnectionHandler.isConnected()) {
+                    System.out.println("we in here");
+                    udpMulticastSocket.receive(dgram);
                 }
+                else{
+                    System.out.println("we out here");
+                    connectionSocket.receive(dgram);
+                }
+
+                System.out.println("packet recieved");
+
+                byte[] compoundData = dgram.getData();
+
+                //split recieved data into identifier and packetdata
+                byte[] identifier = Arrays.copyOfRange(compoundData, 0, NetworkingIdentifiers.IDENTIFIER_LENGTH);
+                byte[] packetData = Arrays.copyOfRange(compoundData,
+                        NetworkingIdentifiers.IDENTIFIER_LENGTH, compoundData.length);
+
+
+                //test print identifier
+                for(byte el : identifier) System.out.print(el);
+
+
+                if(Arrays.equals(identifier, NetworkingIdentifiers.ACCEPT_IDENTIFIER)){
+                    handleConnectionConfirm(packetData);
+                }
+                else if(Arrays.equals(identifier, NetworkingIdentifiers.REJECTION_IDENTIFIER)){
+                    handleConnectionReject(packetData);
+                }
+                else if(Arrays.equals(identifier, NetworkingIdentifiers.SIMULATION_STATE_IDENTIFIER)){
+                    handleStateInput(packetData);
+                }
+
             } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("Error in ClientInputThread");
-            }
-            try {
-                Thread.sleep(ServerHandler.getClientTickRate());
-            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void handleConnectionConfirm(byte[] packetData){
+        String message = new String(packetData);
+        System.out.println("Confirm Message: " + message);
+    }
+
+    private void handleConnectionReject(byte[] packetData){
+        String message = new String(packetData);
+        System.out.println("Reject Message: " + message);
+    }
+
+    private void handleStateInput(byte[] packetData) throws IOException{
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(packetData);
+        ObjectInputStream ois = new ObjectInputStream(bais);
+        try {
+            ServerOutput clientInput = (ServerOutput) ois.readObject();
+            //do stuff with recieved state
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println("CLIENT Error reading object");
+        }
+    }
+
+    public void close(){
+        running = false;
     }
 }
