@@ -1,8 +1,6 @@
 package ServerNetworking.LobbyServer;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -22,6 +20,7 @@ public class LobbyServerWriter extends Thread {
 
     public static ArrayList<String> servernames = new ArrayList<>();
     public static ArrayList<ArrayList<InetAddress>> games = new ArrayList<>();
+    public static ArrayList<ArrayList<PrintWriter>> gamesPW = new ArrayList<>();
 
     public int usernumber = 0;
     public int gameNumber = 0;
@@ -49,9 +48,11 @@ public class LobbyServerWriter extends Thread {
                     }
                     if(NameNotTaken == true){
                         servernames.add(temp);
-                        System.out.println("socket size: "+ sockets.size() +" gameNumber: "+gameNumber+" Adress: "+sockets.get(i).getInetAddress());
+                        System.out.println("socket size: "+ sockets.size() +" gameNumber: "+gameNumber+" Address: "+sockets.get(i).getInetAddress());
                         games.add(new ArrayList<InetAddress>());
                         games.get(gameNumber).add(sockets.get(i).getInetAddress());
+                        gamesPW.add(new ArrayList<PrintWriter>());
+                        gamesPW.get(gameNumber).add(pw.get(i));
                         gameNumber++;
                         pw.get(i).println("You've Hosted "+temp);
                         pw.get(i).flush();
@@ -64,10 +65,14 @@ public class LobbyServerWriter extends Thread {
                             System.out.println("Users Game Found");
                             for(int k = 0; k < games.get(j).size(); k++){
                                 System.out.println("Sending IP");
-                                pw.get(i).print(games.get(j).get(k).toString() + " ");
+                                pw.get(i).print("#S "+games.get(j).get(k).toString() + " ");
                             }
                             pw.get(i).println();
                             pw.get(i).flush();
+                            for(int k = 0; k < gamesPW.get(j).size(); k++){
+                                gamesPW.get(j).get(k).println("#C "+games.get(j).get(0)+ " " +k);
+                                gamesPW.get(j).get(k).flush();
+                            }
                         }
                     }
                 }
@@ -77,6 +82,7 @@ public class LobbyServerWriter extends Thread {
                     for(int j = 0; j < servernames.size(); j++){
                         if(temp.equals(servernames.get(j))){
                             games.get(j).add(sockets.get(i).getInetAddress());
+                            gamesPW.get(j).add(pw.get(i));
                             pw.get(i).println("You've joined "+servernames.get(j));
                             pw.get(i).flush();
                         }

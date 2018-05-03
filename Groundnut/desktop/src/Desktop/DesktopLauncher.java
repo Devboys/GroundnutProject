@@ -12,14 +12,7 @@ import ClientNetworking.GameClient.ClientOutputThread;
 
 public class DesktopLauncher {
     public static void main (String[] arg) {
-        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        new LwjglApplication(new GameThread(), config);
 
-
-        ClientInputThread clientInput = new ClientInputThread();
-        clientInput.start();
-
-        ClientOutputThread clientOutput = new ClientOutputThread();
-        clientOutput.start();
+        LobbyClientMain test = new LobbyClientMain();
     }
 }
