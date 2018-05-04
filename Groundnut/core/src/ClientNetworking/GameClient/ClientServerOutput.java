@@ -11,7 +11,7 @@ import Constants.NetworkingIdentifiers;
 import Input.PlayerInput;
 import ServerNetworking.GameServer.ServerHandler;
 
-public class ClientOutputThread extends Thread {
+public class ClientServerOutput extends Thread {
 
     //Socket
     private DatagramSocket udpSocket;
@@ -24,7 +24,7 @@ public class ClientOutputThread extends Thread {
 
     private boolean running;
 
-    public ClientOutputThread(){
+    public ClientServerOutput(){
         try {
             //Socket
             serverIP = InetAddress.getByName(ServerHandler.serverIP);
@@ -45,14 +45,14 @@ public class ClientOutputThread extends Thread {
             try {
                 switch (ClientConnectionHandler.getState()) {
                     case CONNECTED:
-                        sendPlayerCommands();
+                        sendPlayerInput();
                         break;
                     case CONNECTING:
                         checkTimeout();
                         break;
                     case DISCONNECTED:
                         sendConnectionRequest();
-                        ClientConnectionHandler.switchState(ClientConnectionHandler.ConnectionState.CONNECTING);
+                        ClientConnectionHandler.setState(ConnectionState.CONNECTING);
                         break;
                 }
             }catch (IOException e){
@@ -67,7 +67,7 @@ public class ClientOutputThread extends Thread {
         }
     }
 
-    private void sendPlayerCommands() throws IOException{
+    private void sendPlayerInput() throws IOException{
         //Data
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -100,7 +100,7 @@ public class ClientOutputThread extends Thread {
 
     private void checkTimeout(){
         if(numTimeoutChecks > maxTimeoutChecks){
-            ClientConnectionHandler.switchState(ClientConnectionHandler.ConnectionState.DISCONNECTED);
+            ClientConnectionHandler.setState(ConnectionState.DISCONNECTED);
             numTimeoutChecks = 0;
         }
         numTimeoutChecks++;

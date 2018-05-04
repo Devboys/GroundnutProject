@@ -13,7 +13,7 @@ import Constants.NetworkingIdentifiers;
 import ServerNetworking.GameServer.ServerHandler;
 import ServerNetworking.GameServer.ServerOutput;
 
-public class ClientInputThread extends Thread {
+public class ClientServerInput extends Thread {
 
     //Data
     private final int BUFFER_LENGTH = 256;
@@ -28,7 +28,7 @@ public class ClientInputThread extends Thread {
 
     private boolean running;
 
-    public ClientInputThread() {
+    public ClientServerInput() {
         try {
             //Socket
             InetAddress multicastGroup = InetAddress.getByName(ServerHandler.groupIP);
@@ -40,7 +40,7 @@ public class ClientInputThread extends Thread {
             connectionSocket = new DatagramSocket();
 
         }catch(IOException e){
-            System.out.println("Error while creating ClientInputThread Socket.");
+            System.out.println("Error while creating ClientServerInput Socket.");
         }
 
     }

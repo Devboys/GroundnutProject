@@ -3,8 +3,10 @@ package ServerNetworking.LobbyServer;
 import java.io.IOException;
 
 public class LobbyServerListener extends Thread{
-    public LobbyServerWriter parent;
-    public int threadnumber;
+    private LobbyServerWriter parent;
+    private int threadnumber;
+
+    private boolean isRunning;
 
     public LobbyServerListener(LobbyServerWriter p, int threadnumber){
         parent = p;
@@ -13,18 +15,23 @@ public class LobbyServerListener extends Thread{
 
     public void run(){
         System.out.println("Server chat thread "+threadnumber+" is running");
-        while(true){
+
+        isRunning = true;
+        while(isRunning){
             System.out.println(parent.newsarray.get(threadnumber-1));
+
             try {
                 parent.newsarray.set(threadnumber-1, parent.bir.get(threadnumber-1).readLine());
-                this.sleep(500);
-            } catch (IOException e) {
-                this.stop();
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                this.stop();
+
+                Thread.sleep(500);
+            } catch (IOException | InterruptedException e) {
+                close();
                 e.printStackTrace();
             }
         }
+    }
+
+    public void close(){
+        isRunning = false;
     }
 }
