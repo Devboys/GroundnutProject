@@ -28,7 +28,7 @@ public class ServerInputThread extends Thread {
     public ServerInputThread(){
         try {
             //Socket
-            serverPort = ServerHandler.gamePort;
+            serverPort = ServerHandler.serverPort;
             dgram = new DatagramPacket(buffer, buffer.length);
             udpSocket = new DatagramSocket(serverPort, InetAddress.getByName("0.0.0.0"));
 

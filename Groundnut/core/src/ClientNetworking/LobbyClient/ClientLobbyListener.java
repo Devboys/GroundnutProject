@@ -1,18 +1,19 @@
 package ClientNetworking.LobbyClient;
 
-import com.sun.corba.se.impl.activation.ServerMain;
+import ClientNetworking.ClientNetworkingHandler;
+import ClientNetworking.ConnectionState;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class LobbyClientListener extends Thread {
+public class ClientLobbyListener extends Thread {
 
     private boolean isRunning;
     private BufferedReader inputReader; //reads input from server.
 
-    public LobbyClientListener(BufferedReader inputReader){
+    public ClientLobbyListener(BufferedReader inputReader){
         this.inputReader = inputReader;
     }
 
@@ -38,16 +39,17 @@ public class LobbyClientListener extends Thread {
             String command = input.substring(1);
 
             if(command.startsWith("S")){
-                ServerMain newServer = new ServerMain();
+                //do stuff here
             }
 
             else if(command.startsWith("C")){
                 String[] splitInput = command.split(" ");
                 InetAddress serverHostAddress = InetAddress.getByName(splitInput[1]);
+
                 int playerID = Integer.parseInt(splitInput[2]);
 
-                //launch a client-game instance.
-//                DesktopLauncher2 newClient = new DesktopLauncher2(serverHostAddress, playerID);
+                ClientNetworkingHandler.setHostIP(serverHostAddress);
+                ClientNetworkingHandler.setState(ConnectionState.CONNECTING);
             }
         }
         else{

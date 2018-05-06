@@ -31,10 +31,10 @@ public class LobbyServerWriter extends Thread {
     private static boolean isRunning;
 
     //identifiers
-    private final String hostRequestIden = "Host ";
-    private final String startRequestIden = "Start";
-    private final String joinRequestIden = "Join ";
-    private final String serverListIden = "getServers";
+    private static final String hostRequestIden = "Host ";
+    private static final String startRequestIden = "Start";
+    private static final String joinRequestIden = "Join ";
+    private static final String serverListIden = "getServers";
 
     public void run(){
         System.out.println("ServerMain running");
@@ -43,6 +43,10 @@ public class LobbyServerWriter extends Thread {
         while(isRunning){
 
             for(int i = 0; i < usernumber; i++){
+
+                System.out.println("N" + newsarray.get(i));
+                System.out.println("O" + oldsarray.get(i));
+
                 if(!newsarray.get(i).equals(oldsarray.get(i))) {
 
                     if (newsarray.get(i).startsWith(hostRequestIden)) {
@@ -130,14 +134,14 @@ public class LobbyServerWriter extends Thread {
 
                 for(int k = 0; k < games.get(j).size(); k++){
                     System.out.println("Sending IP");
-                    pw.get(index).print("#S "+games.get(j).get(k).toString() + " ");
+                    pw.get(index).print("#S "+games.get(j).get(k).getHostAddress() + " ");
                 }
 
                 pw.get(index).println();
                 pw.get(index).flush();
 
                 for(int k = 0; k < gamesPW.get(j).size(); k++){
-                    gamesPW.get(j).get(k).println("#C "+games.get(j).get(0)+ " " +k);
+                    gamesPW.get(j).get(k).println("#C "+ games.get(j).get(0).getHostAddress() + " " +k);
                     gamesPW.get(j).get(k).flush();
                 }
             }
@@ -164,6 +168,7 @@ public class LobbyServerWriter extends Thread {
             newsarray.add("initialized");
             oldsarray.add("initialized");
             usernumber++;
+
             usernames.add("user" + usernumber);
 
             LobbyServerListener serverListener = new LobbyServerListener(this, usernumber);

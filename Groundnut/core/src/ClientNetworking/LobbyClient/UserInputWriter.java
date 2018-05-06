@@ -30,6 +30,7 @@ public class UserInputWriter extends Thread {
 
     public void close(){
         isRunning = false;
+        //scanner.close(); //THIS FUCKS UP THE LOBBY SOMEHOW??????
     }
 
 

@@ -1,6 +1,6 @@
-package ClientNetworking.GameClient;
+package ClientNetworking;
 
-enum ConnectionState {
+public enum ConnectionState {
     DISCONNECTED,
     INLOBBY,
     CONNECTING,

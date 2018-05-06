@@ -1,26 +1,29 @@
 package ClientNetworking.LobbyClient;
 
+import ClientNetworking.NetworkingHandler;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class LobbyClientHandler {
+public class ClientLobbyHandler implements NetworkingHandler {
 
     private static final String hostIP = "localhost";
     private static final int portNum = 1102;
 
-    private LobbyClientListener clientIn;
+    private ClientLobbyListener clientIn;
     private UserInputWriter clientOut;
+    private Socket socket;
 
-    public LobbyClientHandler(){
+    public ClientLobbyHandler(){
         try {
-            Socket socket = new Socket(hostIP, portNum);
+            socket = new Socket(hostIP, portNum);
             PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            clientIn = new LobbyClientListener(inputReader);
+            clientIn = new ClientLobbyListener(inputReader);
             clientIn.start();
 
             clientOut = new UserInputWriter(outputWriter);
@@ -31,7 +34,13 @@ public class LobbyClientHandler {
         }
     }
 
-    public void close(){
+    @Override public void close(){
+        try {
+            socket.close();
+        }catch (IOException e){
+            System.out.println("Something went wrong when closing socket in ClientLobbyHandler.");
+        }
+
         clientIn.close();
         clientOut.close();
     }

@@ -1,9 +1,6 @@
 package Core;
 
-import ClientNetworking.GameClient.ClientConnectionHandler;
-import ClientNetworking.GameClient.ClientServerInput;
-import ClientNetworking.GameClient.ClientServerOutput;
-import ClientNetworking.LobbyClient.LobbyClientHandler;
+import ClientNetworking.ClientNetworkingHandler;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -15,6 +12,6 @@ public class GameLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         new LwjglApplication(new GameThread(), config);
 
-        ClientConnectionHandler clientConnectionHandler = new ClientConnectionHandler(true);
+        ClientNetworkingHandler clientNetworkingHandler = new ClientNetworkingHandler();
     }
 }

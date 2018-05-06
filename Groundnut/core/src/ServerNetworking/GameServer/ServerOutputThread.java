@@ -84,7 +84,7 @@ public class ServerOutputThread extends Thread {
         compoundingStream.write(packetMessage.getBytes());
 
         byte[] compoundOutput = compoundingStream.toByteArray();
-        udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, targetIP, ServerHandler.gamePort));
+        udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, targetIP, ServerHandler.clientPort));
 
         System.out.println("confirm sent");
     }
@@ -97,7 +97,7 @@ public class ServerOutputThread extends Thread {
         compoundingStream.write(packetMessage.getBytes());
 
         byte[] compoundOutput = compoundingStream.toByteArray();
-        udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, targetIP, ServerHandler.gamePort));
+        udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, targetIP, ServerHandler.clientPort));
 
         System.out.println("deny sent");
     }

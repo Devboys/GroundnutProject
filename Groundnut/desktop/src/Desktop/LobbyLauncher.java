@@ -1,9 +1,9 @@
 package Desktop;
 
-import ClientNetworking.LobbyClient.LobbyClientHandler;
+import ClientNetworking.LobbyClient.ClientLobbyHandler;
 
 public class LobbyLauncher {
     public static void main (String[] arg) {
-        LobbyClientHandler test = new LobbyClientHandler();
+        ClientLobbyHandler test = new ClientLobbyHandler();
     }
 }

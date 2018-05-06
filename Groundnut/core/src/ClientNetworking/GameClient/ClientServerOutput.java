@@ -7,6 +7,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import ClientNetworking.ClientNetworkingHandler;
+import ClientNetworking.ConnectionState;
 import Constants.NetworkingIdentifiers;
 import Input.PlayerInput;
 import ServerNetworking.GameServer.ServerHandler;
@@ -18,21 +20,19 @@ public class ClientServerOutput extends Thread {
     private InetAddress serverIP;
     private int serverPort;
 
-    //timeout
-    private int numTimeoutChecks;
-    private final int maxTimeoutChecks = 10;
-
     private boolean running;
 
-    public ClientServerOutput(){
+    public ClientServerOutput(InetAddress hostIP){
         try {
             //Socket
-            serverIP = InetAddress.getByName(ServerHandler.serverIP);
-            serverPort = ServerHandler.gamePort;
+            serverIP = hostIP;
+            serverPort = ServerHandler.serverPort;
+
             udpSocket = new DatagramSocket();
             udpSocket.connect(serverIP, serverPort);
 
         }catch(IOException e){
+            e.printStackTrace();
             System.out.println("SERVER Error creating Output datagram udpSocket or data stream.");
         }
     }
@@ -43,17 +43,11 @@ public class ClientServerOutput extends Thread {
 
         while(running){
             try {
-                switch (ClientConnectionHandler.getState()) {
-                    case CONNECTED:
-                        sendPlayerInput();
-                        break;
-                    case CONNECTING:
-                        checkTimeout();
-                        break;
-                    case DISCONNECTED:
-                        sendConnectionRequest();
-                        ClientConnectionHandler.setState(ConnectionState.CONNECTING);
-                        break;
+                if(ClientNetworkingHandler.getState() == ConnectionState.CONNECTED){
+                    sendPlayerInput();
+                } else {
+                    close();
+                    System.out.println("CLIENT: Server handler started in incorrect state");
                 }
             }catch (IOException e){
                 e.printStackTrace();
@@ -62,6 +56,7 @@ public class ClientServerOutput extends Thread {
             try {
                 Thread.sleep(ServerHandler.clientTickRate);
             } catch (InterruptedException e){
+                close();
                 e.printStackTrace();
             }
         }
@@ -83,27 +78,6 @@ public class ClientServerOutput extends Thread {
         byte[] compoundOutput = compoundingStream.toByteArray();
         udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, serverIP, serverPort));
         baos.reset();
-    }
-
-    private void sendConnectionRequest() throws IOException{
-        String connectionRequestMessage = "Connection request";
-
-        ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();
-        compoundingStream.write(NetworkingIdentifiers.CONNECT_REQUEST_IDENTIFIER);
-        compoundingStream.write(connectionRequestMessage.getBytes());
-
-        byte[] compoundOutput = compoundingStream.toByteArray();
-        udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, serverIP, serverPort));
-
-        System.out.println("connection request sent");
-    }
-
-    private void checkTimeout(){
-        if(numTimeoutChecks > maxTimeoutChecks){
-            ClientConnectionHandler.setState(ConnectionState.DISCONNECTED);
-            numTimeoutChecks = 0;
-        }
-        numTimeoutChecks++;
     }
 
     public void close(){ running = false; }

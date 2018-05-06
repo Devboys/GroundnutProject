@@ -33,16 +33,16 @@ public class GameThread extends ApplicationAdapter {
 
     //time-step variables
     private static double optimalFrameDuration  = Math.pow(10,9) / RunConstants.UPS;
-    static final float STEP_TIME = (float) (optimalFrameDuration / Math.pow(10, 9));
+    private static final float STEP_TIME = (float) (optimalFrameDuration / Math.pow(10, 9));
     private static final int MAX_FRAMESKIPS  = 10;
-    double currentTime;
-    double newTime;
-    double frameTime;
-    double timeSinceLastUpdate;
+    private double currentTime;
+    private double newTime;
+    private double frameTime;
+    private double timeSinceLastUpdate;
 
     //physics Stepping variables
-    static final int VELOCITY_ITERATIONS = 6;
-    static final int POSITION_ITERATIONS = 2;
+    private static final int VELOCITY_ITERATIONS = 6;
+    private static final int POSITION_ITERATIONS = 2;
 
     //Box2Dtest Variables
     public static World theWorld ;

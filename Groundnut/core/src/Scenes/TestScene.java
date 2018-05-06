@@ -10,9 +10,9 @@ public class TestScene extends Scene {
 
     private int wallSize = 10;
 
-    private static Player[] players;
-    private static Enemy[] enemies;
-    private static UnitHandler uh;
+    private Player[] players;
+    private Enemy[] enemies;
+    private UnitHandler uh;
 
     public TestScene(){
         super();
