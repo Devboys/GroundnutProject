@@ -1,5 +1,8 @@
 package ServerNetworking.GameServer;
 
+import Core.SimulationHandler;
+import Entity.PlayerGroup;
+
 import java.net.InetAddress;
 
 public class ServerHandler {
@@ -12,17 +15,17 @@ public class ServerHandler {
     public static final int serverTickRate = 1000;
     public static final int clientTickRate = 1000;
     public static final String groupIP = "230.0.0.0";
-    public static final String serverIP = "localhost";
 
     private PlayerSocket[] clientList = new PlayerSocket[maxPlayerCount];
 
-    //make singleton
+    //make singleton - probably wrong, probably parent relationship better
     private static ServerHandler instance;
     private ServerHandler(){
         for(int i = 0; i < maxPlayerCount; i++){
             clientList[i] = new PlayerSocket(i);
         }
     }
+
     public static ServerHandler getInstance(){
         if(instance == null){
             instance = new ServerHandler();
@@ -30,7 +33,25 @@ public class ServerHandler {
         return instance;
     }
 
-    public int getNumConnectedPlayers() { return clientList.length; }
+    public void connectPlayer(InetAddress ip, int index) throws Exception{
+        if(isClientKnown(ip) || clientList[index].isConnected()) throw new Exception();
+        else{
+            clientList[index].setConnected(true);
+            clientList[index].setPlayerIP(ip);
+            SimulationHandler.getInstance().getPlayers().insertPlayer(index);
+            SimulationHandler.getInstance().getPlayers().getPlayer(index).setInputSource(clientList[index]);
+        }
+    }
+
+    public int getNumConnectedPlayers() {
+        int connectCount = 0;
+        for (PlayerSocket pSocket: clientList) {
+            if(pSocket.isConnected()){
+                connectCount++;
+            }
+        }
+        return connectCount;
+    }
 
     public int findFreeClientIndex(){
         for(PlayerSocket pSocket : clientList){
@@ -51,10 +72,6 @@ public class ServerHandler {
             if(clientIP == pSocket.getPlayerIP()) return true;
         }
         return false;
-    }
-
-    public boolean isClientConnected(int clientIndex){
-        return clientList[clientIndex].isConnected();
     }
 
     public PlayerSocket getClient(int clientIndex){

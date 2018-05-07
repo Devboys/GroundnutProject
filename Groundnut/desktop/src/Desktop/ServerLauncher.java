@@ -1,6 +1,7 @@
 package Desktop;
 
 import Core.GameThread;
+import Core.SimulationHandler;
 import Input.PlayerInputHandler;
 import Scenes.GameStateManager;
 import ServerNetworking.GameServer.ServerHandler;
@@ -17,14 +18,18 @@ public class ServerLauncher {
     }
 
     public static void launch(){
-        //start serverside simulation
-        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        new LwjglApplication(new GameThread(), config);
 
-        //setup input/output threads
+//        //start serverside simulation - wrong
+//        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+//        config.title = "SERVER";
+//        new LwjglApplication(new GameThread(), config);
+//
+        //setup input/output threads - MOVE TO SEPARATE HANDLER
         ServerOutputThread serverOutput = new ServerOutputThread();
         ServerInputThread serverInput = new ServerInputThread();
         serverOutput.start();
         serverInput.start();
+
+        SimulationHandler.getInstance().startSimulation(true);
     }
 }

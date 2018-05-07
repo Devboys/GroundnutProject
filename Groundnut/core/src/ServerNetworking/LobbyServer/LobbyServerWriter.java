@@ -41,12 +41,7 @@ public class LobbyServerWriter extends Thread {
 
         isRunning = true;
         while(isRunning){
-
             for(int i = 0; i < usernumber; i++){
-
-                System.out.println("N" + newsarray.get(i));
-                System.out.println("O" + oldsarray.get(i));
-
                 if(!newsarray.get(i).equals(oldsarray.get(i))) {
 
                     if (newsarray.get(i).startsWith(hostRequestIden)) {

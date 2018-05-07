@@ -1,18 +1,20 @@
 package ServerNetworking.GameServer;
 
+import Input.InputSource;
 import Input.PlayerInput;
 
 import java.net.InetAddress;
 
-public class PlayerSocket {
+public class PlayerSocket implements InputSource{
 
     private boolean isConnected;
 
     private InetAddress playerIP;
     private int playerIndex;
-    private PlayerInput inputSource;
+    private PlayerInput playerInput;
 
     public PlayerSocket(int playerIndex){
+        playerInput = new PlayerInput();
         this.playerIndex = playerIndex;
         isConnected = false;
     }
@@ -25,7 +27,8 @@ public class PlayerSocket {
     public InetAddress getPlayerIP() { return playerIP; }
     public void setPlayerIP(InetAddress IP){ playerIP = IP; }
 
-    public void setInputSource(PlayerInput pInput){
-        inputSource = pInput;
+    public void setInput(PlayerInput pInput){
+        playerInput = pInput;
     }
+    @Override public PlayerInput getInput(){ return playerInput; }
 }

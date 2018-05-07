@@ -47,8 +47,4 @@ public class PlayerInputHandler extends InputAdapter {
         }
         return true;
     }
-
-    public void setpInput(PlayerInput pInput) {
-        this.pInput = pInput;
-    }
 }

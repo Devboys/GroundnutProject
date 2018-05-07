@@ -3,6 +3,8 @@ package ClientNetworking;
 import ClientNetworking.ConnectionClient.ClientConnectionHandler;
 import ClientNetworking.GameClient.ClientServerHandler;
 import ClientNetworking.LobbyClient.ClientLobbyHandler;
+import Entity.Player;
+import Input.PlayerInput;
 
 import java.net.InetAddress;
 
@@ -13,12 +15,14 @@ public class ClientNetworkingHandler {
     private static ConnectionState currState = ConnectionState.DISCONNECTED;
     private static NetworkingHandler currHandler;
 
+    private static PlayerInput clientInputSource;
+
     /**No argument constructor will attempt to connect through lobby.*/
     public ClientNetworkingHandler(){
         setState(ConnectionState.INLOBBY);
     }
 
-
+    //MAKE NON_STATIC(parent-relationship with handlers)
     /**Starts the connection protocol between the client and the server at the given IP.
      * @param hostIP the IP of the server-host*/
     public ClientNetworkingHandler(InetAddress hostIP){
@@ -32,6 +36,9 @@ public class ClientNetworkingHandler {
 
     public static void setState(ConnectionState state){
         if(currHandler != null) currHandler.close();
+
+        System.out.println("CLIENT: switching to: "+ state.name());
+        currState = state;
 
         switch (state){
             case CONNECTED:
@@ -57,9 +64,6 @@ public class ClientNetworkingHandler {
                 currHandler = null;
                 break;
         }
-
-        System.out.println("CLIENT: switching to: "+ state.name());
-        currState = state;
     }
 
     public static void setHostIP(InetAddress ip){ gameHostIP = ip; }

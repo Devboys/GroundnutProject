@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import ClientNetworking.ClientNetworkingHandler;
 import ClientNetworking.ConnectionState;
 import Constants.NetworkingIdentifiers;
+import Core.SimulationHandler;
 import Input.PlayerInput;
 import ServerNetworking.GameServer.ServerHandler;
 
@@ -63,10 +64,11 @@ public class ClientServerOutput extends Thread {
     }
 
     private void sendPlayerInput() throws IOException{
+        System.out.println("sending inputs");
         //Data
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(new PlayerInput());
+        oos.writeObject(SimulationHandler.getInstance().getPlayerInput());
         oos.flush();
         byte[] serializedObject = baos.toByteArray();
 

@@ -38,10 +38,10 @@ public abstract class Unit implements Entity{
         this.circleSize = size;
     }
 
-    public void init(){ this.setupPhysics(); }
+    @Override public void init(){ this.setupPhysics(); }
 
     @Override public void update(GameStateManager gsm){
-        this.unitCollider.setLinearVelocity(new Vector2(0,0));
+        unitCollider.setLinearVelocity(new Vector2(0,0));
         if(inputSource!= null) {
             move();
         }
@@ -49,7 +49,7 @@ public abstract class Unit implements Entity{
 
     @Override public void render(){}
 
-    public void destroy(){ theWorld.destroyBody(this.unitCollider);}
+    @Override public void destroy(){ theWorld.destroyBody(unitCollider);}
 
     private void setupPhysics() {
         //Body definition

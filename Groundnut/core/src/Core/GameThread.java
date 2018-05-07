@@ -32,7 +32,7 @@ public class GameThread extends ApplicationAdapter {
     GameStateManager gameStateManager;
 
     //time-step variables
-    private static double optimalFrameDuration  = Math.pow(10,9) / RunConstants.UPS;
+    private static final double optimalFrameDuration  = Math.pow(10,9) / RunConstants.UPS;
     private static final float STEP_TIME = (float) (optimalFrameDuration / Math.pow(10, 9));
     private static final int MAX_FRAMESKIPS  = 10;
     private double currentTime;

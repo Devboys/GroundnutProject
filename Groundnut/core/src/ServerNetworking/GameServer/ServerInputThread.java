@@ -44,13 +44,13 @@ public class ServerInputThread extends Thread {
 //        boolean playerIsKnown = false;
 //        for(PlayerSocket currPlayer : playerList){
 //            if(currPlayer.getPlayerIP().equals(playerIP)){
-//                currPlayer.setInputSource(playerInput);
+//                currPlayer.setInput(playerInput);
 //                playerIsKnown = true;
 //            }
 //        }
 //        if(!playerIsKnown && ServerHandler.getNumConnectedPlayers() < ServerHandler.maxPlayerCount){
 //            PlayerSocket pSocket = new PlayerSocket(playerIP, playerList.size());
-//            pSocket.setInputSource(playerInput);
+//            pSocket.setInput(playerInput);
 //            ServerHandler.addPlayer(pSocket);
 //        }
 //    }
@@ -71,7 +71,9 @@ public class ServerInputThread extends Thread {
                     handleConnectionRequest(dgram.getAddress());
                 }
                 else if(Arrays.equals(identifier, NetworkingIdentifiers.MOVEMENT_PACKET_IDENTIFIER)){
-                    handleMovementInput(packetData, dgram.getAddress());
+                    if(ServerHandler.getInstance().isClientKnown(dgram.getAddress())) {
+                        handleMovementInput(packetData, dgram.getAddress());
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -94,8 +96,11 @@ public class ServerInputThread extends Thread {
             int pIndex = ServerHandler.getInstance().findFreeClientIndex();
             if(pIndex != -1){ //client was accepted
                 //setup serverside connection.
-                ServerHandler.getInstance().getClient(pIndex).setPlayerIP(packetIP);
-                ServerHandler.getInstance().getClient(pIndex).setConnected(true);
+                try {
+                    ServerHandler.getInstance().connectPlayer(packetIP, pIndex);
+                }catch (Exception e){
+                    System.out.println("NEW PLAYER ATTEMPTED TO CONNECT TO ALREADY-FILLED INDEX");
+                }
 
                 //send connection confirm to client
                 ServerOutputThread.sendConnectionConfirm(packetIP);
@@ -108,13 +113,15 @@ public class ServerInputThread extends Thread {
     }
 
     private void handleMovementInput(byte[] packetData, InetAddress packetIP) throws IOException{
+        System.out.println("input received");
+
         ByteArrayInputStream bais = new ByteArrayInputStream(packetData);
         ObjectInputStream ois = new ObjectInputStream(bais);
         try{
             PlayerInput playerInput = (PlayerInput) ois.readObject();
 
             int pIndex = ServerHandler.getInstance().findExistingClientIndex(packetIP);
-            ServerHandler.getInstance().getClient(pIndex).setInputSource(playerInput);
+            ServerHandler.getInstance().getClient(pIndex).setInput(playerInput);
 
         } catch(ClassNotFoundException e){
             e.printStackTrace();

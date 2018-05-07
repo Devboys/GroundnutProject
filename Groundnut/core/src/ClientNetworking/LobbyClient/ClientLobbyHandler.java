@@ -1,11 +1,14 @@
 package ClientNetworking.LobbyClient;
 
+import ClientNetworking.ClientNetworkingHandler;
+import ClientNetworking.ConnectionState;
 import ClientNetworking.NetworkingHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 
 public class ClientLobbyHandler implements NetworkingHandler {
@@ -29,17 +32,21 @@ public class ClientLobbyHandler implements NetworkingHandler {
             clientOut = new UserInputWriter(outputWriter);
             clientOut.start();
 
-        }catch(IOException e){
+        }catch (ConnectException e){
+            System.out.println("Lobby not available");
+            ClientNetworkingHandler.setState(ConnectionState.DISCONNECTED);
+        }
+        catch(IOException e){
             e.printStackTrace();
         }
     }
 
     @Override public void close(){
-        try {
-            socket.close();
-        }catch (IOException e){
-            System.out.println("Something went wrong when closing socket in ClientLobbyHandler.");
-        }
+//        try {
+//            socket.close();
+//        }catch (IOException e){
+//            System.out.println("Something went wrong when closing socket in ClientLobbyHandler.");
+//        }
 
         clientIn.close();
         clientOut.close();

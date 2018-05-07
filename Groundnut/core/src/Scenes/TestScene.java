@@ -1,18 +1,17 @@
 package Scenes;
 
+import ClientNetworking.ClientNetworkingHandler;
 import Constants.ScreenConstants;
+import Core.GameThread;
+import Core.SimulationHandler;
 import Entity.*;
+import Input.PlayerInput;
 import Input.PlayerInputHandler;
-
-import java.util.Arrays;
+import com.badlogic.gdx.Gdx;
 
 public class TestScene extends Scene {
 
     private int wallSize = 10;
-
-    private Player[] players;
-    private Enemy[] enemies;
-    private UnitHandler uh;
 
     public TestScene(){
         super();
@@ -21,17 +20,13 @@ public class TestScene extends Scene {
         Wall eastBorder = new Wall((ScreenConstants.CAM_WIDTH - wallSize), 0, wallSize, ScreenConstants.CAM_HEIGHT);
         Wall westBorder = new Wall(wallSize, 0, wallSize, ScreenConstants.CAM_HEIGHT);
 
-        uh = new UnitHandler(4,2);
-        players = uh.getPlayers();
-        enemies = uh.getEnemies();
-
         entities.add(northBorder);
         entities.add(southBorder);
         entities.add(eastBorder);
         entities.add(westBorder);
 
-        entities.addAll(Arrays.asList(players));
-        entities.addAll(Arrays.asList(enemies));
+        //add all players
+        entities.addAll(SimulationHandler.getInstance().getPlayers().toList());
     }
 
     @Override public void init() {

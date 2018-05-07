@@ -2,7 +2,7 @@ package Input;
 
 import java.io.Serializable;
 
-public class PlayerInput implements Serializable {
+public class PlayerInput implements Serializable, InputSource{
 
     private boolean up;
     private boolean down;
@@ -22,4 +22,8 @@ public class PlayerInput implements Serializable {
     public void setRight(boolean right) { this.right = right; }
 
 
+    @Override
+    public PlayerInput getInput() {
+        return this;
+    }
 }

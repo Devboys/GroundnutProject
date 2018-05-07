@@ -48,10 +48,7 @@ public class ClientServerInput extends Thread {
         while(isRunning) {
             try {
                 if(ClientNetworkingHandler.getState() == ConnectionState.CONNECTED) {
-                    System.out.println("Client is waiting for gameState");
                     udpMulticastSocket.receive(dgram);
-
-                    System.out.println("packet recieved");
 
                     byte[] compoundData = dgram.getData();
 
@@ -74,9 +71,12 @@ public class ClientServerInput extends Thread {
     private void handleStateInput(byte[] packetData) throws IOException{
         ByteArrayInputStream bais = new ByteArrayInputStream(packetData);
         ObjectInputStream ois = new ObjectInputStream(bais);
+
+        System.out.println("state recieved");
+
         try {
             ServerOutput clientInput = (ServerOutput) ois.readObject();
-            //do stuff with recieved state
+
         } catch (Exception e){
             e.printStackTrace();
             System.out.println("CLIENT Error reading object");
