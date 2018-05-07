@@ -11,9 +11,11 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 
+//TODO: FIX SOCKET CLOSE ON TCP CONNECTION WITH LOBBY (SCANNER TOO IN INPUTWRITER).
+
 public class ClientLobbyHandler implements NetworkingHandler {
 
-    private static final String hostIP = "localhost";
+    private static final String LOBBY_HOST_IP = "localhost";
     private static final int portNum = 1102;
 
     private ClientLobbyListener clientIn;
@@ -22,7 +24,8 @@ public class ClientLobbyHandler implements NetworkingHandler {
 
     public ClientLobbyHandler(){
         try {
-            socket = new Socket(hostIP, portNum);
+            //establish socket connection with
+            socket = new Socket(LOBBY_HOST_IP, portNum);
             PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 

@@ -11,7 +11,8 @@ import java.net.UnknownHostException;
 public class ClientLobbyListener extends Thread {
 
     private boolean isRunning;
-    private BufferedReader inputReader; //reads input from server.
+
+    private BufferedReader inputReader; //reads input from server through socket in handler.
 
     public ClientLobbyListener(BufferedReader inputReader){
         this.inputReader = inputReader;
@@ -39,7 +40,7 @@ public class ClientLobbyListener extends Thread {
             String command = input.substring(1);
 
             if(command.startsWith("S")){
-                //do stuff here
+                //TODO: WHATEVER THIS DOES
             }
 
             else if(command.startsWith("C")){
@@ -48,6 +49,7 @@ public class ClientLobbyListener extends Thread {
 
                 int playerID = Integer.parseInt(splitInput[2]);
 
+                //When hosts starts the game, provide the client with the hosts IP and begin connection with server.
                 ClientNetworkingHandler.setHostIP(serverHostAddress);
                 ClientNetworkingHandler.setState(ConnectionState.CONNECTING);
             }
@@ -57,6 +59,7 @@ public class ClientLobbyListener extends Thread {
         }
     }
 
+    /**Closes the thread.*/
     public void close(){
         isRunning = false;
     }

@@ -11,6 +11,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+/**Sends connection-requests to the server in intervals provided by ServerHandler.clientTickRate. */
 public class ClientConnectionOutput extends Thread {
 
     //Socket
@@ -24,7 +25,7 @@ public class ClientConnectionOutput extends Thread {
 
     private boolean isRunning;
 
-    public ClientConnectionOutput(InetAddress hostIP){
+    ClientConnectionOutput(InetAddress hostIP){
         try {
             serverIP = hostIP;
             serverPort = ServerHandler.serverPort;
@@ -63,6 +64,8 @@ public class ClientConnectionOutput extends Thread {
         }
     }
 
+    /**
+     * @return A boolean describing whether the connection-request has timed out. True - yes, False - no.*/
     private boolean checkTimeout(){
         if(numTimeoutChecks == 0) {
             numTimeoutChecks++;
@@ -79,16 +82,19 @@ public class ClientConnectionOutput extends Thread {
     private void sendConnectionRequest() throws IOException{
         String connectionRequestMessage = "Connection request";
 
+        //Compound the data with a connection-request identifier, such that the byte array will be [identifier][data]
         ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();
         compoundingStream.write(NetworkingIdentifiers.CONNECT_REQUEST_IDENTIFIER);
         compoundingStream.write(connectionRequestMessage.getBytes());
 
+        //send the compounded output to the server.
         byte[] compoundOutput = compoundingStream.toByteArray();
         udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, serverIP, serverPort));
 
         System.out.println("connection request sent");
     }
 
+    /**Closes the output-socket and stops the thread. */
     public void close(){
         isRunning = false;
         udpSocket.close();

@@ -23,7 +23,7 @@ public class SimulationHandler {
         return instance;
     }
 
-    //public init call, simulationhandler should be the first thing initialized
+    //public initialize call, simulationhandler should be the first thing initialized
     public void startSimulation(Boolean isServerSide){
         serverSide = isServerSide;
 

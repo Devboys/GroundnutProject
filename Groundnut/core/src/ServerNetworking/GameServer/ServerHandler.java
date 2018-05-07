@@ -1,9 +1,10 @@
 package ServerNetworking.GameServer;
 
 import Core.SimulationHandler;
-import Entity.PlayerGroup;
-
 import java.net.InetAddress;
+
+//TODO: TICKRATES ARE USED AS WAIT-TIMES, NOT TICKRATES, RENAME.
+//TODO: MAKE SERVERHANDLER LIKE OTHER HANDLERS(Non-static, and starts input-and-output threads for server.)
 
 public class ServerHandler {
 

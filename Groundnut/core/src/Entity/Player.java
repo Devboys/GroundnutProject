@@ -75,6 +75,7 @@ public class Player implements Entity{
     @Override
     public void update(GameStateManager gsm) {
         unitCollider.setLinearVelocity(0, 0);
+
         if(inputSource!= null) {
             move();
         }
@@ -85,7 +86,6 @@ public class Player implements Entity{
 
     @Override
     public void destroy(){ theWorld.destroyBody(unitCollider);}
-
 
     private void move(){
         this.unitPos = this.unitCollider.getPosition();

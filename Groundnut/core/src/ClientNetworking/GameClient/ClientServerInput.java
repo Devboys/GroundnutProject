@@ -14,6 +14,9 @@ import Constants.NetworkingIdentifiers;
 import ServerNetworking.GameServer.ServerHandler;
 import ServerNetworking.GameServer.ServerOutput;
 
+//TODO: Update local simulation based on simulation-state recieved from server.
+
+/**Recieves simulation-states from authoritative server and handles these.*/
 public class ClientServerInput extends Thread {
 
     //Data
@@ -26,9 +29,8 @@ public class ClientServerInput extends Thread {
 
     private boolean isRunning;
 
-    public ClientServerInput() {
+    ClientServerInput() {
         try {
-            //Socket
             InetAddress multicastGroup = InetAddress.getByName(ServerHandler.groupIP);
             int multicastPort = ServerHandler.multicastPort;
             dgram = new DatagramPacket(buffer, buffer.length, multicastGroup, multicastPort); //fix
@@ -42,14 +44,14 @@ public class ClientServerInput extends Thread {
 
     }
 
-    @Override
-    public void run() {
+    @Override public void run() {
         isRunning = true;
         while(isRunning) {
             try {
                 if(ClientNetworkingHandler.getState() == ConnectionState.CONNECTED) {
-                    udpMulticastSocket.receive(dgram);
 
+                    //Receive a packet and get its data.
+                    udpMulticastSocket.receive(dgram);
                     byte[] compoundData = dgram.getData();
 
                     //split recieved data into identifier and packetdata
@@ -57,7 +59,7 @@ public class ClientServerInput extends Thread {
                     byte[] packetData = Arrays.copyOfRange(compoundData,
                             NetworkingIdentifiers.IDENTIFIER_LENGTH, compoundData.length);
 
-                    //ignore all other packages than states.
+                    //ignore all other packages than simulation-states.
                     if(Arrays.equals(identifier, NetworkingIdentifiers.SIMULATION_STATE_IDENTIFIER)){
                         handleStateInput(packetData);
                     }
@@ -69,6 +71,8 @@ public class ClientServerInput extends Thread {
     }
 
     private void handleStateInput(byte[] packetData) throws IOException{
+
+        //convert state-object back into an object
         ByteArrayInputStream bais = new ByteArrayInputStream(packetData);
         ObjectInputStream ois = new ObjectInputStream(bais);
 
@@ -83,7 +87,9 @@ public class ClientServerInput extends Thread {
         }
     }
 
+    /**Closes the input-socket and stops the thread. */
     public void close(){
         isRunning = false;
+        udpMulticastSocket.close();
     }
 }

@@ -12,7 +12,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import java.io.IOException;
 
-public class ServerLauncher {
+public class ServerMain {
     public static void main(String[] args){
         launch();
     }

@@ -9,6 +9,10 @@ public class PlayerInput implements Serializable, InputSource{
     private boolean left;
     private boolean right;
 
+    @Override public PlayerInput getInput() {
+        return this;
+    }
+
     public boolean isUp() { return up; }
     public void setUp(boolean up) { this.up = up; }
 
@@ -20,10 +24,4 @@ public class PlayerInput implements Serializable, InputSource{
 
     public boolean isRight() { return right; }
     public void setRight(boolean right) { this.right = right; }
-
-
-    @Override
-    public PlayerInput getInput() {
-        return this;
-    }
 }

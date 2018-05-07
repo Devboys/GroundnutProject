@@ -30,7 +30,7 @@ public class UserInputWriter extends Thread {
 
     public void close(){
         isRunning = false;
-        //scanner.close(); //THIS FUCKS UP THE LOBBY SOMEHOW??????
+        //scanner.close(); //TODO: This never happens - resulting in server never changing state, fix it.
     }
 
 

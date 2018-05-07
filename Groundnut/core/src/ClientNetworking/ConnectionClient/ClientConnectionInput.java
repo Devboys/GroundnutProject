@@ -10,6 +10,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.Arrays;
 
+/**Recieves and handles connection confirms and rejections from the server.*/
 public class ClientConnectionInput extends Thread{
 
     private boolean isRunning;
@@ -22,10 +23,11 @@ public class ClientConnectionInput extends Thread{
    private DatagramSocket connectionSocket;
    private DatagramPacket dgram;
 
-   public ClientConnectionInput(){
+   ClientConnectionInput(){
        try{
            dgram = new DatagramPacket(buffer, buffer.length);
            connectionSocket = new DatagramSocket(ServerHandler.clientPort);
+           connectionSocket.setSoTimeout(1000);
 
        }catch (IOException e){e.printStackTrace();}
    }
@@ -35,16 +37,18 @@ public class ClientConnectionInput extends Thread{
         isRunning = true;
         while(isRunning) {
             try {
-                if (ClientNetworkingHandler.getState() == ConnectionState.CONNECTING) {
+                if (ClientNetworkingHandler.getState() == ConnectionState.CONNECTING) { //must be in correct state.
+
+                    //Recieve a packet and get its data.
                     connectionSocket.receive(dgram);
                     byte[] compoundData = dgram.getData();
 
+                    //separate identifier from packet-data
                     byte[] identifier = Arrays.copyOfRange(compoundData, 0, NetworkingIdentifiers.IDENTIFIER_LENGTH);
                     byte[] packetData = Arrays.copyOfRange(compoundData,
                             NetworkingIdentifiers.IDENTIFIER_LENGTH, compoundData.length);
 
-                    //UNFINISHED, MORE
-
+                    //check if packet is a connect-confirm or connect-rejection (or something else).
                     if(Arrays.equals(identifier, NetworkingIdentifiers.ACCEPT_IDENTIFIER)){
                         handleConnectionConfirm(packetData);
                     }
@@ -54,6 +58,7 @@ public class ClientConnectionInput extends Thread{
 
                 } else {
                     System.out.println("CLIENT: Connection packet recieved outside of connection-state");
+                    ClientNetworkingHandler.setState(ConnectionState.DISCONNECTED);
                 }
             }catch(IOException e){
                 e.printStackTrace();
@@ -64,15 +69,18 @@ public class ClientConnectionInput extends Thread{
     private void handleConnectionConfirm(byte[] packetData){
        ClientNetworkingHandler.setState(ConnectionState.CONNECTED);
        String message = new String(packetData);
+
        System.out.println("Confirm Message: " + message);
     }
 
     private void handleConnectionReject(byte[] packetData){
        ClientNetworkingHandler.setState(ConnectionState.DISCONNECTED);
        String message = new String(packetData);
+
        System.out.println("Reject Message: " + message);
     }
 
+    /**Closes the input-socket and stops the thread. */
     public void close(){
         isRunning = false;
         connectionSocket.close();

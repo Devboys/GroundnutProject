@@ -14,6 +14,9 @@ import Core.SimulationHandler;
 import Input.PlayerInput;
 import ServerNetworking.GameServer.ServerHandler;
 
+//TODO: OBJECTOUTPUTSTREAM SHOULD NOT BE REMADE EVERY TIME IT IS USED.
+
+/**Sends Player-input objects, sampled from the SimulationHandler, to the server. Packets are sent in intervals.*/
 public class ClientServerOutput extends Thread {
 
     //Socket
@@ -23,7 +26,7 @@ public class ClientServerOutput extends Thread {
 
     private boolean running;
 
-    public ClientServerOutput(InetAddress hostIP){
+    ClientServerOutput(InetAddress hostIP){
         try {
             //Socket
             serverIP = hostIP;
@@ -40,15 +43,15 @@ public class ClientServerOutput extends Thread {
 
     @Override
     public void run() {
-        running = true;
 
+        running = true;
         while(running){
             try {
-                if(ClientNetworkingHandler.getState() == ConnectionState.CONNECTED){
+                if(ClientNetworkingHandler.getState() == ConnectionState.CONNECTED){ //only work if
                     sendPlayerInput();
                 } else {
-                    close();
                     System.out.println("CLIENT: Server handler started in incorrect state");
+                    ClientNetworkingHandler.setState(ConnectionState.DISCONNECTED);
                 }
             }catch (IOException e){
                 e.printStackTrace();
@@ -72,15 +75,20 @@ public class ClientServerOutput extends Thread {
         oos.flush();
         byte[] serializedObject = baos.toByteArray();
 
-        //add packet identifier to packet byte-array output.
+        //add packet identifier to packet byte-array output such that packet is [identifier][data].
         ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();
         compoundingStream.write(NetworkingIdentifiers.MOVEMENT_PACKET_IDENTIFIER);
         compoundingStream.write(serializedObject);
 
+        //send compound packet-data to server.
         byte[] compoundOutput = compoundingStream.toByteArray();
         udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, serverIP, serverPort));
         baos.reset();
     }
 
-    public void close(){ running = false; }
+    /**Closes the output-socket and stops the thread. */
+    public void close(){
+        running = false;
+        udpSocket.close();
+    }
 }

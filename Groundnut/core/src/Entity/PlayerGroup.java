@@ -9,8 +9,8 @@ public class PlayerGroup {
     private Player[] players;
     private int playersInserted;
 
-    private final int initX = -50;
-    private final int initY = -50;
+    private final int initX = -50; //start player outside of screen.
+    private final int initY = -50; //start player outside of screen.
 
     public PlayerGroup(){
         players = new Player[MAX_PLAYERS];
