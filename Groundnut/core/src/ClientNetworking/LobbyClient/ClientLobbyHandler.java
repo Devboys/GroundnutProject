@@ -22,14 +22,16 @@ public class ClientLobbyHandler implements NetworkingHandler {
     private UserInputWriter clientOut;
     private Socket socket;
 
-    public ClientLobbyHandler(){
+    public ClientLobbyHandler(ClientNetworkingHandler parent){
         try {
-            //establish socket connection with
+            //establish socket connection with lobby
             socket = new Socket(LOBBY_HOST_IP, portNum);
+
+            //wrap input- and output-streams in a reader and a writer.
             PrintWriter outputWriter = new PrintWriter(socket.getOutputStream());
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            clientIn = new ClientLobbyListener(inputReader);
+            clientIn = new ClientLobbyListener(inputReader, parent);
             clientIn.start();
 
             clientOut = new UserInputWriter(outputWriter);
@@ -37,7 +39,7 @@ public class ClientLobbyHandler implements NetworkingHandler {
 
         }catch (ConnectException e){
             System.out.println("Lobby not available");
-            ClientNetworkingHandler.setState(ConnectionState.DISCONNECTED);
+            parent.setState(ConnectionState.DISCONNECTED);
         }
         catch(IOException e){
             e.printStackTrace();

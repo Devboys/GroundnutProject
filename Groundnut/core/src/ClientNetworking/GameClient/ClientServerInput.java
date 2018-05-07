@@ -29,7 +29,11 @@ public class ClientServerInput extends Thread {
 
     private boolean isRunning;
 
-    ClientServerInput() {
+    private ClientNetworkingHandler parentHandler;
+
+    ClientServerInput(ClientNetworkingHandler parent) {
+        parentHandler = parent;
+
         try {
             InetAddress multicastGroup = InetAddress.getByName(ServerHandler.groupIP);
             int multicastPort = ServerHandler.multicastPort;
@@ -48,7 +52,7 @@ public class ClientServerInput extends Thread {
         isRunning = true;
         while(isRunning) {
             try {
-                if(ClientNetworkingHandler.getState() == ConnectionState.CONNECTED) {
+                if(parentHandler.getState() == ConnectionState.CONNECTED) {
 
                     //Receive a packet and get its data.
                     udpMulticastSocket.receive(dgram);

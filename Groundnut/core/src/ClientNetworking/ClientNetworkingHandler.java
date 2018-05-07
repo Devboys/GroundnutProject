@@ -8,7 +8,6 @@ import Input.PlayerInput;
 
 import java.net.InetAddress;
 
-//TODO: MAKE ClientNetworkingHandler A NON-STATIC(parent-relationship with handlers)
 //TODO: REDO CONNECTION-PORTS ON SERVER AS WELL AS CLIENT.
 
 /**Super-handler for client-server networking. Handles the client's connection-state and opens handlers for
@@ -16,11 +15,9 @@ import java.net.InetAddress;
  * Also holds the game-server's host-IP when one is provided. */
 public class ClientNetworkingHandler {
 
-    private static InetAddress gameHostIP;
-    private static ConnectionState currState = ConnectionState.DISCONNECTED;
-    private static NetworkingHandler currHandler;
-
-    private static PlayerInput clientInputSource;
+    private InetAddress gameHostIP;
+    private ConnectionState currState;
+    private NetworkingHandler currHandler;
 
     /**No argument constructor will attempt to connect through lobby.*/
     public ClientNetworkingHandler(){
@@ -35,7 +32,7 @@ public class ClientNetworkingHandler {
     }
 
     /** @return This object's current ConnectionState */
-    public static ConnectionState getState(){
+    public ConnectionState getState(){
         return currState;
     }
 
@@ -44,7 +41,7 @@ public class ClientNetworkingHandler {
      * provided previously. Otherwise, they will switch to DISCONNECTED instead.
      * @param state the state to switch to.
      */
-    public static void setState(ConnectionState state){
+    public void setState(ConnectionState state){
         if(currHandler != null) currHandler.close();
 
         System.out.println("CLIENT: switching to: "+ state.name());
@@ -53,18 +50,18 @@ public class ClientNetworkingHandler {
         switch (state){
             case CONNECTED:
                 if(gameHostIP != null) {  //server-connection requires a hostIP to send packages to.
-                    currHandler = new ClientServerHandler();
+                    currHandler = new ClientServerHandler(this);
                 } else {
                     setState(ConnectionState.DISCONNECTED);
                     System.out.println("No host IP, switching to disconnected");
                 }
                 break;
             case INLOBBY:
-                currHandler = new ClientLobbyHandler();
+                currHandler = new ClientLobbyHandler(this);
                 break;
             case CONNECTING:
                 if(gameHostIP != null) { //server-connection requires a hostIP to send packages to.
-                    currHandler = new ClientConnectionHandler();
+                    currHandler = new ClientConnectionHandler(this);
                 } else {
                     setState(ConnectionState.DISCONNECTED);
                     System.out.println("No host IP, switching to disconnected");
@@ -76,6 +73,6 @@ public class ClientNetworkingHandler {
         }
     }
 
-    public static void setHostIP(InetAddress ip){ gameHostIP = ip; }
-    public static InetAddress getHostIP(){ return gameHostIP; }
+    public void setHostIP(InetAddress ip){ gameHostIP = ip; }
+    public InetAddress getHostIP(){ return gameHostIP; }
 }

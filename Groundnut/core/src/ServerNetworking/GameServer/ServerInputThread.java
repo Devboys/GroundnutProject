@@ -25,7 +25,11 @@ public class ServerInputThread extends Thread {
     private int serverPort;
     private boolean running;
 
-    public ServerInputThread(){
+    private ServerHandler serverHandler;
+
+    public ServerInputThread(ServerHandler parent){
+        serverHandler = parent;
+
         try {
             //Socket
             serverPort = ServerHandler.serverPort;
@@ -71,7 +75,7 @@ public class ServerInputThread extends Thread {
                     handleConnectionRequest(dgram.getAddress());
                 }
                 else if(Arrays.equals(identifier, NetworkingIdentifiers.MOVEMENT_PACKET_IDENTIFIER)){
-                    if(ServerHandler.getInstance().isClientKnown(dgram.getAddress())) {
+                    if(serverHandler.isClientKnown(dgram.getAddress())) {
                         handleMovementInput(packetData, dgram.getAddress());
                     }
                 }
@@ -86,18 +90,18 @@ public class ServerInputThread extends Thread {
     }
 
     private void handleConnectionRequest(InetAddress packetIP) throws IOException{
-        boolean isKnown = ServerHandler.getInstance().isClientKnown(packetIP);
+        boolean isKnown = serverHandler.isClientKnown(packetIP);
 
         if(isKnown){
             //send connection confirm to client.
             ServerOutputThread.sendConnectionConfirm(packetIP);
         }
         else{
-            int pIndex = ServerHandler.getInstance().findFreeClientIndex();
+            int pIndex = serverHandler.findFreeClientIndex();
             if(pIndex != -1){ //client was accepted
                 //setup serverside connection.
                 try {
-                    ServerHandler.getInstance().connectPlayer(packetIP, pIndex);
+                    serverHandler.connectPlayer(packetIP, pIndex);
                 }catch (Exception e){
                     System.out.println("NEW PLAYER ATTEMPTED TO CONNECT TO ALREADY-FILLED INDEX");
                 }
@@ -120,8 +124,8 @@ public class ServerInputThread extends Thread {
         try{
             PlayerInput playerInput = (PlayerInput) ois.readObject();
 
-            int pIndex = ServerHandler.getInstance().findExistingClientIndex(packetIP);
-            ServerHandler.getInstance().getClient(pIndex).setInput(playerInput);
+            int pIndex = serverHandler.findExistingClientIndex(packetIP);
+            serverHandler.getClient(pIndex).setInput(playerInput);
 
         } catch(ClassNotFoundException e){
             e.printStackTrace();

@@ -10,9 +10,10 @@ public class ClientServerHandler implements NetworkingHandler {
     private ClientServerInput clientIn;   //recieves simulation-states from server.
     private ClientServerOutput clientOut; //sends player-input objects to server.
 
-    public ClientServerHandler(){
-        clientIn = new ClientServerInput();
-        clientOut = new ClientServerOutput(ClientNetworkingHandler.getHostIP());
+    public ClientServerHandler(ClientNetworkingHandler parent){
+
+        clientIn = new ClientServerInput(parent);
+        clientOut = new ClientServerOutput(parent);
 
         clientIn.start();
         clientOut.start();

@@ -14,7 +14,11 @@ public class ClientLobbyListener extends Thread {
 
     private BufferedReader inputReader; //reads input from server through socket in handler.
 
-    public ClientLobbyListener(BufferedReader inputReader){
+    private ClientNetworkingHandler parentHandler;
+
+    public ClientLobbyListener(BufferedReader inputReader, ClientNetworkingHandler parent){
+        parentHandler = parent;
+
         this.inputReader = inputReader;
     }
 
@@ -50,8 +54,8 @@ public class ClientLobbyListener extends Thread {
                 int playerID = Integer.parseInt(splitInput[2]);
 
                 //When hosts starts the game, provide the client with the hosts IP and begin connection with server.
-                ClientNetworkingHandler.setHostIP(serverHostAddress);
-                ClientNetworkingHandler.setState(ConnectionState.CONNECTING);
+                parentHandler.setHostIP(serverHostAddress);
+                parentHandler.setState(ConnectionState.CONNECTING);
             }
         }
         else{

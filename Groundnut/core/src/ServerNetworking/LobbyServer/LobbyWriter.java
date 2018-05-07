@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class LobbyServerWriter extends Thread {
+public class LobbyWriter extends Thread {
 
     //communication arrays
     public static ArrayList<Socket> sockets = new ArrayList<Socket>();
@@ -166,7 +166,7 @@ public class LobbyServerWriter extends Thread {
 
             usernames.add("user" + usernumber);
 
-            LobbyServerListener serverListener = new LobbyServerListener(this, usernumber);
+            LobbyListener serverListener = new LobbyListener(this, usernumber);
             serverListener.start();
 
             //test println

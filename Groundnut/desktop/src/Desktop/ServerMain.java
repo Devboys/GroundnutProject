@@ -18,18 +18,7 @@ public class ServerMain {
     }
 
     public static void launch(){
-
-//        //start serverside simulation - wrong
-//        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-//        config.title = "SERVER";
-//        new LwjglApplication(new GameThread(), config);
-//
-        //setup input/output threads - MOVE TO SEPARATE HANDLER
-        ServerOutputThread serverOutput = new ServerOutputThread();
-        ServerInputThread serverInput = new ServerInputThread();
-        serverOutput.start();
-        serverInput.start();
-
+        ServerHandler serverHandler = new ServerHandler();
         SimulationHandler.getInstance().startSimulation(true);
     }
 }

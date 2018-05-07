@@ -16,7 +16,6 @@ public class ClientConnectionOutput extends Thread {
 
     //Socket
     private DatagramSocket udpSocket;
-    private InetAddress serverIP;
     private int serverPort;
 
     //timeout
@@ -25,13 +24,16 @@ public class ClientConnectionOutput extends Thread {
 
     private boolean isRunning;
 
-    ClientConnectionOutput(InetAddress hostIP){
+    private ClientNetworkingHandler parentHandler;
+
+    ClientConnectionOutput(ClientNetworkingHandler parent){
+        this.parentHandler = parent;
+
         try {
-            serverIP = hostIP;
             serverPort = ServerHandler.serverPort;
 
             udpSocket = new DatagramSocket();
-            udpSocket.connect(serverIP, serverPort);
+            udpSocket.connect(parent.getHostIP(), serverPort);
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -42,7 +44,7 @@ public class ClientConnectionOutput extends Thread {
         isRunning = true;
         while(isRunning){
             try {
-                if (ClientNetworkingHandler.getState() == ConnectionState.CONNECTING) {
+                if (parentHandler.getState() == ConnectionState.CONNECTING) {
                     if (checkTimeout()) {
                         sendConnectionRequest();
                     }
@@ -89,7 +91,9 @@ public class ClientConnectionOutput extends Thread {
 
         //send the compounded output to the server.
         byte[] compoundOutput = compoundingStream.toByteArray();
-        udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, serverIP, serverPort));
+        udpSocket.send(
+                new DatagramPacket(compoundOutput, compoundOutput.length, parentHandler.getHostIP(), serverPort)
+        );
 
         System.out.println("connection request sent");
     }

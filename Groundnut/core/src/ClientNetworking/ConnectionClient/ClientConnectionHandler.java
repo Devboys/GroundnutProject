@@ -10,9 +10,10 @@ public class ClientConnectionHandler implements NetworkingHandler {
     private ClientConnectionInput clientIn; //recieves connection-confirms and rejects from server.
     private ClientConnectionOutput clientOut; //prints connection-requests to server
 
-    public ClientConnectionHandler(){
-        clientIn = new ClientConnectionInput();
-        clientOut = new ClientConnectionOutput(ClientNetworkingHandler.getHostIP());
+    public ClientConnectionHandler(ClientNetworkingHandler parent){
+
+        clientIn = new ClientConnectionInput(parent);
+        clientOut = new ClientConnectionOutput(parent);
 
         clientIn.start();
         clientOut.start();

@@ -23,7 +23,11 @@ public class ClientConnectionInput extends Thread{
    private DatagramSocket connectionSocket;
    private DatagramPacket dgram;
 
-   ClientConnectionInput(){
+   ClientNetworkingHandler parentHandler;
+
+   ClientConnectionInput(ClientNetworkingHandler parent){
+       this.parentHandler = parent;
+
        try{
            dgram = new DatagramPacket(buffer, buffer.length);
            connectionSocket = new DatagramSocket(ServerHandler.clientPort);
@@ -37,7 +41,7 @@ public class ClientConnectionInput extends Thread{
         isRunning = true;
         while(isRunning) {
             try {
-                if (ClientNetworkingHandler.getState() == ConnectionState.CONNECTING) { //must be in correct state.
+                if (parentHandler.getState() == ConnectionState.CONNECTING) { //must be in correct state.
 
                     //Recieve a packet and get its data.
                     connectionSocket.receive(dgram);
@@ -58,7 +62,7 @@ public class ClientConnectionInput extends Thread{
 
                 } else {
                     System.out.println("CLIENT: Connection packet recieved outside of connection-state");
-                    ClientNetworkingHandler.setState(ConnectionState.DISCONNECTED);
+                    parentHandler.setState(ConnectionState.DISCONNECTED);
                 }
             }catch(IOException e){
                 e.printStackTrace();
@@ -67,14 +71,14 @@ public class ClientConnectionInput extends Thread{
     }
 
     private void handleConnectionConfirm(byte[] packetData){
-       ClientNetworkingHandler.setState(ConnectionState.CONNECTED);
+       parentHandler.setState(ConnectionState.CONNECTED);
        String message = new String(packetData);
 
        System.out.println("Confirm Message: " + message);
     }
 
     private void handleConnectionReject(byte[] packetData){
-       ClientNetworkingHandler.setState(ConnectionState.DISCONNECTED);
+       parentHandler.setState(ConnectionState.DISCONNECTED);
        String message = new String(packetData);
 
        System.out.println("Reject Message: " + message);

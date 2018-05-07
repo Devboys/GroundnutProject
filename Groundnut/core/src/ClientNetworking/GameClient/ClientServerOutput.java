@@ -21,19 +21,20 @@ public class ClientServerOutput extends Thread {
 
     //Socket
     private DatagramSocket udpSocket;
-    private InetAddress serverIP;
     private int serverPort;
 
     private boolean running;
 
-    ClientServerOutput(InetAddress hostIP){
+    private ClientNetworkingHandler parentHandler;
+
+    ClientServerOutput(ClientNetworkingHandler parent){
+        parentHandler = parent;
+
         try {
-            //Socket
-            serverIP = hostIP;
             serverPort = ServerHandler.serverPort;
 
             udpSocket = new DatagramSocket();
-            udpSocket.connect(serverIP, serverPort);
+            udpSocket.connect(parentHandler.getHostIP(), serverPort);
 
         }catch(IOException e){
             e.printStackTrace();
@@ -47,11 +48,11 @@ public class ClientServerOutput extends Thread {
         running = true;
         while(running){
             try {
-                if(ClientNetworkingHandler.getState() == ConnectionState.CONNECTED){ //only work if
+                if(parentHandler.getState() == ConnectionState.CONNECTED){ //only work if
                     sendPlayerInput();
                 } else {
                     System.out.println("CLIENT: Server handler started in incorrect state");
-                    ClientNetworkingHandler.setState(ConnectionState.DISCONNECTED);
+                    parentHandler.setState(ConnectionState.DISCONNECTED);
                 }
             }catch (IOException e){
                 e.printStackTrace();
@@ -82,7 +83,9 @@ public class ClientServerOutput extends Thread {
 
         //send compound packet-data to server.
         byte[] compoundOutput = compoundingStream.toByteArray();
-        udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, serverIP, serverPort));
+        udpSocket.send(
+                new DatagramPacket(compoundOutput, compoundOutput.length, parentHandler.getHostIP(), serverPort)
+        );
         baos.reset();
     }
 

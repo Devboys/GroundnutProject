@@ -2,13 +2,13 @@ package ServerNetworking.LobbyServer;
 
 import java.io.IOException;
 
-public class LobbyServerListener extends Thread{
-    private LobbyServerWriter parent;
+public class LobbyListener extends Thread{
+    private LobbyWriter parent;
     private int threadnumber;
 
     private boolean isRunning;
 
-    public LobbyServerListener(LobbyServerWriter p, int threadnumber){
+    public LobbyListener(LobbyWriter p, int threadnumber){
         parent = p;
         this.threadnumber = threadnumber;
     }
