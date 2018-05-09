@@ -86,7 +86,7 @@ public class ServerOutputThread extends Thread {
         byte[] compoundOutput = compoundingStream.toByteArray();
         udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, targetIP, ServerHandler.clientPort));
 
-        System.out.println("confirm sent");
+        System.out.println("confirm sent to: " + targetIP.toString() + "(" + ServerHandler.clientPort + ")");
     }
 
     public static void sendConnectionReject(InetAddress targetIP) throws IOException{

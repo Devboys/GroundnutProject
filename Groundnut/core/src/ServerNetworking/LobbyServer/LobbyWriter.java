@@ -2,7 +2,9 @@ package ServerNetworking.LobbyServer;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class LobbyWriter extends Thread {
@@ -127,16 +129,27 @@ public class LobbyWriter extends Thread {
 
                 System.out.println("Users Game Found");
 
+                String hostIP = "";
+
                 for(int k = 0; k < games.get(j).size(); k++){
-                    System.out.println("Sending IP");
-                    pw.get(index).print("#S "+games.get(j).get(k).getHostAddress() + " ");
+                    hostIP = games.get(j).get(k).getHostAddress();
+
+                    if(hostIP.equals("127.0.0.1")){
+                        try {
+                            hostIP = InetAddress.getLocalHost().toString();
+                            hostIP = hostIP.split("/")[1];
+                        }catch (UnknownHostException e){e.printStackTrace();}
+                    }
+
+                    System.out.println("Sending IP: " + hostIP);
+                    pw.get(index).print("#S "+ hostIP + " ");
                 }
 
                 pw.get(index).println();
                 pw.get(index).flush();
 
                 for(int k = 0; k < gamesPW.get(j).size(); k++){
-                    gamesPW.get(j).get(k).println("#C "+ games.get(j).get(0).getHostAddress() + " " +k);
+                    gamesPW.get(j).get(k).println("#C "+ hostIP + " " +k);
                     gamesPW.get(j).get(k).flush();
                 }
             }

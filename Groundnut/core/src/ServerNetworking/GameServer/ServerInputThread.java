@@ -90,6 +90,8 @@ public class ServerInputThread extends Thread {
     }
 
     private void handleConnectionRequest(InetAddress packetIP) throws IOException{
+        System.out.println("Connect request received from: " + packetIP.toString());
+
         boolean isKnown = serverHandler.isClientKnown(packetIP);
 
         if(isKnown){
@@ -117,7 +119,7 @@ public class ServerInputThread extends Thread {
     }
 
     private void handleMovementInput(byte[] packetData, InetAddress packetIP) throws IOException{
-        System.out.println("input received");
+        System.out.println("input received from: " + packetIP.toString());
 
         ByteArrayInputStream bais = new ByteArrayInputStream(packetData);
         ObjectInputStream ois = new ObjectInputStream(bais);

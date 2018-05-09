@@ -6,6 +6,7 @@ import com.sun.security.ntlm.Server;
 import java.net.InetAddress;
 
 //TODO: TICKRATES ARE USED AS WAIT-TIMES, NOT TICKRATES, RENAME.
+//TODO: UNIFY PORTS THROUGHOUT PROGRAM
 
 public class ServerHandler {
 

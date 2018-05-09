@@ -6,6 +6,8 @@ import java.net.Socket;
 
 public class LobbyHandler {
 
+    //TODO: FIND A WAY TO  CLOSE THE LOBBY THREADS ELEGANTLY
+
     private static final int serverPort = 1102;
     private static ServerSocket serverSocket;
 

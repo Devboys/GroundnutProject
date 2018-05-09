@@ -49,6 +49,7 @@ public class ClientLobbyListener extends Thread {
 
             else if(command.startsWith("C")){
                 String[] splitInput = command.split(" ");
+                System.out.println("Recieved Host IP: " + splitInput[1]);
                 InetAddress serverHostAddress = InetAddress.getByName(splitInput[1]);
 
                 int playerID = Integer.parseInt(splitInput[2]);

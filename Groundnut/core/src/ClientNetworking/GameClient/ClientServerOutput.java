@@ -68,7 +68,6 @@ public class ClientServerOutput extends Thread {
     }
 
     private void sendPlayerInput() throws IOException{
-        System.out.println("sending inputs");
         //Data
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -87,6 +86,7 @@ public class ClientServerOutput extends Thread {
                 new DatagramPacket(compoundOutput, compoundOutput.length, parentHandler.getHostIP(), serverPort)
         );
         baos.reset();
+        System.out.println("Input sent to: " + parentHandler.getHostIP().toString() + "(" + serverPort + ")");
     }
 
     /**Closes the output-socket and stops the thread. */
