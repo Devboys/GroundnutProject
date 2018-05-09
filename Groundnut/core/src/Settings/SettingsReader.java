@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class SettingsReader {
@@ -17,7 +18,10 @@ public class SettingsReader {
 
     private SettingsReader(){} //private constructor to disable extension & instantiation.
 
+    /**Read and set all values from Settings.txt.
+     * @throws FileNotFoundException If Settings.txt has not been found*/
     public static void initValues() throws FileNotFoundException {
+        setDefaults();
         BufferedReader bufferedReader = new BufferedReader( new FileReader(SETTINGS_PATH));
 
         String readInput;
@@ -39,11 +43,12 @@ public class SettingsReader {
                         variableValue = variableValue.substring(0, variableValue.length()-2);
                     }
 
-                    //use identifier  to check what kind of variable we got, and treat accordingly.
-                    switch (variableIdentifier){
-                        case hostIPIdentifier:
-                            LobbyHostIP = InetAddress.getByName(variableValue);
-                            break;
+                    if(variableValue!= "") { //ignore empty settings.
+                        switch (variableIdentifier) { //identify the type of setting read.
+                            case hostIPIdentifier:
+                                LobbyHostIP = InetAddress.getByName(variableValue);
+                                break;
+                        }
                     }
 
                 }
@@ -60,5 +65,16 @@ public class SettingsReader {
         }
     }
 
+    /**Sets default values of all settings in */
+    private static void setDefaults(){
+        try {
+            LobbyHostIP = InetAddress.getByName("localhost");
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** @return The lobby-hosts IP as defined in Settings.txt*/
     public static InetAddress getLobbyHostIP(){ return LobbyHostIP; }
 }
