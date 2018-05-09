@@ -11,8 +11,9 @@ import java.util.Arrays;
 import ClientNetworking.ClientNetworkingHandler;
 import ClientNetworking.ConnectionState;
 import Constants.NetworkingIdentifiers;
+import Core.SimulationHandler;
 import ServerNetworking.GameServer.ServerHandler;
-import ServerNetworking.GameServer.ServerOutput;
+import ServerNetworking.GameServer.GameStateSample;
 
 //TODO: Update local simulation based on simulation-state recieved from server.
 
@@ -59,12 +60,14 @@ public class ClientServerInput extends Thread {
                     byte[] compoundData = dgram.getData();
 
                     //split recieved data into identifier and packetdata
-                    byte[] identifier = Arrays.copyOfRange(compoundData, 0, NetworkingIdentifiers.IDENTIFIER_LENGTH);
+                    byte[] identifier = Arrays.copyOfRange(compoundData, 0,
+                            NetworkingIdentifiers.IDENTIFIER_LENGTH);
                     byte[] packetData = Arrays.copyOfRange(compoundData,
                             NetworkingIdentifiers.IDENTIFIER_LENGTH, compoundData.length);
 
                     //ignore all other packages than simulation-states.
                     if(Arrays.equals(identifier, NetworkingIdentifiers.SIMULATION_STATE_IDENTIFIER)){
+                        System.out.println("State received from: " + dgram.getAddress());
                         handleStateInput(packetData);
                     }
                 }
@@ -75,16 +78,13 @@ public class ClientServerInput extends Thread {
     }
 
     private void handleStateInput(byte[] packetData) throws IOException{
-
         //convert state-object back into an object
         ByteArrayInputStream bais = new ByteArrayInputStream(packetData);
         ObjectInputStream ois = new ObjectInputStream(bais);
 
-        System.out.println("state recieved");
-
         try {
-            ServerOutput clientInput = (ServerOutput) ois.readObject();
-
+            GameStateSample serverState = (GameStateSample) ois.readObject();
+            SimulationHandler.getInstance().synchronizeSimulation(serverState);
         } catch (Exception e){
             e.printStackTrace();
             System.out.println("CLIENT Error reading object");

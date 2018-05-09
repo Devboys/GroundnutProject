@@ -9,6 +9,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.Arrays;
 
 
 public class ServerOutputThread extends Thread {
@@ -64,15 +65,17 @@ public class ServerOutputThread extends Thread {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
 
-        oos.writeObject(new ServerOutput());
+        oos.writeObject(new GameStateSample());
         oos.flush();
 
+        //add identifier to serialized object
         ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();
         compoundingStream.write(NetworkingIdentifiers.SIMULATION_STATE_IDENTIFIER);
         compoundingStream.write(baos.toByteArray());
 
-        buffer = baos.toByteArray();
-        udpMulticastSocket.send(new DatagramPacket(buffer, buffer.length, multicastGroupIP, multicastPort));
+        //send compounded packet
+        byte[] compoundOutput = compoundingStream.toByteArray();
+        udpMulticastSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, multicastGroupIP, multicastPort));
         baos.reset();
     }
 

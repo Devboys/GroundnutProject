@@ -3,6 +3,7 @@ package Core;
 import Entity.PlayerGroup;
 import Input.PlayerInput;
 import Input.PlayerInputHandler;
+import ServerNetworking.GameServer.GameStateSample;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -35,6 +36,11 @@ public class SimulationHandler {
         else{
             startClientSim();
         }
+    }
+
+    public void synchronizeSimulation(GameStateSample state){
+        System.out.println("beep boop synchronizing");
+        //TODO: SYNCHRONIZE METHOD.
     }
 
     private void startServerSim(){
