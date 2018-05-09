@@ -66,6 +66,7 @@ public class ServerInputThread extends Thread {
                 udpSocket.receive(dgram);
                 byte[] compoundData = dgram.getData();
 
+
                 //split recieved data into identifier and packetdata
                 byte[] identifier = Arrays.copyOfRange(compoundData, 0, NetworkingIdentifiers.IDENTIFIER_LENGTH);
                 byte[] packetData = Arrays.copyOfRange(compoundData,

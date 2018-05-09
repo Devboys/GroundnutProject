@@ -66,14 +66,14 @@ public class ServerHandler {
 
     public int findExistingClientIndex(InetAddress clientIP){
         for(PlayerSocket pSocket : clientList){
-            if(clientIP == pSocket.getPlayerIP()) return pSocket.getPlayerIndex();
+            if(clientIP.equals(pSocket.getPlayerIP())) return pSocket.getPlayerIndex();
         }
         return -1;
     }
 
     public boolean isClientKnown(InetAddress clientIP){
         for(PlayerSocket pSocket : clientList){
-            if(clientIP == pSocket.getPlayerIP()) return true;
+            if(clientIP.equals(pSocket.getPlayerIP())) return true;
         }
         return false;
     }
