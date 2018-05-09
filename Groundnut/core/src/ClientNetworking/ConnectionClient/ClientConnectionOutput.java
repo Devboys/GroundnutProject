@@ -95,7 +95,7 @@ public class ClientConnectionOutput extends Thread {
                 new DatagramPacket(compoundOutput, compoundOutput.length, parentHandler.getHostIP(), serverPort)
         );
 
-        System.out.println("connection request sent");
+        System.out.println("Connect-Request sent to:" + parentHandler.getHostIP() + "(" + serverPort + ")");
     }
 
     /**Closes the output-socket and stops the thread. */

@@ -31,7 +31,7 @@ public class ClientConnectionInput extends Thread{
        try{
            dgram = new DatagramPacket(buffer, buffer.length);
            connectionSocket = new DatagramSocket(ServerHandler.clientPort);
-           connectionSocket.setSoTimeout(1000);
+           //connectionSocket.setSoTimeout(1000);
 
        }catch (IOException e){e.printStackTrace();}
    }

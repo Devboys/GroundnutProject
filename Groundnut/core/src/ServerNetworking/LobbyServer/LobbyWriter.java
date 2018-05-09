@@ -134,10 +134,10 @@ public class LobbyWriter extends Thread {
                 for(int k = 0; k < games.get(j).size(); k++){
                     hostIP = games.get(j).get(k).getHostAddress();
 
-                    if(hostIP.equals("127.0.0.1")){
+                    if(hostIP.equals("127.0.0.1")){ //dont return localhost IP, return local IP instead.
                         try {
                             hostIP = InetAddress.getLocalHost().toString();
-                            hostIP = hostIP.split("/")[1];
+                            hostIP = hostIP.split("/")[1]; //remove user network name.
                         }catch (UnknownHostException e){e.printStackTrace();}
                     }
 

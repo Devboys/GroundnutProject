@@ -44,19 +44,23 @@ public class ClientLobbyListener extends Thread {
             String command = input.substring(1);
 
             if(command.startsWith("S")){
-                //TODO: WHATEVER THIS DOES
+                String[] splitInput = command.split(" ");
+                System.out.println("Received Host IP: " + splitInput[1]);
+                InetAddress serverHostAddress = InetAddress.getByName(splitInput[1]);
+                parentHandler.setHostIP(serverHostAddress);
+                parentHandler.setState(ConnectionState.CONNECTING);
             }
 
             else if(command.startsWith("C")){
                 String[] splitInput = command.split(" ");
-                System.out.println("Recieved Host IP: " + splitInput[1]);
+                //System.out.println("Received Host IP: " + splitInput[1]);
                 InetAddress serverHostAddress = InetAddress.getByName(splitInput[1]);
 
                 int playerID = Integer.parseInt(splitInput[2]);
 
                 //When hosts starts the game, provide the client with the hosts IP and begin connection with server.
-                parentHandler.setHostIP(serverHostAddress);
-                parentHandler.setState(ConnectionState.CONNECTING);
+//                parentHandler.setHostIP(serverHostAddress);
+//                parentHandler.setState(ConnectionState.CONNECTING);
             }
         }
         else{
