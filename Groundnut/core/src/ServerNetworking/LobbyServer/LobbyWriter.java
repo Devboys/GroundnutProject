@@ -129,17 +129,15 @@ public class LobbyWriter extends Thread {
 
                 System.out.println("Users Game Found");
 
-                String hostIP = "";
+                String hostIP = games.get(j).get(0).getHostAddress(); //get game-host IP.
+                if(hostIP.equals("127.0.0.1")){ //dont return localhost IP, return local IP instead.
+                    try {
+                        hostIP = InetAddress.getLocalHost().toString();
+                        hostIP = hostIP.split("/")[1]; //remove user network name from IP.
+                    }catch (UnknownHostException e){e.printStackTrace();}
+                }
 
                 for(int k = 0; k < games.get(j).size(); k++){
-                    hostIP = games.get(j).get(k).getHostAddress();
-
-                    if(hostIP.equals("127.0.0.1")){ //dont return localhost IP, return local IP instead.
-                        try {
-                            hostIP = InetAddress.getLocalHost().toString();
-                            hostIP = hostIP.split("/")[1]; //remove user network name.
-                        }catch (UnknownHostException e){e.printStackTrace();}
-                    }
 
                     System.out.println("Sending IP: " + hostIP);
                     pw.get(index).print("#S "+ hostIP + " ");

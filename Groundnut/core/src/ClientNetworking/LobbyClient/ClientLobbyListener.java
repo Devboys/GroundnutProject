@@ -23,7 +23,7 @@ public class ClientLobbyListener extends Thread {
     }
 
     public void run(){
-        System.out.println("client thread running");
+        System.out.println("Client thread running");
         isRunning = true;
 
         while(isRunning){
@@ -32,7 +32,7 @@ public class ClientLobbyListener extends Thread {
                 handleInput(serverInput);
 
             } catch (IOException e) {
-                System.out.println("killing Thread");
+                System.out.println("Killing Thread");
                 close();
                 e.printStackTrace();
             }
@@ -44,23 +44,20 @@ public class ClientLobbyListener extends Thread {
             String command = input.substring(1);
 
             if(command.startsWith("S")){
-                String[] splitInput = command.split(" ");
-                System.out.println("Received Host IP: " + splitInput[1]);
-                InetAddress serverHostAddress = InetAddress.getByName(splitInput[1]);
-                parentHandler.setHostIP(serverHostAddress);
-                parentHandler.setState(ConnectionState.CONNECTING);
+                //TODO: WHAT THIS IS SUPPOSED TO DO.
             }
 
             else if(command.startsWith("C")){
                 String[] splitInput = command.split(" ");
-                //System.out.println("Received Host IP: " + splitInput[1]);
+                System.out.println("Received Host IP: " + splitInput[1]);
+
                 InetAddress serverHostAddress = InetAddress.getByName(splitInput[1]);
 
                 int playerID = Integer.parseInt(splitInput[2]);
 
                 //When hosts starts the game, provide the client with the hosts IP and begin connection with server.
-//                parentHandler.setHostIP(serverHostAddress);
-//                parentHandler.setState(ConnectionState.CONNECTING);
+                parentHandler.setHostIP(serverHostAddress);
+                parentHandler.setState(ConnectionState.CONNECTING);
             }
         }
         else{
