@@ -15,9 +15,6 @@ import java.net.InetAddress;
  * Also holds the game-server's host-IP when one is provided. */
 public class ClientNetworkingHandler {
 
-    //Public settings
-
-
     private InetAddress gameHostIP;
     private ConnectionState currState;
     private NetworkingHandler currHandler;
