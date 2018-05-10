@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 public class GameStateManager {
 
 
+    //TODO: REPLACE WITH FACTORY PATTERN ASAP - STATICS SCENES ARE LOADED BEFORE SimulationHandler AND CAN CAUSE WIERD EXCEPTIONS
     //enum of possible states
     public enum Scenes {
         //NEW SCENES HERE BELOW HERE

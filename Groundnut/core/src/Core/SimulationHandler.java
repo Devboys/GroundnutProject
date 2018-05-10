@@ -60,6 +60,8 @@ public class SimulationHandler {
         config.title = "SERVER SIMULATION";
         new LwjglApplication(new GameThread(), config);
 
+
+        ServerHandler sh = new ServerHandler();
     }
 
     private void startClientSim(){
@@ -91,6 +93,7 @@ public class SimulationHandler {
     }
 
     public void setClientID(int id){
+        System.out.println("PlayerID set to: " + id);
         clientID = id;
     }
 

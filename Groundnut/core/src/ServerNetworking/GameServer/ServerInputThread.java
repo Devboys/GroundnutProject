@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 
@@ -37,6 +38,7 @@ public class ServerInputThread extends Thread {
             udpSocket = new DatagramSocket(serverPort, InetAddress.getByName("0.0.0.0"));
 
         } catch (IOException e) {
+            System.out.println("heyyyy");
             e.printStackTrace();
         }
     }
@@ -73,9 +75,7 @@ public class ServerInputThread extends Thread {
                         NetworkingIdentifiers.IDENTIFIER_LENGTH, compoundData.length);
 
                 if(Arrays.equals(identifier, NetworkingIdentifiers.CONNECT_REQUEST_IDENTIFIER)){
-                    String requestMessage = new String(packetData);
-
-                    handleConnectionRequest(dgram.getAddress(), requestMessage);
+                    handleConnectionRequest(dgram.getAddress(), packetData);
                 }
                 else if(Arrays.equals(identifier, NetworkingIdentifiers.MOVEMENT_PACKET_IDENTIFIER)){
                     if(serverHandler.isClientKnown(dgram.getAddress())) {
@@ -92,11 +92,10 @@ public class ServerInputThread extends Thread {
         running = false;
     }
 
-    private void handleConnectionRequest(InetAddress packetIP, String packetData) throws IOException{
+    private void handleConnectionRequest(InetAddress packetIP, byte[] packetData) throws IOException{
         System.out.println("Connect request received from: " + packetIP.toString());
 
-        int playerID = Integer.parseInt(packetData);
-
+        int playerID = ByteBuffer.wrap(packetData).getInt();
         boolean isKnown = serverHandler.isClientKnown(packetIP);
 
         if(isKnown){

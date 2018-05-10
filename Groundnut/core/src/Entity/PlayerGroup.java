@@ -1,5 +1,7 @@
 package Entity;
 
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +31,7 @@ public class PlayerGroup {
 
     public void insertPlayer(int index) throws IndexOutOfBoundsException{
         playersInserted++;
-        players[index].setPos(50*playersInserted, 50*playersInserted);
+        Vector2 initPos = new Vector2(50*playersInserted, 50*playersInserted);
+        players[index].setPos(initPos);
     }
 }

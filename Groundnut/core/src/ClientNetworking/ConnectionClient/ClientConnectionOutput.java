@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.ByteBuffer;
 
 /**Sends connection-requests to the server in intervals provided by ServerHandler.clientTickRate. */
 public class ClientConnectionOutput extends Thread {
@@ -83,12 +84,12 @@ public class ClientConnectionOutput extends Thread {
     }
 
     private void sendConnectionRequest() throws IOException{
-        String connectionRequestMessage = "" + SimulationHandler.getInstance().getClientID();
+        byte[] playerIDBytes = ByteBuffer.allocate(4).putInt(SimulationHandler.getInstance().getClientID()).array();
 
         //Compound the data with a connection-request identifier, such that the byte array will be [identifier][data]
         ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();
         compoundingStream.write(NetworkingIdentifiers.CONNECT_REQUEST_IDENTIFIER);
-        compoundingStream.write(connectionRequestMessage.getBytes());
+        compoundingStream.write(playerIDBytes);
 
         //send the compounded output to the server.
         byte[] compoundOutput = compoundingStream.toByteArray();

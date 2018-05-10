@@ -11,6 +11,8 @@ public class GameStateSample implements Serializable{
     Vector2[] playerPos;
 
     public GameStateSample(){
+        playerPos = new Vector2[ServerHandler.maxPlayerCount];
+
         for (int i = 0; i < ServerHandler.maxPlayerCount; i++) {
             playerPos[i] = SimulationHandler.getInstance().getPlayers().getPlayer(i).getUnitPos();
         }

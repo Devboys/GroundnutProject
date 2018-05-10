@@ -18,7 +18,7 @@ public class ServerMain {
     }
 
     public static void launch(){
-        ServerHandler serverHandler = new ServerHandler();
         SimulationHandler.getInstance().startSimulation(true);
+
     }
 }

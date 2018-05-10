@@ -32,7 +32,9 @@ public class Player implements Entity{
     private InputSource inputSource;
 
     public void setPos(Vector2 position){
-        unitPos = position;
+        if(unitPos != null) {
+            unitPos = position;
+        }
     }
 
     public Vector2 getUnitPos() {
