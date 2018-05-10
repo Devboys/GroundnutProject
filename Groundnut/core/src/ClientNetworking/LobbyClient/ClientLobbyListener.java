@@ -2,6 +2,7 @@ package ClientNetworking.LobbyClient;
 
 import ClientNetworking.ClientNetworkingHandler;
 import ClientNetworking.ConnectionState;
+import Core.SimulationHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,7 +54,9 @@ public class ClientLobbyListener extends Thread {
 
                 InetAddress serverHostAddress = InetAddress.getByName(splitInput[1]);
 
+                //inform local player of his ID on the serverSide;
                 int playerID = Integer.parseInt(splitInput[2]);
+                SimulationHandler.getInstance().setClientID(playerID);
 
                 //When hosts starts the game, provide the client with the hosts IP and begin connection with server.
                 parentHandler.setHostIP(serverHostAddress);
