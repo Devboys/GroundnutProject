@@ -73,7 +73,9 @@ public class ServerInputThread extends Thread {
                         NetworkingIdentifiers.IDENTIFIER_LENGTH, compoundData.length);
 
                 if(Arrays.equals(identifier, NetworkingIdentifiers.CONNECT_REQUEST_IDENTIFIER)){
-                    handleConnectionRequest(dgram.getAddress());
+                    String requestMessage = new String(packetData);
+
+                    handleConnectionRequest(dgram.getAddress(), requestMessage);
                 }
                 else if(Arrays.equals(identifier, NetworkingIdentifiers.MOVEMENT_PACKET_IDENTIFIER)){
                     if(serverHandler.isClientKnown(dgram.getAddress())) {
@@ -90,8 +92,10 @@ public class ServerInputThread extends Thread {
         running = false;
     }
 
-    private void handleConnectionRequest(InetAddress packetIP) throws IOException{
+    private void handleConnectionRequest(InetAddress packetIP, String packetData) throws IOException{
         System.out.println("Connect request received from: " + packetIP.toString());
+
+        int playerID = Integer.parseInt(packetData);
 
         boolean isKnown = serverHandler.isClientKnown(packetIP);
 
@@ -100,11 +104,10 @@ public class ServerInputThread extends Thread {
             ServerOutputThread.sendConnectionConfirm(packetIP);
         }
         else{
-            int pIndex = serverHandler.findFreeClientIndex();
-            if(pIndex != -1){ //client was accepted
+            if(serverHandler.isIndexFree(playerID)){ //client was accepted
                 //setup serverside connection.
                 try {
-                    serverHandler.connectPlayer(packetIP, pIndex);
+                    serverHandler.connectPlayer(packetIP, playerID);
                 }catch (Exception e){
                     System.out.println("NEW PLAYER ATTEMPTED TO CONNECT TO ALREADY-FILLED INDEX");
                 }

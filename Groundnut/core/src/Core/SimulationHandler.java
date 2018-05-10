@@ -18,6 +18,7 @@ public class SimulationHandler {
     private static boolean serverSide;
     private PlayerInput clientInput;
     private PlayerGroup playerGroup;
+    private int clientID;
 
     public static SimulationHandler getInstance(){
         if(instance == null){
@@ -75,6 +76,14 @@ public class SimulationHandler {
 
     public PlayerInput getPlayerInput(){
         return clientInput;
+    }
+
+    public int getClientID() {
+        return clientID;
+    }
+
+    public void setClientID(int id){
+        clientID = id;
     }
 
 }
