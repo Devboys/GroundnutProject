@@ -3,6 +3,7 @@ package ClientNetworking.ConnectionClient;
 import ClientNetworking.ClientNetworkingHandler;
 import ClientNetworking.ConnectionState;
 import Constants.NetworkingIdentifiers;
+import Core.SimulationHandler;
 import ServerNetworking.GameServer.ServerHandler;
 
 import java.io.ByteArrayOutputStream;
@@ -82,7 +83,7 @@ public class ClientConnectionOutput extends Thread {
     }
 
     private void sendConnectionRequest() throws IOException{
-        String connectionRequestMessage = "Connection request";
+        String connectionRequestMessage = "" + SimulationHandler.getInstance().getClientID();
 
         //Compound the data with a connection-request identifier, such that the byte array will be [identifier][data]
         ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();
