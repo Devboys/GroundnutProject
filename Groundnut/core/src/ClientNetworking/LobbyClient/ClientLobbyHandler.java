@@ -41,7 +41,7 @@ public class ClientLobbyHandler implements NetworkingHandler {
             clientOut.start();
 
         }catch (ConnectException e){
-            System.out.println("Lobby not available");
+            System.out.println("Lobby not available at: " + lobbyHostIP + "(" + portNum + ")");
             parent.setState(ConnectionState.DISCONNECTED);
         }
         catch(IOException e){
