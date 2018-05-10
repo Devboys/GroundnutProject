@@ -57,16 +57,11 @@ public class ServerHandler {
         return connectCount;
     }
 
-    //NO LONGER USED.
     public int findFreeClientIndex(){
         for(PlayerSocket pSocket : clientList){
             if(!pSocket.isConnected()) return pSocket.getPlayerIndex();
         }
         return -1;
-    }
-
-    public boolean isIndexFree(int index){
-        return !clientList[index].isConnected();
     }
 
     public int findExistingClientIndex(InetAddress clientIP){

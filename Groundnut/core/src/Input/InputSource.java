@@ -1,5 +1,5 @@
 package Input;
 
 public interface InputSource {
-    PlayerInput getInput();
+    public PlayerInput getInput();
 }
