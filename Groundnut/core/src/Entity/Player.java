@@ -13,6 +13,7 @@ import static Core.GameThread.theWorld;
 
 public class Player implements Entity{
 
+    public int playerNum;
     public Player(int xLoc, int yLoc) {}
 
     private static final int MOVE_SPEED = 100;
@@ -23,21 +24,19 @@ public class Player implements Entity{
     private Vector2 unitPos;
 
     private Body unitCollider;
+
     private BodyDef bodyDef;
     private CircleShape circle;
     private float circleSize = 10;
     private FixtureDef fixDef;
-
     private InputSource inputSource;
 
-    public void setPos(int x, int y){
-        if(unitCollider != null) {
-            unitCollider.setTransform(x, y, 0);
-        }
-        else{
-            xLoc = x;
-            yLoc = y;
-        }
+    public void setPos(Vector2 position){
+        unitPos = position;
+    }
+
+    public Vector2 getUnitPos() {
+        return unitPos;
     }
 
     public void setInputSource(InputSource source){
@@ -105,5 +104,12 @@ public class Player implements Entity{
         if(inputSource.getInput().isLeft()) {
             this.unitCollider.applyLinearImpulse(new Vector2(-MOVE_SPEED, 0), this.unitPos, true);
         }
+    }
+    public int getPlayerNum() {
+        return playerNum;
+    }
+
+    public void setPlayerNum(int playerNum) {
+        this.playerNum = playerNum;
     }
 }

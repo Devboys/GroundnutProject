@@ -31,6 +31,4 @@ public class PlayerGroup {
         playersInserted++;
         players[index].setPos(50*playersInserted, 50*playersInserted);
     }
-
-
 }

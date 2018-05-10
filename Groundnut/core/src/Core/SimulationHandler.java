@@ -1,12 +1,15 @@
 package Core;
 
+import Entity.Player;
 import Entity.PlayerGroup;
 import Input.PlayerInput;
 import Input.PlayerInputHandler;
 import ServerNetworking.GameServer.GameStateSample;
+import ServerNetworking.GameServer.ServerHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.math.Vector2;
 
 //TODO: MAKE ALL CLOSE() METHODS RELY ON A SIMULATION-HANDLER BOOLEAN (except lobby)
 
@@ -39,8 +42,13 @@ public class SimulationHandler {
     }
 
     public void synchronizeSimulation(GameStateSample state){
+        Vector2[] newestPositions = state.getPositions();
+        for (int i = 0; i < ServerHandler.maxPlayerCount; i++) {
+            playerGroup.getPlayer(i).setPos(newestPositions[i]);
+        }
         System.out.println("beep boop synchronizing");
-        //TODO: SYNCHRONIZE METHOD.
+
+
     }
 
     private void startServerSim(){

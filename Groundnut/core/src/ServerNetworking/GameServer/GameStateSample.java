@@ -1,14 +1,22 @@
 package ServerNetworking.GameServer;
 
+import Core.SimulationHandler;
+import Entity.PlayerGroup;
+import com.badlogic.gdx.math.Vector2;
+
 import java.io.Serializable;
 
 public class GameStateSample implements Serializable{
 
-    Boolean[] commands;
+    Vector2[] playerPos;
 
-    public GameStateSample(){}
+    public GameStateSample(){
+        for (int i = 0; i < ServerHandler.maxPlayerCount; i++) {
+            playerPos[i] = SimulationHandler.getInstance().getPlayers().getPlayer(i).getUnitPos();
+        }
+    }
 
-    public Boolean[] getCommands(){
-        return commands;
+    public Vector2[] getPositions(){
+        return playerPos;
     }
 }
