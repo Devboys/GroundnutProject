@@ -1,14 +1,13 @@
 package ServerNetworking.GameServer;
 
 import Core.SimulationHandler;
-import Entity.PlayerGroup;
 import com.badlogic.gdx.math.Vector2;
 
 import java.io.Serializable;
 
 public class GameStateSample implements Serializable{
 
-    Vector2[] playerPos;
+    private Vector2[] playerPos;
 
     public GameStateSample(){
         playerPos = new Vector2[ServerHandler.maxPlayerCount];
@@ -21,4 +20,5 @@ public class GameStateSample implements Serializable{
     public Vector2[] getPositions(){
         return playerPos;
     }
+
 }

@@ -14,9 +14,6 @@ import java.util.Arrays;
 
 public class ServerOutputThread extends Thread {
 
-    //Data
-    private byte[] buffer;
-
     //Multicast Socket
     private MulticastSocket udpMulticastSocket;
     private InetAddress multicastGroupIP;
@@ -68,10 +65,14 @@ public class ServerOutputThread extends Thread {
         oos.writeObject(new GameStateSample());
         oos.flush();
 
+        byte[] objectBytes = baos.toByteArray();
+
         //add identifier to serialized object
         ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();
         compoundingStream.write(NetworkingIdentifiers.SIMULATION_STATE_IDENTIFIER);
-        compoundingStream.write(baos.toByteArray());
+        compoundingStream.write(objectBytes);
+
+        compoundingStream.flush();
 
         //send compounded packet
         byte[] compoundOutput = compoundingStream.toByteArray();
@@ -102,7 +103,7 @@ public class ServerOutputThread extends Thread {
         byte[] compoundOutput = compoundingStream.toByteArray();
         udpSocket.send(new DatagramPacket(compoundOutput, compoundOutput.length, targetIP, ServerHandler.clientPort));
 
-        System.out.println("deny sent");
+        System.out.println("Reject sent to: " + targetIP.toString() + "(" + ServerHandler.clientPort + ")");
     }
 
     public void close(){ running = false; }

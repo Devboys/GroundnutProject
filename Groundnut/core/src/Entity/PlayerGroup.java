@@ -11,13 +11,13 @@ public class PlayerGroup {
     private Player[] players;
     private int playersInserted;
 
-    private final int initX = -50; //start player outside of screen.
-    private final int initY = -50; //start player outside of screen.
+    private final int initX = -50; //Start player outside of screen.
+    private final int initY = -50; //Start player outside of screen.
 
     public PlayerGroup(){
         players = new Player[MAX_PLAYERS];
         for (int i = 0; i < players.length; i++) {
-            players[i] = new Player(initX, initY);
+            players[i] = new Player(new Vector2(initX, initY));
         }
     }
 

@@ -13,14 +13,13 @@ import static Core.GameThread.theWorld;
 
 public class Player implements Entity{
 
+    //TODO: RE-STRUCTURE PLAYERCLASS TO BETTER ALLOW FOR INSERTION INTO PHYSICS SIMULATION
+
     public int playerNum;
-    public Player(int xLoc, int yLoc) {}
 
     private static final int MOVE_SPEED = 100;
 
-    private int xLoc;
-    private int yLoc;
-
+    private Vector2 initPos;
     private Vector2 unitPos;
 
     private Body unitCollider;
@@ -31,10 +30,16 @@ public class Player implements Entity{
     private FixtureDef fixDef;
     private InputSource inputSource;
 
+    public Player(Vector2 initialPosition) {
+        initPos = initialPosition;
+        unitPos = initPos;
+    }
+
     public void setPos(Vector2 position){
-        if(unitPos != null) {
-            unitPos = position;
+        if(unitCollider != null) {
+            unitCollider.setTransform(position, unitCollider.getAngle());
         }
+        else initPos = position;
     }
 
     public Vector2 getUnitPos() {
@@ -49,7 +54,7 @@ public class Player implements Entity{
         //Body definition
         bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(xLoc, yLoc);
+        bodyDef.position.set(initPos);
         unitCollider = theWorld.createBody(bodyDef);
 
         //Shape

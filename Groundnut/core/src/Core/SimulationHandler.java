@@ -42,13 +42,12 @@ public class SimulationHandler {
         }
     }
 
-    public void synchronizeSimulation(GameStateSample state){
+    public void synchronizeSimulation(GameStateSample state) {
         Vector2[] newestPositions = state.getPositions();
+
         for (int i = 0; i < ServerHandler.maxPlayerCount; i++) {
             playerGroup.getPlayer(i).setPos(newestPositions[i]);
         }
-        System.out.println("beep boop synchronizing");
-
 
     }
 

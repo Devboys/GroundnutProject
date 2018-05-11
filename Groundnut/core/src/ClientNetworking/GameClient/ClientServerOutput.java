@@ -73,7 +73,11 @@ public class ClientServerOutput extends Thread {
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(SimulationHandler.getInstance().getPlayerInput());
         oos.flush();
+        oos.close();
         byte[] serializedObject = baos.toByteArray();
+        baos.flush();
+
+
 
         //add packet identifier to packet byte-array output such that packet is [identifier][data].
         ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();

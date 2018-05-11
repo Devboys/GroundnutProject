@@ -1,6 +1,7 @@
 package ClientNetworking.GameClient;
 
 import java.io.ByteArrayInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
@@ -21,7 +22,7 @@ import ServerNetworking.GameServer.GameStateSample;
 public class ClientServerInput extends Thread {
 
     //Data
-    private final int BUFFER_LENGTH = 256;
+    private final int BUFFER_LENGTH = 1024; //THIS MUST BE LARGE ENOUGH - ELSE EOFEXCEPTION
     private byte[] buffer = new byte[BUFFER_LENGTH];
 
     //multicast Socket
