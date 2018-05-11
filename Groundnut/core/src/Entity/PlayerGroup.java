@@ -34,4 +34,12 @@ public class PlayerGroup {
         Vector2 initPos = new Vector2(50*playersInserted, 50*playersInserted);
         players[index].setPos(initPos);
     }
+
+    public void switchPlayerIndexes(int switchFrom, int switchTo){
+        Player tempPlayer = players[switchFrom];
+        players[switchFrom] = players[switchTo];
+        players[switchTo] = tempPlayer;
+
+        //switch player positions
+    }
 }
