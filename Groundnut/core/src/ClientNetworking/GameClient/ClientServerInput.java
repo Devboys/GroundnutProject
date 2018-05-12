@@ -22,7 +22,7 @@ import ServerNetworking.GameServer.GameStateSample;
 public class ClientServerInput extends Thread {
 
     //Data
-    private final int BUFFER_LENGTH = 1024; //THIS MUST BE LARGE ENOUGH - ELSE EOFEXCEPTION
+    private final int BUFFER_LENGTH = 576; //THIS MUST BE LARGE ENOUGH - ELSE EOFEXCEPTION
     private byte[] buffer = new byte[BUFFER_LENGTH];
 
     //multicast Socket

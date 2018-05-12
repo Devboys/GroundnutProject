@@ -22,6 +22,9 @@ public class Player implements Entity{
     private Vector2 initPos;
     private Vector2 unitPos;
 
+    private Vector2 queuedPos;
+    private boolean transformInQueue = false;
+
     private Body unitCollider;
 
     private BodyDef bodyDef;
@@ -37,7 +40,8 @@ public class Player implements Entity{
 
     public void setPos(Vector2 position){
         if(unitCollider != null) {
-            unitCollider.setTransform(position, unitCollider.getAngle());
+            queuedPos = position;
+            transformInQueue = true;
         }
         else initPos = position;
     }
@@ -80,6 +84,13 @@ public class Player implements Entity{
 
     @Override
     public void update(GameStateManager gsm) {
+        //queue transforms to avoid calling .setTransform when world is simulating. Update() finishes before world
+        // starts, so world should never be locked in here.
+        if(transformInQueue){
+            unitCollider.setTransform(queuedPos, unitCollider.getAngle());
+            transformInQueue = false;
+            queuedPos = null;
+        }
         unitCollider.setLinearVelocity(0, 0);
 
         if(inputSource!= null) {

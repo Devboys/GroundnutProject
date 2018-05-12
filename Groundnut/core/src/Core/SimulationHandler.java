@@ -95,7 +95,7 @@ public class SimulationHandler {
         System.out.println("PlayerID set to: " + id);
         clientID = id;
 
-        //Switch local player index in playergroup (0 pr default) for its serverside index (clientID).
+        //Switch local player index in playergroup (default is 0) for its serverside index (clientID).
         playerGroup.switchPlayerIndexes(0, clientID);
     }
 

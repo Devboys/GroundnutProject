@@ -13,8 +13,8 @@ public class ServerHandler {
     public static final int serverPort = 24000;
     public static final int clientPort = 24002;
     public static final int multicastPort = 24003;
-    public static final int serverTickRate = 1000;
-    public static final int clientTickRate = 1000;
+    public static final int serverTickRate = 20;
+    public static final int clientTickRate = 20;
     public static final String groupIP = "230.0.0.0";
 
     public static final int maxPlayerCount = 4;
