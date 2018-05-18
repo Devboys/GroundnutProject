@@ -1,7 +1,7 @@
 package Entity;
 
 import Input.PlayerInput;
-import Scenes.GameStateManager;
+import Scenes.SceneManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -40,7 +40,7 @@ public abstract class Unit implements Entity{
 
     @Override public void init(){ this.setupPhysics(); }
 
-    @Override public void update(GameStateManager gsm){
+    @Override public void update(SceneManager gsm){
         unitCollider.setLinearVelocity(new Vector2(0,0));
         if(inputSource!= null) {
             move();

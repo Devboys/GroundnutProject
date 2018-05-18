@@ -1,13 +1,8 @@
 package Scenes;
 
-import ClientNetworking.ClientNetworkingHandler;
 import Constants.ScreenConstants;
-import Core.GameThread;
 import Core.SimulationHandler;
 import Entity.*;
-import Input.PlayerInput;
-import Input.PlayerInputHandler;
-import com.badlogic.gdx.Gdx;
 
 public class TestScene extends Scene {
 
@@ -34,7 +29,7 @@ public class TestScene extends Scene {
             e.init();
         }
     }
-    @Override public void update(GameStateManager gsm) {
+    @Override public void update(SceneManager gsm) {
         for(Entity e : entities){
             e.update(gsm);
         }

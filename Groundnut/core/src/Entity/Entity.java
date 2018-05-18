@@ -1,10 +1,10 @@
 package Entity;
 
-import Scenes.GameStateManager;
+import Scenes.SceneManager;
 
 public interface Entity {
     void init();
-    void update(GameStateManager gsm);
+    void update(SceneManager gsm);
     void render();
     void destroy();
 }

@@ -13,7 +13,7 @@ public abstract class Scene {
         entities = new ArrayList<Entity>();
     }
     public abstract void init();
-    public abstract void update(GameStateManager gsm);
+    public abstract void update(SceneManager gsm);
     public abstract void render();
     public abstract void destroy();
 }

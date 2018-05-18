@@ -1,12 +1,12 @@
 package Scenes;
 
-public class GameStateManager {
+public class SceneManager {
 
     //Scene Management
     private Scene[] sceneArray;
     private int currentSceneIndex;
 
-    public GameStateManager(){
+    public SceneManager(){
         sceneArray = new Scene[SceneList.values().length];
 
         //setup testScene as initial scene.
@@ -14,9 +14,9 @@ public class GameStateManager {
         currentSceneIndex = SceneList.TEST.ordinal();
     }
 
-    /** Tells the GameStateManager to distribute all init(), update() and render() calls to the Scene. This method will
+    /** Tells the SceneManager to distribute all init(), update() and render() calls to the Scene. This method will
      * also init the scene.
-     * @param scene An element in the enum GameStateManager.SceneList.*/
+     * @param scene An element in the enum SceneManager.SceneList.*/
     public void switchScene(SceneList scene){
 
         sceneArray[scene.ordinal()] = scene.createNewScene();

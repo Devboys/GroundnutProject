@@ -1,8 +1,7 @@
 package Entity;
 
 import Input.InputSource;
-import Input.PlayerInput;
-import Scenes.GameStateManager;
+import Scenes.SceneManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -83,7 +82,7 @@ public class Player implements Entity{
     }
 
     @Override
-    public void update(GameStateManager gsm) {
+    public void update(SceneManager gsm) {
         //queue transforms to avoid calling .setTransform when world is simulating. Update() finishes before world
         // starts, so world should never be locked in here.
         if(transformInQueue){

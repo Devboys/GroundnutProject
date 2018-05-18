@@ -2,8 +2,7 @@ package Core;
 
 import Constants.RunConstants;
 import Constants.ScreenConstants;
-import Input.PlayerInputHandler;
-import Scenes.GameStateManager;
+import Scenes.SceneManager;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -29,7 +28,7 @@ public class GameThread extends ApplicationAdapter {
     BitmapFont font;
     Box2DDebugRenderer testRender;
 
-    GameStateManager gameStateManager;
+    SceneManager sceneManager;
 
     //time-step variables
     private static final double optimalFrameDuration  = Math.pow(10,9) / RunConstants.UPS;
@@ -51,7 +50,7 @@ public class GameThread extends ApplicationAdapter {
     private static final int yAcceleration = 0;
 
     @Override public void create () {
-        gameStateManager = new GameStateManager();
+        sceneManager = new SceneManager();
         //update timing variables
 
         currentTime = System.nanoTime();
@@ -77,7 +76,7 @@ public class GameThread extends ApplicationAdapter {
         theWorld = new World(new Vector2(xAcceleration, yAcceleration), true);
 
         //initialize dependent values.
-        gameStateManager.init();
+        sceneManager.init();
     }
 
     //LibGDX loop structure.
@@ -105,7 +104,7 @@ public class GameThread extends ApplicationAdapter {
 	}
 
 	public void update(){
-        gameStateManager.update();
+        sceneManager.update();
 
         theWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     }
@@ -125,8 +124,8 @@ public class GameThread extends ApplicationAdapter {
         //test-render the physics colliders.
         testRender.render(theWorld, camera.combined);
 
-        //render the gamestate through the gameStateManager
-        gameStateManager.render();
+        //render the gamestate through the sceneManager
+        sceneManager.render();
     }
 
     @Override public void dispose () {
