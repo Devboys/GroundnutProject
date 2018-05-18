@@ -16,8 +16,6 @@ import Core.SimulationHandler;
 import ServerNetworking.GameServer.ServerHandler;
 import ServerNetworking.GameServer.GameStateSample;
 
-//TODO: Update local simulation based on simulation-state recieved from server.
-
 /**Recieves simulation-states from authoritative server and handles these.*/
 public class ClientServerInput extends Thread {
 

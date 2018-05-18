@@ -1,48 +1,23 @@
 package Scenes;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class GameStateManager {
-
-
-    //TODO: REPLACE WITH FACTORY PATTERN ASAP - STATICS SCENES ARE LOADED BEFORE SimulationHandler AND CAN CAUSE WIERD EXCEPTIONS
-    //enum of possible states
-    public enum Scenes {
-        //NEW SCENES HERE BELOW HERE
-        TEST(new TestScene());
-
-        private final Scene sceneObject;
-        Scenes(Scene sc){
-            sceneObject = sc;
-        }
-        private Scene createNewScene(){
-
-            try {
-                return sceneObject.getClass().getConstructor().newInstance();
-            }catch (IllegalAccessException | InstantiationException |
-                    NoSuchMethodException  | InvocationTargetException e){
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
 
     //Scene Management
     private Scene[] sceneArray;
     private int currentSceneIndex;
 
     public GameStateManager(){
-        sceneArray = new Scene[Scenes.values().length];
+        sceneArray = new Scene[SceneList.values().length];
 
         //setup testScene as initial scene.
-        sceneArray[Scenes.TEST.ordinal()] = Scenes.TEST.createNewScene();
-        currentSceneIndex = Scenes.TEST.ordinal();
+        sceneArray[SceneList.TEST.ordinal()] = SceneList.TEST.createNewScene();
+        currentSceneIndex = SceneList.TEST.ordinal();
     }
 
     /** Tells the GameStateManager to distribute all init(), update() and render() calls to the Scene. This method will
      * also init the scene.
-     * @param scene An element in the enum GameStateManager.Scenes.*/
-    public void switchScene(Scenes scene){
+     * @param scene An element in the enum GameStateManager.SceneList.*/
+    public void switchScene(SceneList scene){
 
         sceneArray[scene.ordinal()] = scene.createNewScene();
 

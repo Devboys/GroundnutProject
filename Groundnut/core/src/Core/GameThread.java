@@ -35,6 +35,7 @@ public class GameThread extends ApplicationAdapter {
     private static final double optimalFrameDuration  = Math.pow(10,9) / RunConstants.UPS;
     private static final float STEP_TIME = (float) (optimalFrameDuration / Math.pow(10, 9));
     private static final int MAX_FRAMESKIPS  = 10;
+
     private double currentTime;
     private double newTime;
     private double frameTime;
@@ -69,6 +70,7 @@ public class GameThread extends ApplicationAdapter {
         //setup test rendering
         testRender = new Box2DDebugRenderer();
     }
+
     private void setupUpdate(){
         //initialize independent values
         Box2D.init();
@@ -78,6 +80,7 @@ public class GameThread extends ApplicationAdapter {
         gameStateManager.init();
     }
 
+    //LibGDX loop structure.
     @Override public void render () {
         //update game in steps:
         //Time previous frame duration
@@ -107,8 +110,9 @@ public class GameThread extends ApplicationAdapter {
         theWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     }
 
+    //The actual render-call.
     public void renderGame(){
-        //do the rendering
+        //clear the screen
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -118,7 +122,10 @@ public class GameThread extends ApplicationAdapter {
         font.draw(batch, serverInfo, 40,70);
         batch.end();
 
+        //test-render the physics colliders.
         testRender.render(theWorld, camera.combined);
+
+        //render the gamestate through the gameStateManager
         gameStateManager.render();
     }
 
