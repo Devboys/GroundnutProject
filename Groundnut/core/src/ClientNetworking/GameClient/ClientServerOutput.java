@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 
-import ClientNetworking.ClientNetworkingHandler;
+import ClientNetworking.ClientNetworkingManager;
 import ClientNetworking.ConnectionState;
 import Constants.NetworkingIdentifiers;
 import Core.SimulationHandler;
-import Input.PlayerInput;
 import ServerNetworking.GameServer.ServerHandler;
 
 //TODO: OBJECTOUTPUTSTREAM SHOULD NOT BE REMADE EVERY TIME IT IS USED.
@@ -25,9 +23,9 @@ public class ClientServerOutput extends Thread {
 
     private boolean running;
 
-    private ClientNetworkingHandler parentHandler;
+    private ClientNetworkingManager parentHandler;
 
-    ClientServerOutput(ClientNetworkingHandler parent){
+    ClientServerOutput(ClientNetworkingManager parent){
         parentHandler = parent;
 
         try {

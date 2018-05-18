@@ -1,6 +1,6 @@
 package ClientNetworking.ConnectionClient;
 
-import ClientNetworking.ClientNetworkingHandler;
+import ClientNetworking.ClientNetworkingManager;
 import ClientNetworking.ConnectionState;
 import Constants.NetworkingIdentifiers;
 import ServerNetworking.GameServer.ServerHandler;
@@ -23,9 +23,9 @@ public class ClientConnectionInput extends Thread{
    private DatagramSocket connectionSocket;
    private DatagramPacket dgram;
 
-   ClientNetworkingHandler parentHandler;
+   ClientNetworkingManager parentHandler;
 
-   ClientConnectionInput(ClientNetworkingHandler parent){
+   ClientConnectionInput(ClientNetworkingManager parent){
        this.parentHandler = parent;
 
        try{

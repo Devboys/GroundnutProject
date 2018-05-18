@@ -1,6 +1,6 @@
 package ClientNetworking.LobbyClient;
 
-import ClientNetworking.ClientNetworkingHandler;
+import ClientNetworking.ClientNetworkingManager;
 import ClientNetworking.ConnectionState;
 import ClientNetworking.NetworkingHandler;
 import Settings.SettingsReader;
@@ -24,7 +24,7 @@ public class ClientLobbyHandler implements NetworkingHandler {
     private UserInputWriter clientOut;
     private Socket socket;
 
-    public ClientLobbyHandler(ClientNetworkingHandler parent){
+    public ClientLobbyHandler(ClientNetworkingManager parent){
         try {
             //establish socket connection with lobby
             socket = new Socket(lobbyHostIP, portNum);

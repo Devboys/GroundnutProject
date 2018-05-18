@@ -1,6 +1,6 @@
 package ClientNetworking.LobbyClient;
 
-import ClientNetworking.ClientNetworkingHandler;
+import ClientNetworking.ClientNetworkingManager;
 import ClientNetworking.ConnectionState;
 import Core.SimulationHandler;
 
@@ -15,9 +15,9 @@ public class ClientLobbyListener extends Thread {
 
     private BufferedReader inputReader; //reads input from server through socket in handler.
 
-    private ClientNetworkingHandler parentHandler;
+    private ClientNetworkingManager parentHandler;
 
-    public ClientLobbyListener(BufferedReader inputReader, ClientNetworkingHandler parent){
+    public ClientLobbyListener(BufferedReader inputReader, ClientNetworkingManager parent){
         parentHandler = parent;
 
         this.inputReader = inputReader;

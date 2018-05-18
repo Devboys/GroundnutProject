@@ -13,7 +13,7 @@ import java.net.InetAddress;
 /**Super-handler for client-server networking. Handles the client's connection-state and opens handlers for
  * different networking tasks, like connecting to a lobby.
  * Also holds the game-server's host-IP when one is provided. */
-public class ClientNetworkingHandler {
+public class ClientNetworkingManager {
 
     //Public settings
 
@@ -23,13 +23,13 @@ public class ClientNetworkingHandler {
     private NetworkingHandler currHandler;
 
     /**No argument constructor will attempt to connect through lobby.*/
-    public ClientNetworkingHandler(){
+    public ClientNetworkingManager(){
         setState(ConnectionState.INLOBBY);
     }
 
     /**Starts the connection protocol between the client and the server at the given IP.
      * @param hostIP the IP of the server-host*/
-    public ClientNetworkingHandler(InetAddress hostIP){
+    public ClientNetworkingManager(InetAddress hostIP){
         gameHostIP = hostIP;
         setState(ConnectionState.CONNECTING);
     }

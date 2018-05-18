@@ -1,7 +1,6 @@
 package ClientNetworking.GameClient;
 
 import java.io.ByteArrayInputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
@@ -9,7 +8,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.Arrays;
 
-import ClientNetworking.ClientNetworkingHandler;
+import ClientNetworking.ClientNetworkingManager;
 import ClientNetworking.ConnectionState;
 import Constants.NetworkingIdentifiers;
 import Core.SimulationHandler;
@@ -29,9 +28,9 @@ public class ClientServerInput extends Thread {
 
     private boolean isRunning;
 
-    private ClientNetworkingHandler parentHandler;
+    private ClientNetworkingManager parentHandler;
 
-    ClientServerInput(ClientNetworkingHandler parent) {
+    ClientServerInput(ClientNetworkingManager parent) {
         parentHandler = parent;
 
         try {

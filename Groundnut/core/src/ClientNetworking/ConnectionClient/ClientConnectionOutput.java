@@ -1,6 +1,6 @@
 package ClientNetworking.ConnectionClient;
 
-import ClientNetworking.ClientNetworkingHandler;
+import ClientNetworking.ClientNetworkingManager;
 import ClientNetworking.ConnectionState;
 import Constants.NetworkingIdentifiers;
 import Core.SimulationHandler;
@@ -10,7 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
 /**Sends connection-requests to the server in intervals provided by ServerHandler.clientTickRate. */
@@ -26,9 +25,9 @@ public class ClientConnectionOutput extends Thread {
 
     private boolean isRunning;
 
-    private ClientNetworkingHandler parentHandler;
+    private ClientNetworkingManager parentHandler;
 
-    ClientConnectionOutput(ClientNetworkingHandler parent){
+    ClientConnectionOutput(ClientNetworkingManager parent){
         this.parentHandler = parent;
 
         try {

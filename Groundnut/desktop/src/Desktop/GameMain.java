@@ -1,6 +1,6 @@
 package Desktop;
 
-import ClientNetworking.ClientNetworkingHandler;
+import ClientNetworking.ClientNetworkingManager;
 import Core.SimulationHandler;
 import Settings.SettingsReader;
 
@@ -15,7 +15,7 @@ public class GameMain {
             e.printStackTrace();
         }
 
-        ClientNetworkingHandler clientNetworkingHandler = new ClientNetworkingHandler();
+        ClientNetworkingManager clientNetworkingManager = new ClientNetworkingManager();
         SimulationHandler.getInstance().startSimulation(false);
     }
 
