@@ -1,11 +1,12 @@
 package ServerNetworking.GameServer;
 
+import Core.GameState;
 import Core.SimulationHandler;
 import com.badlogic.gdx.math.Vector2;
 
 import java.io.Serializable;
 
-public class GameStateSample implements Serializable{
+public class GameStateSample implements Serializable, GameState{
 
     private Vector2[] playerPos;
 
@@ -20,5 +21,7 @@ public class GameStateSample implements Serializable{
     public Vector2[] getPositions(){
         return playerPos;
     }
-
+    public void setPlayerPos(Vector2[] playerPos) {
+        this.playerPos = playerPos;
+    }
 }

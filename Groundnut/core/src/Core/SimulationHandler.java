@@ -16,8 +16,7 @@ public class SimulationHandler {
 
     private static SimulationHandler instance;
     private SimulationHandler(){}
-
-    private static boolean isServerSide;
+    private static boolean serverSide;
     private PlayerInput clientInput;
     private PlayerGroup playerGroup;
     private int clientID;
@@ -29,7 +28,7 @@ public class SimulationHandler {
         return instance;
     }
 
-    public void synchronizeSimulation(GameStateSample state) {
+    public void synchronizeSimulation(GameState state) {
         Vector2[] newestPositions = state.getPositions();
 
         for (int i = 0; i < ServerHandler.maxPlayerCount; i++) {
@@ -38,7 +37,7 @@ public class SimulationHandler {
     }
 
     public void startServerSim(){
-        isServerSide = true;
+        serverSide = true;
 
         playerGroup = new PlayerGroup();
 
@@ -50,7 +49,7 @@ public class SimulationHandler {
     }
 
     public void startClientSim(){
-        isServerSide = false;
+        serverSide = false;
 
         playerGroup = new PlayerGroup();
 
@@ -65,7 +64,7 @@ public class SimulationHandler {
         playerGroup.getPlayer(0).setInputSource(clientInput);
     }
 
-    public static boolean isServerSide() { return isServerSide; }
+    public static boolean isServerSide() { return serverSide; }
 
     public PlayerGroup getPlayers(){
         return playerGroup;
