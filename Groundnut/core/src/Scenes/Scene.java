@@ -8,7 +8,6 @@ public abstract class Scene {
 
     ArrayList<Entity> entities;
 
-
     protected Scene(){
         entities = new ArrayList<Entity>();
     }

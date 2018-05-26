@@ -75,8 +75,6 @@ public class ClientServerOutput extends Thread {
         byte[] serializedObject = baos.toByteArray();
         baos.flush();
 
-
-
         //add packet identifier to packet byte-array output such that packet is [identifier][data].
         ByteArrayOutputStream compoundingStream = new ByteArrayOutputStream();
         compoundingStream.write(NetworkingIdentifiers.MOVEMENT_PACKET_IDENTIFIER);

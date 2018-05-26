@@ -56,8 +56,7 @@ public class ServerHandler {
         }
         return connectCount;
     }
-
-    //NO LONGER USED.
+    
     public int findFreeClientIndex(){
         for(PlayerSocket pSocket : clientList){
             if(!pSocket.isConnected()) return pSocket.getPlayerIndex();

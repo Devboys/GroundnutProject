@@ -9,6 +9,6 @@ import java.net.UnknownHostException;
 public class GameMainNoLobby {
     public static void main(String[] args) throws UnknownHostException {
         ClientNetworkingManager networkHandler = new ClientNetworkingManager(InetAddress.getByName("localhost"));
-        SimulationHandler.getInstance().startSimulation(false);
+        SimulationHandler.getInstance().startClientSim();
     }
 }
