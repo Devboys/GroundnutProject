@@ -16,7 +16,7 @@ public class GameMain {
         }
 
         ClientNetworkingManager clientNetworkingManager = new ClientNetworkingManager();
-        SimulationHandler.getInstance().startSimulation(false);
+        SimulationHandler.getInstance().startClientSim();
     }
 
 }

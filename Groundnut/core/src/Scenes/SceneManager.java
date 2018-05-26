@@ -14,13 +14,14 @@ public class SceneManager {
         currentSceneIndex = SceneList.TEST.ordinal();
     }
 
-    /** Tells the SceneManager to distribute all init(), update() and render() calls to the Scene. This method will
+    /** Tells the SceneManager to distribute all update() and render() calls to the Scene. This method will
      * also init the scene.
      * @param scene An element in the enum SceneManager.SceneList.*/
     public void switchScene(SceneList scene){
 
         sceneArray[scene.ordinal()] = scene.createNewScene();
 
+        //TODO: MAKE PRETTY
         if(currentSceneIndex != -99) {
             sceneArray[currentSceneIndex].destroy();
             sceneArray[scene.ordinal()].init();

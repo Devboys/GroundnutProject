@@ -27,7 +27,8 @@ public class ClientNetworkingManager {
         setState(ConnectionState.INLOBBY);
     }
 
-    /**Starts the connection protocol between the client and the server at the given IP.
+    /**Starts the connection protocol between the client and the server at the given IP. This does not currently work
+     * since the game-server expects a playerID which is only set by the lobby protocol.
      * @param hostIP the IP of the server-host*/
     public ClientNetworkingManager(InetAddress hostIP){
         gameHostIP = hostIP;

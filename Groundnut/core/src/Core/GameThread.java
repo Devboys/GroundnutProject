@@ -18,8 +18,8 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 /** LibGDX main thread. Handles rendering and is also the start-point for the update thread.*/
 public class GameThread extends ApplicationAdapter {
 
-    OrthographicCamera camera;
-    ExtendViewport viewPort;
+    private OrthographicCamera camera;
+    private ExtendViewport viewPort;
 
     //debug rendering
     String serverInfo = "SERVER INFO";
@@ -28,7 +28,7 @@ public class GameThread extends ApplicationAdapter {
     BitmapFont font;
     Box2DDebugRenderer testRender;
 
-    SceneManager sceneManager;
+    private SceneManager sceneManager;
 
     //time-step variables
     private static final double optimalFrameDuration  = Math.pow(10,9) / RunConstants.UPS;
@@ -100,17 +100,19 @@ public class GameThread extends ApplicationAdapter {
             timeSinceLastUpdate -= optimalFrameDuration;
             iterations++;
         }
+
+        //finally, render game.
         renderGame();
 	}
 
-	public void update(){
+	private void update(){
         sceneManager.update();
 
         theWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     }
 
     //The actual render-call.
-    public void renderGame(){
+    private void renderGame(){
         //clear the screen
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

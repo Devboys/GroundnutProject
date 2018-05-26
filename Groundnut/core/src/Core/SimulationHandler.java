@@ -1,6 +1,5 @@
 package Core;
 
-import Entity.Player;
 import Entity.PlayerGroup;
 import Input.PlayerInput;
 import Input.PlayerInputHandler;
@@ -18,7 +17,7 @@ public class SimulationHandler {
     private static SimulationHandler instance;
     private SimulationHandler(){}
 
-    private static boolean serverSide;
+    private static boolean isServerSide;
     private PlayerInput clientInput;
     private PlayerGroup playerGroup;
     private int clientID;
@@ -30,28 +29,16 @@ public class SimulationHandler {
         return instance;
     }
 
-    //public initialize call, simulationhandler should be the first thing initialized
-    public void startSimulation(Boolean isServerSide){
-        serverSide = isServerSide;
-
-        if(serverSide){
-            startServerSim();
-        }
-        else{
-            startClientSim();
-        }
-    }
-
     public void synchronizeSimulation(GameStateSample state) {
         Vector2[] newestPositions = state.getPositions();
 
         for (int i = 0; i < ServerHandler.maxPlayerCount; i++) {
             playerGroup.getPlayer(i).setPos(newestPositions[i]);
         }
-
     }
 
-    private void startServerSim(){
+    public void startServerSim(){
+        isServerSide = true;
 
         playerGroup = new PlayerGroup();
 
@@ -59,11 +46,12 @@ public class SimulationHandler {
         config.title = "SERVER SIMULATION";
         new LwjglApplication(new GameThread(), config);
 
-
         ServerHandler sh = new ServerHandler();
     }
 
-    private void startClientSim(){
+    public void startClientSim(){
+        isServerSide = false;
+
         playerGroup = new PlayerGroup();
 
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
@@ -77,7 +65,7 @@ public class SimulationHandler {
         playerGroup.getPlayer(0).setInputSource(clientInput);
     }
 
-    public static boolean isServerSide() { return serverSide; }
+    public static boolean isServerSide() { return isServerSide; }
 
     public PlayerGroup getPlayers(){
         return playerGroup;

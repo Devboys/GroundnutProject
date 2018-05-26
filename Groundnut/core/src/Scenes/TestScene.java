@@ -8,6 +8,8 @@ public class TestScene extends Scene {
 
     private int wallSize = 10;
 
+    PlayerGroup pGroup;
+
     public TestScene(){
         super();
         Wall northBorder = new Wall(0, ScreenConstants.CAM_HEIGHT - wallSize, ScreenConstants.CAM_WIDTH, wallSize);
