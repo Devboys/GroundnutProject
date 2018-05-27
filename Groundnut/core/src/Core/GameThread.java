@@ -2,6 +2,7 @@ package Core;
 
 import Constants.RunConstants;
 import Constants.ScreenConstants;
+import Scenes.SceneList;
 import Scenes.SceneManager;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -51,6 +52,7 @@ public class GameThread extends ApplicationAdapter {
 
     @Override public void create () {
         sceneManager = new SceneManager();
+        sceneManager.switchScene(SceneList.TEST);
         //update timing variables
 
         currentTime = System.nanoTime();

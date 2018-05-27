@@ -10,6 +10,9 @@ public class GameStateSample implements Serializable, GameState{
 
     private Vector2[] playerPos;
 
+
+    /**Samples and stores all player-positions in the local simulation.
+     * A start method must have been called on SimulationHandler before this is useful*/
     public GameStateSample(){
         playerPos = new Vector2[ServerHandler.maxPlayerCount];
 
@@ -18,10 +21,9 @@ public class GameStateSample implements Serializable, GameState{
         }
     }
 
+
+    /** @return All stored player-positions */
     public Vector2[] getPositions(){
         return playerPos;
-    }
-    public void setPlayerPos(Vector2[] playerPos) {
-        this.playerPos = playerPos;
     }
 }

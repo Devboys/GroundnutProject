@@ -28,7 +28,8 @@ public class ServerInputThread extends Thread {
 
     private ServerHandler serverHandler;
 
-    public ServerInputThread(ServerHandler parent){
+    /**@param parent The ServerHandler that this thread is attached too*/
+    ServerInputThread(ServerHandler parent){
         serverHandler = parent;
 
         try {
@@ -43,24 +44,7 @@ public class ServerInputThread extends Thread {
         }
     }
 
-//    private void checkDatagram(InetAddress playerIP, PlayerInput playerInput){
-//        ArrayList<PlayerSocket> playerList = ServerHandler.getClientList();
-//
-//        //check if player is known
-//        boolean playerIsKnown = false;
-//        for(PlayerSocket currPlayer : playerList){
-//            if(currPlayer.getPlayerIP().equals(playerIP)){
-//                currPlayer.setInput(playerInput);
-//                playerIsKnown = true;
-//            }
-//        }
-//        if(!playerIsKnown && ServerHandler.getNumConnectedPlayers() < ServerHandler.maxPlayerCount){
-//            PlayerSocket pSocket = new PlayerSocket(playerIP, playerList.size());
-//            pSocket.setInput(playerInput);
-//            ServerHandler.addPlayer(pSocket);
-//        }
-//    }
-
+    /**Runs a while-loop that continuously checks for various requests from the clientside.*/
     @Override public void run() {
         running = true;
         while (running) {
@@ -88,17 +72,17 @@ public class ServerInputThread extends Thread {
         }
     }
 
-    public void close(){
-        running = false;
-    }
-
+    /**Called by run() whenever a connection-request packet has been received. Checks whether the client can connect
+     * and triggers the outputthread to return a connection confirmation or rejection based on the result.
+     * @param packetIP The IP of the received packet
+     * @param packetData The data of the received packet.
+     * @throws IOException*/
     private void handleConnectionRequest(InetAddress packetIP, byte[] packetData) throws IOException{
         System.out.println("Connect request received from: " + packetIP.toString());
 
         int playerID = ByteBuffer.wrap(packetData).getInt();
-        boolean isKnown = serverHandler.isClientKnown(packetIP);
 
-        if(isKnown){
+        if(serverHandler.isClientKnown(packetIP)){
             //send connection confirm to client.
             ServerOutputThread.sendConnectionConfirm(packetIP);
         }
@@ -121,19 +105,31 @@ public class ServerInputThread extends Thread {
         }
     }
 
-    private void handleMovementInput(byte[] packetData, InetAddress packetIP) throws IOException{
+    /**Called by run() whenever a movement-input packet has been detected.
+     * Ties the user-input to the PlayerSocket in the ServerHandler if the client is known.
+     * @param packetData The data of the received packet.
+     * @param packetIP The IP-address attached to the packet.
+     * @throws IOException*/
+    private void handleMovementInput(byte[] packetData, InetAddress packetIP) throws IOException {
         System.out.println("input received from: " + packetIP.toString());
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(packetData);
-        ObjectInputStream ois = new ObjectInputStream(bais);
-        try{
-            PlayerInput playerInput = (PlayerInput) ois.readObject();
+        if (serverHandler.isClientKnown(packetIP)) {
+            ByteArrayInputStream bais = new ByteArrayInputStream(packetData);
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            try {
+                PlayerInput playerInput = (PlayerInput) ois.readObject();
 
-            int pIndex = serverHandler.findExistingClientIndex(packetIP);
-            serverHandler.getClient(pIndex).setInput(playerInput);
+                int pIndex = serverHandler.findExistingClientIndex(packetIP);
+                serverHandler.getClient(pIndex).setInput(playerInput);
 
-        } catch(ClassNotFoundException e){
-            e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    /**Closes the server-loop by allowing the run() method to exit. Untested.*/
+    public void close(){
+        running = false;
     }
 }

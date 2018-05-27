@@ -23,7 +23,7 @@ public class ClientConnectionInput extends Thread{
    private DatagramSocket connectionSocket;
    private DatagramPacket dgram;
 
-   ClientNetworkingManager parentHandler;
+   private ClientNetworkingManager parentHandler;
 
    ClientConnectionInput(ClientNetworkingManager parent){
        this.parentHandler = parent;
@@ -36,19 +36,20 @@ public class ClientConnectionInput extends Thread{
        }catch (IOException e){e.printStackTrace();}
    }
 
+    /**Receieves and handles connection messages from server. Packets are identified by their identifies.
+     * See handleConnectionConfirm() and handleConnectionReject() for specific handling.*/
     @Override public void run(){
-
         isRunning = true;
         while(isRunning) {
             try {
                 if (parentHandler.getState() == ConnectionState.CONNECTING) { //must be in correct state.
-
                     //Recieve a packet and get its data.
                     connectionSocket.receive(dgram);
                     byte[] compoundData = dgram.getData();
 
                     //separate identifier from packet-data
-                    byte[] identifier = Arrays.copyOfRange(compoundData, 0, NetworkingIdentifiers.IDENTIFIER_LENGTH);
+                    byte[] identifier = Arrays.copyOfRange(compoundData, 0,
+                            NetworkingIdentifiers.IDENTIFIER_LENGTH);
                     byte[] packetData = Arrays.copyOfRange(compoundData,
                             NetworkingIdentifiers.IDENTIFIER_LENGTH, compoundData.length);
 
@@ -70,6 +71,9 @@ public class ClientConnectionInput extends Thread{
         }
     }
 
+    /**Used by run() to handle connection-confirms from the server.
+     * Requests the networking-manager to switch to CONNECTED
+     * @param packetData the data of the received packet */
     private void handleConnectionConfirm(byte[] packetData){
        parentHandler.setState(ConnectionState.CONNECTED);
        String message = new String(packetData);
@@ -77,6 +81,9 @@ public class ClientConnectionInput extends Thread{
        System.out.println("Confirm Message: " + message);
     }
 
+    /**Used by run() to handle connection-rejections from the server.
+     * Requests the networking-manager to switch to DISCONNECTED.
+     * @param packetData the data of the received packet*/
     private void handleConnectionReject(byte[] packetData){
        parentHandler.setState(ConnectionState.DISCONNECTED);
        String message = new String(packetData);
@@ -84,7 +91,7 @@ public class ClientConnectionInput extends Thread{
        System.out.println("Reject Message: " + message);
     }
 
-    /**Closes the input-socket and stops the thread. */
+    /**Closes the input-socket and stops the thread by allowing run() to exit. */
     public void close(){
         isRunning = false;
         connectionSocket.close();

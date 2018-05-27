@@ -26,17 +26,23 @@ public class ServerHandler {
 
     public ServerHandler(){
         for(int i = 0; i < maxPlayerCount; i++){
-            clientList[i] = new PlayerSocket(i);
+            clientList[i] = new PlayerSocket();
         }
 
         //setup input/output threads
-        ServerOutputThread serverOut = new ServerOutputThread();
-        ServerInputThread serverIn = new ServerInputThread(this);
+        serverOut = new ServerOutputThread();
+        serverIn = new ServerInputThread(this);
 
         serverOut.start();
         serverIn.start();
     }
 
+
+    /**Attaches a client-ip to the PlayerSocket at the given index.
+     * @param ip the client's IP-address
+     * @param index the index that the client should be connected to.
+     * @throws Exception Whenever a connection-attempt is made on a filled PlayerSocket.
+     */
     public void connectPlayer(InetAddress ip, int index) throws Exception{
         if(isClientKnown(ip) || clientList[index].isConnected()) throw new Exception();
         else{
@@ -47,6 +53,8 @@ public class ServerHandler {
         }
     }
 
+
+    /**@return The number of connected players in the clientlist*/
     public int getNumConnectedPlayers() {
         int connectCount = 0;
         for (PlayerSocket pSocket: clientList) {
@@ -56,25 +64,37 @@ public class ServerHandler {
         }
         return connectCount;
     }
-    
+
+
+    /**@return The index of the first disconnected PlayerSocket encountered in the client list.*/
     public int findFreeClientIndex(){
-        for(PlayerSocket pSocket : clientList){
-            if(!pSocket.isConnected()) return pSocket.getPlayerIndex();
+        for(int i = 0; i < clientList.length; i++){
+            PlayerSocket pSocket = clientList[i];
+            if(!pSocket.isConnected()) return i;
         }
         return -1;
     }
 
+    /**@param index The index to ask for connection status.
+     * @return whether the socket at the given index in the clientlist is connected.*/
     public boolean isIndexFree(int index){
         return !clientList[index].isConnected();
     }
 
+
+    /** Returns the index of the Client with the given IP-address. If no such players exists, returns -1.
+     * @param clientIP The IP of the client.
+     * @return the index of the client with the given IP-address*/
     public int findExistingClientIndex(InetAddress clientIP){
-        for(PlayerSocket pSocket : clientList){
-            if(clientIP.equals(pSocket.getPlayerIP())) return pSocket.getPlayerIndex();
+        for(int i = 0; i < clientList.length; i++){
+            PlayerSocket pSocket = clientList[i];
+            if(clientIP.equals(pSocket.getPlayerIP())) return i;
         }
         return -1;
     }
 
+    /**@param clientIP The client IP-address to check.
+     * @return Whether the client with the given IP-address has already been connected.*/
     public boolean isClientKnown(InetAddress clientIP){
         for(PlayerSocket pSocket : clientList){
             if(clientIP.equals(pSocket.getPlayerIP())) return true;
@@ -82,8 +102,16 @@ public class ServerHandler {
         return false;
     }
 
+    /** Returns the client at the given index.*/
     public PlayerSocket getClient(int clientIndex){
         return clientList[clientIndex];
+    }
+
+
+    /**Closes all resources in the handler. Currently untested*/
+    public void close(){
+        serverIn.close();
+        serverOut.close();
     }
 
 }

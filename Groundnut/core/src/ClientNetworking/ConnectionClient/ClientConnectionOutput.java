@@ -40,8 +40,8 @@ public class ClientConnectionOutput extends Thread {
         }
     }
 
+    /**Continuously sends connection-requests to the server.*/
     @Override public void run(){
-
         isRunning = true;
         while(isRunning){
             try {
@@ -67,8 +67,7 @@ public class ClientConnectionOutput extends Thread {
         }
     }
 
-    /**
-     * @return A boolean describing whether the connection-request has timed out. True - yes, False - no.*/
+    /**@return whether the connection-request has timed out.*/
     private boolean checkTimeout(){
         if(numTimeoutChecks == 0) {
             numTimeoutChecks++;
@@ -82,6 +81,8 @@ public class ClientConnectionOutput extends Thread {
         return false;
     }
 
+    /**Used by run() to send a connection-request to the server IP-address as defined in the networking-manager.
+     * @throws IOException when identifier-adding process fails*/
     private void sendConnectionRequest() throws IOException{
         byte[] playerIDBytes = ByteBuffer.allocate(4).putInt(SimulationHandler.getInstance().getClientID()).array();
 
@@ -99,7 +100,7 @@ public class ClientConnectionOutput extends Thread {
         System.out.println("Connect-Request sent to:" + parentHandler.getHostIP() + "(" + serverPort + ")");
     }
 
-    /**Closes the output-socket and stops the thread. */
+    /**Closes the output-socket and stops the thread by allowing run() to exit.*/
     public void close(){
         isRunning = false;
         udpSocket.close();

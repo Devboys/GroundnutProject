@@ -10,6 +10,7 @@ public class TestScene extends Scene {
 
     PlayerGroup pGroup;
 
+    /**Test-scene that adds 4 walls and all players to a playing field.*/
     public TestScene(){
         super();
         Wall northBorder = new Wall(0, ScreenConstants.CAM_HEIGHT - wallSize, ScreenConstants.CAM_WIDTH, wallSize);

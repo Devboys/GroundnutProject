@@ -6,12 +6,12 @@ public class SceneManager {
     private Scene[] sceneArray;
     private int currentSceneIndex;
 
+    /**Manager that controls the underlying finite-state-machine of the game-loop.
+     * Uses SceneList-elements to generate new Scenes and redirects Update() and Render() calls to its current scene.*/
     public SceneManager(){
         sceneArray = new Scene[SceneList.values().length];
 
-        //setup testScene as initial scene.
-        sceneArray[SceneList.TEST.ordinal()] = SceneList.TEST.createNewScene();
-        currentSceneIndex = SceneList.TEST.ordinal();
+        currentSceneIndex = SceneList.DEFAULT.ordinal();
     }
 
     /** Tells the SceneManager to distribute all update() and render() calls to the Scene. This method will
@@ -19,10 +19,12 @@ public class SceneManager {
      * @param scene An element in the enum SceneManager.SceneList.*/
     public void switchScene(SceneList scene){
 
-        sceneArray[scene.ordinal()] = scene.createNewScene();
+        if(scene != SceneList.DEFAULT) {
+            sceneArray[scene.ordinal()] = scene.createNewScene();
+        }
 
         //TODO: MAKE PRETTY
-        if(currentSceneIndex != -99) {
+        if(currentSceneIndex !=  SceneList.DEFAULT.ordinal()) {
             sceneArray[currentSceneIndex].destroy();
             sceneArray[scene.ordinal()].init();
         }
@@ -30,17 +32,22 @@ public class SceneManager {
         currentSceneIndex = scene.ordinal();
     }
 
-    /** Calls init() on whichever scene is the current scene.*/
+    /**@return The currently loaded Scene-object.*/
+    public Scene getCurrentScene(){
+        return sceneArray[currentSceneIndex];
+    }
+
+    /**Calls init() on whichever scene is the current scene.*/
     public void init(){
         if(sceneArray[currentSceneIndex] != null ) sceneArray[currentSceneIndex].init();
     }
 
-    /** Calls update() on whichever scene is the current scene.*/
+    /**Calls update() on whichever scene is the current scene.*/
     public void update(){
         if(sceneArray[currentSceneIndex] != null ) sceneArray[currentSceneIndex].update(this);
     }
 
-    /** Calls render() on whichever scene is the current scene.*/
+    /**Calls render() on whichever scene is the current scene.*/
     public void render() {
         if(sceneArray[currentSceneIndex] != null ) sceneArray[currentSceneIndex].render();
     }

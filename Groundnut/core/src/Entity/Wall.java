@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
+/**Simple entity that functions as a non-traversable area for other collider-objects in the physics-simulation. */
 public class Wall implements Entity {
 
     private int xLoc;
@@ -28,7 +29,7 @@ public class Wall implements Entity {
     }
 
     @Override
-    public void update(SceneManager gsm) {}
+    public void update(SceneManager sm) {}
 
     @Override
     public void render() {}
@@ -38,6 +39,7 @@ public class Wall implements Entity {
         GameThread.theWorld.destroyBody(groundBody);
     }
 
+    /**Sets up and inserts a collider-representation in the box2D world to allow for collisions.*/
     private void setupPhysics(){
         //define floor(static)
         BodyDef groundDef = new BodyDef();

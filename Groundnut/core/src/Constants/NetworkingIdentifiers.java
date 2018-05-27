@@ -4,6 +4,7 @@ public class NetworkingIdentifiers {
 
     public static final int IDENTIFIER_LENGTH = 3;
 
+    //TODO: REDO THIS, BYTES ARE 8BIT NOT SINGLE BIT: SPACE IS WASTED.
     //client-packet identifiers
     public static final byte[] CONNECT_REQUEST_IDENTIFIER = {0, 0, 0};
     public static final byte[] MOVEMENT_PACKET_IDENTIFIER = {1, 0, 0};

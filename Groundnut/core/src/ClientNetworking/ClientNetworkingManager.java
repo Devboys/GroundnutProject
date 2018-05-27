@@ -10,13 +10,10 @@ import java.net.InetAddress;
 
 //TODO: REDO CONNECTION-PORTS ON SERVER AS WELL AS CLIENT.
 
-/**Super-handler for client-server networking. Handles the client's connection-state and opens handlers for
+/**Manager for client-server networking. Handles the client's connection-state and opens handlers for
  * different networking tasks, like connecting to a lobby.
  * Also holds the game-server's host-IP when one is provided. */
 public class ClientNetworkingManager {
-
-    //Public settings
-
 
     private InetAddress gameHostIP;
     private ConnectionState currState;

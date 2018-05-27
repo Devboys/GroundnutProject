@@ -40,9 +40,9 @@ public class ClientServerOutput extends Thread {
         }
     }
 
-    @Override
-    public void run() {
-
+    /**Continuously sends the client's PlayerInput object to the server with an interval based on
+     * ServerHandler.clientTickRate*/
+    @Override public void run() {
         running = true;
         while(running){
             try {
@@ -65,6 +65,9 @@ public class ClientServerOutput extends Thread {
         }
     }
 
+    /**Used by run() to send a sample of the PlayerInput object tied to the SimulationHandler.
+     * Sends packets to the server at the IP-address set in the networking-manager.
+     * @throws IOException */
     private void sendPlayerInput() throws IOException{
         //Data
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -89,7 +92,7 @@ public class ClientServerOutput extends Thread {
         System.out.println("Input sent to: " + parentHandler.getHostIP().toString() + "(" + serverPort + ")");
     }
 
-    /**Closes the output-socket and stops the thread. */
+    /**Closes the output-socket and stops the thread by allowing run() to exit. */
     public void close(){
         running = false;
         udpSocket.close();

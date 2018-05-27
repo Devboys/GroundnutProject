@@ -47,6 +47,7 @@ public class ClientServerInput extends Thread {
 
     }
 
+    /**Receives and handles authoritative game-states from the server.*/
     @Override public void run() {
         isRunning = true;
         while(isRunning) {
@@ -75,6 +76,10 @@ public class ClientServerInput extends Thread {
         }
     }
 
+    /**Used by run() to handle received game-states.
+     * Deserializes the game-state and requests the SimulationHandler to synchronize with it.
+     * @param packetData the data of the packet.
+     * @throws IOException When the ObjectOutputStream creation has failed */
     private void handleStateInput(byte[] packetData) throws IOException{
         //convert state-object back into an object
         ByteArrayInputStream bais = new ByteArrayInputStream(packetData);
@@ -89,7 +94,7 @@ public class ClientServerInput extends Thread {
         }
     }
 
-    /**Closes the input-socket and stops the thread. */
+    /**Closes the input-socket and stops the thread by allowing run() to exit. */
     public void close(){
         isRunning = false;
         udpMulticastSocket.close();

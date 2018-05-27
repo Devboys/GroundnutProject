@@ -12,10 +12,6 @@ import static Core.GameThread.theWorld;
 
 public class Player implements Entity{
 
-    //TODO: RE-STRUCTURE PLAYERCLASS TO BETTER ALLOW FOR INSERTION INTO PHYSICS SIMULATION
-
-    public int playerNum;
-
     private static final int MOVE_SPEED = 100;
 
     private Vector2 initPos;
@@ -32,11 +28,14 @@ public class Player implements Entity{
     private FixtureDef fixDef;
     private InputSource inputSource;
 
+    /**@param initialPosition the initial position of the players collider.*/
     public Player(Vector2 initialPosition) {
         initPos = initialPosition;
         unitPos = initPos;
     }
 
+    /**Queues the players position to be changed in the next Update() call. Overrides any previous queued position.
+     * @param position the position to move the player to.*/
     public void setPos(Vector2 position){
         if(unitCollider != null) {
             queuedPos = position;
@@ -45,14 +44,19 @@ public class Player implements Entity{
         else initPos = position;
     }
 
+    /** @return The current position of the player*/
     public Vector2 getUnitPos() {
         return unitPos;
     }
 
+    /**Sets the input-source of the player-object. The input-source is asked for a PlayerInput object in
+     * each Update() call to move the player.
+     * @param source the given input-source.*/
     public void setInputSource(InputSource source){
         inputSource = source;
     }
 
+    /**Sets up and inserts the collider-representation of the player into the box2D physics-simulation.*/
     private void setupPhysics() {
         //Body definition
         bodyDef = new BodyDef();
@@ -81,8 +85,10 @@ public class Player implements Entity{
         setupPhysics();
     }
 
+    /**Updates all values relevant to the player. This includes moving the player.
+     * @param sm the SceneManager that this entity's scene is tied to.*/
     @Override
-    public void update(SceneManager gsm) {
+    public void update(SceneManager sm) {
         //queue transforms to avoid calling .setTransform when world is simulating. Update() finishes before world
         // starts, so world should never be locked in here.
         if(transformInQueue){
@@ -97,12 +103,14 @@ public class Player implements Entity{
         }
     }
 
-    @Override
-    public void render() {}
+    /**Renders the players current sprite to the screen (not yet implemented)*/
+    @Override public void render() {}
 
-    @Override
-    public void destroy(){ theWorld.destroyBody(unitCollider);}
+    /**Removes the players collider in the box2D physics-simulation.*/
+    @Override public void destroy(){ theWorld.destroyBody(unitCollider);}
 
+    /**Moves the player based on this players InputSource. Also updates the unitPos-field to match the
+     * colliders position in the physics-simulation.*/
     private void move(){
         this.unitPos = this.unitCollider.getPosition();
         //NORTH
@@ -121,12 +129,5 @@ public class Player implements Entity{
         if(inputSource.getInput().isLeft()) {
             this.unitCollider.applyLinearImpulse(new Vector2(-MOVE_SPEED, 0), this.unitPos, true);
         }
-    }
-    public int getPlayerNum() {
-        return playerNum;
-    }
-
-    public void setPlayerNum(int playerNum) {
-        this.playerNum = playerNum;
     }
 }

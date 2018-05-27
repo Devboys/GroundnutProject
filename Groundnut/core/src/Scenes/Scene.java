@@ -4,9 +4,11 @@ import Entity.Entity;
 
 import java.util.ArrayList;
 
+/**Abstract Scene object that adds an Entity-arraylist to all Scenes.
+ * SceneManager will only accept objects that extends this*/
 public abstract class Scene {
 
-    ArrayList<Entity> entities;
+    protected ArrayList<Entity> entities;
 
     protected Scene(){
         entities = new ArrayList<Entity>();

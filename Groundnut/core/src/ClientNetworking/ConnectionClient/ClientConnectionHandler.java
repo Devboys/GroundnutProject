@@ -19,7 +19,6 @@ public class ClientConnectionHandler implements NetworkingHandler {
         clientOut.start();
     }
 
-
     @Override public void close() {
         clientIn.close();
         clientOut.close();
